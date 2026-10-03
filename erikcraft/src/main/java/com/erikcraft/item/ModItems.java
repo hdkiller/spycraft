@@ -36,13 +36,19 @@ public class ModItems {
         new MobTrackerItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
     );
 
-    // Tactical Spy Goggles - Night Vision & live Beacon HUD
+    // Tactical Spy Goggles - Night Vision & sky-high beacon pillar
     public static final Item SPY_GOGGLES = registerItem(
         "spy_goggles",
         new SpyGogglesItem(new Item.Properties().rarity(Rarity.EPIC).durability(450))
     );
 
-    // Remote Detonator - Syncs to placed C4 and detonates on command!
+    // GPS Waypoint Navigator Visor - 3D floating guidance arrows in the air
+    public static final Item GPS_NAVIGATOR_GOGGLES = registerItem(
+        "gps_navigator_goggles",
+        new GpsNavigatorGogglesItem(new Item.Properties().rarity(Rarity.EPIC).durability(450))
+    );
+
+    // Remote Detonator - Syncs to placed C4 and detonates on command (3 yield levels)
     public static final Item REMOTE_DETONATOR = registerItem(
         "remote_detonator",
         new RemoteDetonatorItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))

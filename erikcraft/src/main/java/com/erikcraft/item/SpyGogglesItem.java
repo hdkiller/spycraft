@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Tactical Spy Goggles / Night Vision Glasses
  * - Wear on head for instant Night Vision!
- * - Illuminates tracked Block Beacons with a glowing light pillar through walls!
+ * - Illuminates tracked Block Beacons with a sky-high towering light pillar (96+ blocks) through terrain!
  * - Highlights tracked Mobs with a glowing outline!
  * - Highlights armed C4 canisters with level-specific particle sparks!
  * - Displays a live tactical HUD on the Action Bar!
@@ -49,14 +49,15 @@ public class SpyGogglesItem extends ArmorItem {
             StringBuilder hud = new StringBuilder("§b🕶️ SPY HUD ");
             boolean hasSignals = false;
 
-            // 2. Render Beacon Light Pillar if a block is tracked
+            // 2. Render Sky-High Beacon Light Pillar (up to 96 blocks into the sky!)
             if (trackedBlock != null) {
                 BlockPos bpos = trackedBlock.pos();
                 double dist = Math.sqrt(player.blockPosition().distSqr(bpos));
                 hasSignals = true;
 
-                if (level instanceof ServerLevel serverLevel && dist < 128) {
-                    for (int dy = 0; dy <= 16; dy += 2) {
+                // Send beacon light beam particles straight up into the clouds (visible up to 256m!)
+                if (level instanceof ServerLevel serverLevel && dist < 256) {
+                    for (int dy = 0; dy <= 96; dy += 3) {
                         serverLevel.sendParticles(ParticleTypes.END_ROD,
                             bpos.getX() + 0.5, bpos.getY() + 1.0 + dy, bpos.getZ() + 0.5,
                             1, 0, 0, 0, 0);

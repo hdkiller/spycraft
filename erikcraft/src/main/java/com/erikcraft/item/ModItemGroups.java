@@ -22,10 +22,11 @@ public class ModItemGroups {
         BuiltInRegistries.CREATIVE_MODE_TAB,
         ERIK_GROUP,
         FabricItemGroup.builder()
-            .icon(() -> new ItemStack(ModItems.SPY_GOGGLES))
+            .icon(() -> new ItemStack(ModItems.GPS_NAVIGATOR_GOGGLES))
             .title(Component.translatable("itemGroup.erikcraft.erikcraft_tab"))
             .displayItems((displayContext, entries) -> {
                 entries.accept(ModItems.SPY_GOGGLES);
+                entries.accept(ModItems.GPS_NAVIGATOR_GOGGLES);
                 entries.accept(ModItems.GRAPPLING_HOOK_GUN);
                 entries.accept(ModItems.SPY_TRACKER);
                 entries.accept(ModBlocks.C4_BLOCK);
