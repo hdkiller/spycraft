@@ -85,6 +85,12 @@ public class ModItems {
         new ReconDroneItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
     );
 
+    // Mission Beacon - Deploys 96-story Spy Base Skyscraper with guards & defenses
+    public static final Item MISSION_BEACON = registerItem(
+        "mission_beacon",
+        new MissionBeaconItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,

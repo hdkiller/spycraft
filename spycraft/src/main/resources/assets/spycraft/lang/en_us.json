@@ -14,6 +14,7 @@
   "item.spycraft.remote_detonator": "Remote C4 Detonator",
   "item.spycraft.recon_drone": "Felderítő Drón (Tactical Recon Drone)",
   "block.spycraft.sound_trap": "Hangcsapda (Sonic Decoy Trap)",
+  "item.spycraft.mission_beacon": "Küldetés Jeladó (Mission Deployer Beacon)",
   "effect.spycraft.drone_piloting": "Drón Irányítás (Drone Piloting)",
   "itemGroup.spycraft.erikcraft_tab": "ErikCraft Spy & Adventure Gear"
 }

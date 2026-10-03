@@ -10,6 +10,7 @@ import com.hdkiller.spycraft.sound.SoundTrapManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTabs;
 import org.slf4j.Logger;
@@ -47,8 +48,26 @@ public class SpyCraftMod implements ModInitializer {
             ReconDroneManager.onPlayerDisconnect(handler.getPlayer());
         });
 
+        // Register /spycraft spawn_base command
+        net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            dispatcher.register(net.minecraft.commands.Commands.literal("spycraft")
+                .then(net.minecraft.commands.Commands.literal("spawn_base")
+                    .requires(source -> source.hasPermission(2))
+                    .executes(context -> {
+                        var source = context.getSource();
+                        var player = source.getPlayer();
+                        var level = source.getLevel();
+                        var pos = player != null ? player.blockPosition() : BlockPos.containing(source.getPosition());
+                        boolean success = com.hdkiller.spycraft.mission.SpyBaseMissionBuilder.deployMission(level, pos, player);
+                        return success ? 1 : 0;
+                    })
+                )
+            );
+        });
+
         // Add items to standard Combat & Tools tabs
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
+            entries.accept(ModItems.MISSION_BEACON);
             entries.accept(ModBlocks.SOUND_TRAP);
             entries.accept(ModItems.RECON_DRONE);
             entries.accept(ModItems.SNIPER_RIFLE);
