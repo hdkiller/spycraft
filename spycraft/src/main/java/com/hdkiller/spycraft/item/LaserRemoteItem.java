@@ -1,5 +1,6 @@
 package com.hdkiller.spycraft.item;
 
+import com.hdkiller.spycraft.block.LaserPylonBlock;
 import com.hdkiller.spycraft.block.ModBlocks;
 import com.hdkiller.spycraft.laser.LaserForcefieldManager;
 import net.minecraft.core.BlockPos;
@@ -22,9 +23,11 @@ import java.util.Iterator;
 
 /**
  * Laser Forcefield Remote Controller
- * 1. Right-click 3 or more Laser Pylon blocks to link them into a closed perimeter.
- * 2. Right-click in the air to toggle the impenetrable Laser Forcefield Wall ON or OFF!
- * 3. Sneak + Right-click to clear the linked network.
+ * 1. Right-click Laser Pylon blocks to link them into an impenetrable perimeter.
+ *    Pylons close together (within 32 blocks) automatically join the same trap.
+ *    Pylons placed further away automatically form separate, independent laser traps!
+ * 2. Right-click in the air near a trap to toggle that trap ON or OFF!
+ * 3. Sneak + Right-click to clear the nearest trap (or all traps).
  */
 public class LaserRemoteItem extends Item {
     public LaserRemoteItem(Properties properties) {
@@ -45,8 +48,16 @@ public class LaserRemoteItem extends Item {
         // Sneak + click to reset network
         if (player.isShiftKeyDown()) {
             if (!level.isClientSide) {
-                LaserForcefieldManager.clearNetwork(player.getUUID(), level);
-                player.sendSystemMessage(Component.literal("§e🗑️ [LÉZER HÁLÓZAT TÖRLVE] §7Minden összekötött oszlop leválasztva."));
+                var network = LaserForcefieldManager.getNetwork(player.getUUID());
+                LaserForcefieldManager.LaserTrap nearTrap = network.findNearestTrap(pos, 64.0);
+                if (nearTrap != null) {
+                    int trapNum = network.traps.indexOf(nearTrap) + 1;
+                    LaserForcefieldManager.clearTrap(level, network, nearTrap);
+                    player.sendSystemMessage(Component.literal("§e🗑️ [#" + trapNum + " LÉZER CSAPDA TÖRLVE] §7A közeli csapda oszlopai leválasztva."));
+                } else {
+                    LaserForcefieldManager.clearNetwork(player.getUUID(), level);
+                    player.sendSystemMessage(Component.literal("§e🗑️ [MINDEN LÉZER CSAPDA TÖRLVE] §7Minden összekötött oszlop leválasztva."));
+                }
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.2f);
             }
@@ -56,49 +67,25 @@ public class LaserRemoteItem extends Item {
         if (level.getBlockState(pos).is(ModBlocks.LASER_PYLON)) {
             if (!level.isClientSide) {
                 var network = LaserForcefieldManager.getNetwork(player.getUUID());
-                if (network.dimension != null && !network.dimension.equals(level.dimension())) {
-                    LaserForcefieldManager.clearNetwork(player.getUUID(), level);
-                    network = LaserForcefieldManager.getNetwork(player.getUUID());
-                    player.sendSystemMessage(Component.literal("§e⚠️ Dimenzióváltás: a korábbi hálózat törölve lett. Új hálózat indult."));
-                }
                 network.dimension = level.dimension();
 
-                if (!network.pylons.contains(pos)) {
-                    network.pylons.add(pos);
-
-                    if (level instanceof ServerLevel serverLevel) {
-                        serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                            pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5,
-                            20, 0.2, 0.2, 0.2, 0.05);
-
-                        float pitch = Math.min(0.8f + network.pylons.size() * 0.25f, 2.0f);
-                        serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
-                            SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 1.2f, pitch);
+                // 1. Check if pos is already in an existing trap -> Unlink it
+                LaserForcefieldManager.LaserTrap existingTrap = null;
+                for (LaserForcefieldManager.LaserTrap t : network.traps) {
+                    if (t.pylons.contains(pos)) {
+                        existingTrap = t;
+                        break;
                     }
+                }
 
-                    int count = network.pylons.size();
-                    player.sendSystemMessage(Component.literal(
-                        "§a🔗 [LÉZEROSZLOP #" + count + " CSATLAKOZTATVA!] §f[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]"
-                    ));
-
-                    if (count >= 3) {
-                        player.sendSystemMessage(Component.literal(
-                            "§a  ↳ ✅ Körlet kész (" + count + " pont)! Kattints a levegőbe az ERŐPAJZS aktiválásához!"
-                        ));
-                    } else {
-                        player.sendSystemMessage(Component.literal(
-                            "§7  ↳ Még legalább " + (3 - count) + " oszlop szükséges a zárt körlethez."
-                        ));
-                    }
-                } else {
-                    // Right clicking an already connected pylon unlinks it!
-                    network.pylons.remove(pos);
-                    boolean wasActive = network.active;
-                    if (level.getBlockState(pos).is(ModBlocks.LASER_PYLON) && level.getBlockState(pos).hasProperty(com.hdkiller.spycraft.block.LaserPylonBlock.ACTIVE)) {
-                        level.setBlock(pos, level.getBlockState(pos).setValue(com.hdkiller.spycraft.block.LaserPylonBlock.ACTIVE, false), Block.UPDATE_ALL);
+                if (existingTrap != null) {
+                    existingTrap.pylons.remove(pos);
+                    boolean wasActive = existingTrap.active;
+                    if (level.getBlockState(pos).is(ModBlocks.LASER_PYLON) && level.getBlockState(pos).hasProperty(LaserPylonBlock.ACTIVE)) {
+                        level.setBlock(pos, level.getBlockState(pos).setValue(LaserPylonBlock.ACTIVE, false), Block.UPDATE_ALL);
                     }
                     if (wasActive) {
-                        LaserForcefieldManager.setNetworkPylonsActive(level, network, false);
+                        LaserForcefieldManager.setTrapPylonsActive(level, existingTrap, false);
                     }
 
                     if (level instanceof ServerLevel serverLevel) {
@@ -107,18 +94,70 @@ public class LaserRemoteItem extends Item {
                             15, 0.2, 0.2, 0.2, 0.05);
                         serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
                             SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1.0f, 0.8f);
-                        if (wasActive) {
-                            serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
-                                SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.2f, 0.8f);
+                    }
+
+                    int remaining = existingTrap.pylons.size();
+                    int trapNum = network.traps.indexOf(existingTrap) + 1;
+                    player.sendSystemMessage(Component.literal(
+                        "§e✂️ [LÉZEROSZLOP LEVÁLASZTVA!] §7#" + trapNum + " Csapda [" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "] " +
+                        (wasActive ? "§c(A csapda kikapcsolt!) " : "") +
+                        "§7Megmaradt: " + remaining + " oszlop."
+                    ));
+
+                    if (remaining == 0) {
+                        network.traps.remove(existingTrap);
+                    }
+                } else {
+                    // 2. Pos is NOT in any trap: find nearest trap within MAX_LINK_DISTANCE (32 blocks)
+                    LaserForcefieldManager.LaserTrap targetTrap = null;
+                    double bestDistSq = Double.MAX_VALUE;
+
+                    for (LaserForcefieldManager.LaserTrap t : network.traps) {
+                        if (t.dimension != null && !t.dimension.equals(level.dimension())) continue;
+                        double d = t.getMinDistanceSqTo(pos);
+                        if (d <= LaserForcefieldManager.MAX_LINK_DISTANCE_SQ && d < bestDistSq) {
+                            bestDistSq = d;
+                            targetTrap = t;
                         }
                     }
 
-                    int remaining = network.pylons.size();
-                    player.sendSystemMessage(Component.literal(
-                        "§e✂️ [LÉZEROSZLOP LEVÁLASZTVA!] §7[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "] " +
-                        (wasActive ? "§c(Az erőpajzs kikapcsolt!) " : "") +
-                        "§7Megmaradt: " + remaining + " oszlop."
-                    ));
+                    boolean isNewTrap = false;
+                    if (targetTrap == null) {
+                        targetTrap = new LaserForcefieldManager.LaserTrap(player.getUUID(), level.dimension());
+                        network.traps.add(targetTrap);
+                        isNewTrap = true;
+                    }
+
+                    targetTrap.pylons.add(pos);
+                    int trapNum = network.traps.indexOf(targetTrap) + 1;
+                    int count = targetTrap.pylons.size();
+
+                    if (level instanceof ServerLevel serverLevel) {
+                        serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                            pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5,
+                            20, 0.2, 0.2, 0.2, 0.05);
+                        float pitch = Math.min(0.8f + count * 0.25f, 2.0f);
+                        serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
+                            SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 1.2f, pitch);
+                    }
+
+                    if (isNewTrap) {
+                        player.sendSystemMessage(Component.literal(
+                            "§b✨ [ÚJ LÉZER CSAPDA #" + trapNum + " ELKEZDVE!] §f[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "] (1. oszlop)"
+                        ));
+                        player.sendSystemMessage(Component.literal(
+                            "§7  ↳ Helyezz további oszlopokat a közelben (max 32 blokk), hogy láncot alkossanak!"
+                        ));
+                    } else {
+                        player.sendSystemMessage(Component.literal(
+                            "§a🔗 [LÉZEROSZLOP #" + count + " CSATLAKOZTATVA!] §7(#" + trapNum + " Csapda) §f[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]"
+                        ));
+                        if (count >= 2) {
+                            player.sendSystemMessage(Component.literal(
+                                "§a  ↳ ✅ Lánc kész (" + count + " oszlop)! Kattints a levegőbe az ERŐPAJZS aktiválásához!"
+                            ));
+                        }
+                    }
                 }
 
                 player.getCooldowns().addCooldown(this, 10);
@@ -137,26 +176,48 @@ public class LaserRemoteItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide) {
-            // Sneak + click in air clears network
+            var network = LaserForcefieldManager.getNetwork(player.getUUID());
+
+            // Sneak + click in air clears nearest trap or all
             if (player.isShiftKeyDown()) {
-                LaserForcefieldManager.clearNetwork(player.getUUID(), level);
-                player.sendSystemMessage(Component.literal("§e🗑️ [LÉZER HÁLÓZAT TÖRLVE] §7Minden összekötött oszlop leválasztva."));
+                LaserForcefieldManager.LaserTrap nearTrap = network.findNearestTrap(player.blockPosition(), 64.0);
+                if (nearTrap != null) {
+                    int trapNum = network.traps.indexOf(nearTrap) + 1;
+                    LaserForcefieldManager.clearTrap(level, network, nearTrap);
+                    player.sendSystemMessage(Component.literal("§e🗑️ [#" + trapNum + " LÉZER CSAPDA TÖRLVE] §7A közeli csapda oszlopai leválasztva."));
+                } else {
+                    LaserForcefieldManager.clearNetwork(player.getUUID(), level);
+                    player.sendSystemMessage(Component.literal("§e🗑️ [MINDEN LÉZER CSAPDA TÖRLVE] §7Minden hálózat és oszlop törölve."));
+                }
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.2f);
                 return InteractionResultHolder.sidedSuccess(stack, false);
             }
 
-            var network = LaserForcefieldManager.getNetwork(player.getUUID());
-            if (network.dimension != null && !network.dimension.equals(level.dimension())) {
-                player.sendSystemMessage(Component.literal(
-                    "§c📡 [LÉZER CSAPDA] §7A csatlakoztatott oszlopok egy másik dimenzióban találhatók!"
-                ));
+            // Find nearest trap within 64 blocks
+            LaserForcefieldManager.LaserTrap targetTrap = network.findNearestTrap(player.blockPosition(), 64.0);
+            if (targetTrap == null && network.traps.size() == 1) {
+                targetTrap = network.traps.get(0);
+            }
+
+            if (targetTrap == null) {
+                level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.5f);
+                if (network.traps.isEmpty()) {
+                    player.sendSystemMessage(Component.literal(
+                        "§c📡 [LÉZER TÁVIRÁNYÍTÓ] §7Nincs egyetlen beállított lézer csapdád sem! Kattints előbb lézeroszlopokra a távirányítóval."
+                    ));
+                } else {
+                    player.sendSystemMessage(Component.literal(
+                        "§c📡 [LÉZER TÁVIRÁNYÍTÓ] §7Nem vagy egyetlen lézer csapdád közelében sem (64 blokk)! Menj közelebb a kívánt csapdához."
+                    ));
+                }
                 return InteractionResultHolder.sidedSuccess(stack, false);
             }
 
-            // Prune broken/missing pylons from network before toggling
+            // Prune broken/missing pylons from target trap before toggling
             boolean prunedAny = false;
-            Iterator<BlockPos> it = network.pylons.iterator();
+            Iterator<BlockPos> it = targetTrap.pylons.iterator();
             while (it.hasNext()) {
                 BlockPos p = it.next();
                 if (level.isLoaded(p) && !level.getBlockState(p).is(ModBlocks.LASER_PYLON)) {
@@ -165,39 +226,40 @@ public class LaserRemoteItem extends Item {
                 }
             }
             if (prunedAny) {
-                LaserForcefieldManager.setNetworkPylonsActive(level, network, false);
+                LaserForcefieldManager.setTrapPylonsActive(level, targetTrap, false);
             }
 
-            int count = network.pylons.size();
+            int trapNum = network.traps.indexOf(targetTrap) + 1;
+            int count = targetTrap.pylons.size();
 
-            if (count < 3) {
+            if (count < 2) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.5f);
                 player.sendSystemMessage(Component.literal(
-                    "§c📡 [LÉZER CSAPDA] §7Legalább 3 épp lézeroszlop kell az erőpajzshoz! (Jelenleg: " + count + ")"
+                    "§c📡 [LÉZER CSAPDA #" + trapNum + "] §7Legalább 2 épp oszlop kell az erőpajzshoz! (Jelenleg: " + count + ")"
                 ));
                 return InteractionResultHolder.sidedSuccess(stack, false);
             }
 
-            // Toggle active state
-            boolean newActive = !network.active;
-            LaserForcefieldManager.setNetworkPylonsActive(level, network, newActive);
+            // Toggle active state for this trap
+            boolean newActive = !targetTrap.active;
+            LaserForcefieldManager.setTrapPylonsActive(level, targetTrap, newActive);
 
-            if (network.active) {
+            if (targetTrap.active) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.5f, 1.2f);
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 1.2f, 1.6f);
 
                 player.sendSystemMessage(Component.literal(
-                    "§c🚨 [LÉZER ERŐPAJZS AKTIVÁLVA!] §4Áthatolhatatlan erőpajzs fal élesítve " + count + " oszlop között!"
+                    "§c🚨 [LÉZER CSAPDA #" + trapNum + " AKTIVÁLVA!] §4Áthatolhatatlan erőpajzs fal élesítve " + count + " oszlop között!"
                 ));
             } else {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.5f, 0.8f);
 
                 player.sendSystemMessage(Component.literal(
-                    "§a🛡️ [LÉZER ERŐPAJZS KIKAPCSOLVA] §7A lézerfal leállt, a terület szabadon átjárható."
+                    "§a🛡️ [LÉZER CSAPDA #" + trapNum + " KIKAPCSOLVA] §7A lézerfal leállt, a terület szabadon átjárható."
                 ));
             }
 

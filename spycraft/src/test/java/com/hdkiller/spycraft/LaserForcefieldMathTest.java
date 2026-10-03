@@ -132,4 +132,51 @@ class LaserForcefieldMathTest {
 
         LaserForcefieldManager.clearNetwork(owner);
     }
+
+    @Test
+    @DisplayName("Independent multi-trap clustering: distant pylons form separate traps")
+    void testMultiTrapClustering() {
+        java.util.UUID owner = java.util.UUID.randomUUID();
+        LaserForcefieldManager.ForcefieldNetwork net = LaserForcefieldManager.getNetwork(owner);
+
+        // Trap 1: Base A at (0, 64, 0), (5, 64, 0), (5, 64, 5)
+        LaserForcefieldManager.LaserTrap trap1 = new LaserForcefieldManager.LaserTrap(owner, null);
+        trap1.pylons.addAll(List.of(
+            new BlockPos(0, 64, 0),
+            new BlockPos(5, 64, 0),
+            new BlockPos(5, 64, 5)
+        ));
+        trap1.active = true;
+        net.traps.add(trap1);
+
+        // Trap 2: Base B at (100, 64, 100), (105, 64, 100)
+        // Distance to Trap 1 is ~140 blocks (well above MAX_LINK_DISTANCE = 32 blocks)
+        LaserForcefieldManager.LaserTrap trap2 = new LaserForcefieldManager.LaserTrap(owner, null);
+        trap2.pylons.addAll(List.of(
+            new BlockPos(100, 64, 100),
+            new BlockPos(105, 64, 100)
+        ));
+        trap2.active = true;
+        net.traps.add(trap2);
+
+        assertEquals(2, net.traps.size(), "Player should have 2 distinct traps");
+        assertTrue(trap1.active, "Trap 1 should be active");
+        assertTrue(trap2.active, "Trap 2 should be active");
+
+        // Nearest trap lookup from Base A (1, 64, 1) should be trap1
+        LaserForcefieldManager.LaserTrap nearestA = net.findNearestTrap(new BlockPos(1, 64, 1), 64.0);
+        assertSame(trap1, nearestA, "Nearest to (1,64,1) must be Trap 1");
+
+        // Nearest trap lookup from Base B (102, 64, 102) should be trap2
+        LaserForcefieldManager.LaserTrap nearestB = net.findNearestTrap(new BlockPos(102, 64, 102), 64.0);
+        assertSame(trap2, nearestB, "Nearest to (102,64,102) must be Trap 2");
+
+        // Deactivating or breaking pylon in Trap 2 leaves Trap 1 fully intact and active!
+        LaserForcefieldManager.setTrapPylonsActive(null, trap2, false);
+        assertFalse(trap2.active, "Trap 2 should be inactive");
+        assertTrue(trap1.active, "Trap 1 must remain active and undisturbed!");
+
+        // Clean up
+        LaserForcefieldManager.clearNetwork(owner);
+    }
 }
