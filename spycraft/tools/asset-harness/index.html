@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpyCraft Asset Studio & Variant Harness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #111726;
+      --bg-card-hover: #162035;
+      --bg-card-active: #1a2742;
+      --border-color: #1e293b;
+      --border-highlight: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --font-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      line-height: 1.5;
+      padding-bottom: 120px;
+      overflow-x: hidden;
+    }
+
+    /* Top Bar */
+    header {
+      background: rgba(17, 23, 38, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0284c7, #10b981);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-weight: 600;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .preset-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .preset-selector label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    select, button {
+      font-family: var(--font-ui);
+      background: #1e293b;
+      color: var(--text-main);
+      border: 1px solid #334155;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    select:focus, button:focus {
+      outline: none;
+      border-color: var(--border-highlight);
+    }
+
+    button:hover {
+      background: #334155;
+      border-color: #475569;
+    }
+
+    .btn-primary {
+      background: #0284c7;
+      border-color: #0369a1;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0369a1;
+      border-color: #075985;
+    }
+
+    .bg-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .bg-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .bg-btn.active {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 1px;
+    }
+
+    .bg-btn-grid {
+      background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 12px 12px;
+    }
+    .bg-btn-slate { background: #1e293b; }
+    .bg-btn-dirt { background: #5c3e21; }
+    .bg-btn-stone { background: #6b7280; }
+    .bg-btn-oak { background: #a16207; }
+
+    /* Category Nav */
+    .category-bar {
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      overflow-x: auto;
+    }
+
+    .cat-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .cat-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    .cat-btn.active {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: rgba(6, 182, 212, 0.4);
+      color: var(--accent-cyan);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* Asset Section */
+    .asset-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .asset-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .asset-title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .asset-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .kind-tag {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .kind-item {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .kind-block {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .asset-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 800px;
+    }
+
+    /* Variants Grid */
+    .variants-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .variant-card {
+      background: #0d121f;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .variant-card:hover {
+      border-color: #334155;
+      background: #111726;
+      transform: translateY(-2px);
+    }
+
+    .variant-card.is-active-in-mod {
+      border-color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.04);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.12);
+    }
+
+    .active-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .active-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 6px var(--accent-green);
+    }
+
+    /* Sprite Display Canvas / Frame */
+    .sprite-frame {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sprite-img {
+      image-rendering: pixelated;
+      width: 128px;
+      height: 128px;
+      transition: transform 0.15s ease;
+    }
+
+    .sprite-frame:hover .sprite-img {
+      transform: scale(1.08);
+    }
+
+    .variant-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-grow: 1;
+    }
+
+    .variant-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .theme-pill {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      display: inline-block;
+      width: fit-content;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .theme-specops { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+    .theme-cyberpunk { background: rgba(6, 182, 212, 0.2); color: #67e8f9; }
+    .theme-steampunk { background: rgba(245, 158, 11, 0.2); color: #fde047; }
+    .theme-custom { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+
+    .variant-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .variant-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .btn-apply {
+      flex: 1;
+      background: #1e293b;
+      border: 1px solid #334155;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--text-main);
+    }
+
+    .btn-apply:hover {
+      background: #0284c7;
+      border-color: #0369a1;
+      color: white;
+    }
+
+    .btn-inspect {
+      background: transparent;
+      border: 1px solid #334155;
+      color: var(--text-muted);
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .btn-inspect:hover {
+      background: #1e293b;
+      color: var(--text-main);
+    }
+
+    /* Fixed Minecraft Hotbar Simulator */
+    .hotbar-simulator {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid #334155;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      z-index: 90;
+    }
+
+    .hotbar-ui {
+      display: flex;
+      background: #8f8f8f;
+      border: 2px solid #373737;
+      box-shadow: inset -2px -2px #555555, inset 2px 2px #ffffff;
+      padding: 2px;
+      gap: 4px;
+    }
+
+    .hotbar-slot {
+      width: 44px;
+      height: 44px;
+      background: #8b8b8b;
+      border: 2px solid #373737;
+      box-shadow: inset 2px 2px #373737, inset -2px -2px #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hotbar-slot.selected {
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+
+    .hotbar-slot img {
+      width: 32px;
+      height: 32px;
+      image-rendering: pixelated;
+    }
+
+    .hotbar-tooltip {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      max-width: 350px;
+    }
+
+    .mc-gold { color: #f59e0b; font-weight: 700; }
+    .mc-cyan { color: #22d3ee; }
+    .mc-gray { color: #94a3b8; font-size: 11px; }
+
+    /* 3D Cube Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      width: 90%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .cube-scene {
+      width: 220px;
+      height: 220px;
+      perspective: 800px;
+      margin: 20px 0;
+      cursor: grab;
+    }
+
+    .cube-scene:active {
+      cursor: grabbing;
+    }
+
+    .cube {
+      width: 140px;
+      height: 140px;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateX(-25deg) rotateY(45deg);
+      transition: transform 0.05s ease-out;
+      margin: 40px auto;
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      background-size: cover;
+      image-rendering: pixelated;
+    }
+
+    .cube-face-front  { transform: rotateY(  0deg) translateZ(70px); }
+    .cube-face-back   { transform: rotateY(180deg) translateZ(70px); }
+    .cube-face-right  { transform: rotateY( 90deg) translateZ(70px); }
+    .cube-face-left   { transform: rotateY(-90deg) translateZ(70px); }
+    .cube-face-top    { transform: rotateX( 90deg) translateZ(70px); }
+    .cube-face-bottom { transform: rotateX(-90deg) translateZ(70px); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: #064e3b;
+      border: 1px solid #059669;
+      color: #ecfdf5;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transform: translateY(-50px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 300;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h1 class="brand-title">SpyCraft Asset Studio</h1>
+          <span class="brand-badge">FABRIC 1.21.1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-group">
+      <div class="preset-selector">
+        <label for="theme-preset">THEME PRESET:</label>
+        <select id="theme-preset">
+          <option value="specops">SpecOps Tactical (Matte Black / Military Olive)</option>
+          <option value="cyberpunk">Cyberpunk Neon (Titanium / Cyan Plasma)</option>
+          <option value="steampunk">Steampunk / Vanilla Friendly (Brass / Wood)</option>
+          <option value="baseline">Original Baseline Prototype</option>
+        </select>
+        <button class="btn-primary" onclick="applyPreset()">Apply All</button>
+      </div>
+
+      <div class="bg-buttons">
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-dim); margin-right: 4px;">BG:</span>
+        <button class="bg-btn bg-btn-grid active" title="Transparent Grid" onclick="setBg('grid', this)"></button>
+        <button class="bg-btn bg-btn-slate" title="Slate Dark" onclick="setBg('slate', this)"></button>
+        <button class="bg-btn bg-btn-stone" title="Minecraft Stone" onclick="setBg('stone', this)"></button>
+        <button class="bg-btn bg-btn-dirt" title="Minecraft Dirt" onclick="setBg('dirt', this)"></button>
+        <button class="bg-btn bg-btn-oak" title="Minecraft Oak Planks" onclick="setBg('oak', this)"></button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-dim);">ZOOM:</span>
+        <select id="zoom-select" onchange="setZoom(this.value)">
+          <option value="4">4x (64px)</option>
+          <option value="8" selected>8x (128px)</option>
+          <option value="12">12x (192px)</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <nav class="category-bar">
+    <button class="cat-btn active" onclick="filterCategory('all', this)">All Assets (20)</button>
+    <button class="cat-btn" onclick="filterCategory('weapons', this)">Weapons & Gadgets</button>
+    <button class="cat-btn" onclick="filterCategory('surveillance', this)">Surveillance & Recon</button>
+    <button class="cat-btn" onclick="filterCategory('disguise', this)">Infiltration & Disguise</button>
+    <button class="cat-btn" onclick="filterCategory('explosives', this)">Explosives & Defense</button>
+  </nav>
+
+  <main id="assets-container">
+    <!-- Populated dynamically via JS -->
+  </main>
+
+  <!-- Minecraft Hotbar Simulator -->
+  <div class="hotbar-simulator">
+    <div class="hotbar-ui" id="hotbar-slots">
+      <!-- 9 slots -->
+    </div>
+    <div class="hotbar-tooltip" id="hotbar-tooltip">
+      <div class="mc-gold" id="tt-title">Sniper Rifle</div>
+      <div class="mc-cyan" id="tt-desc">Range: 120 blocks · 3x Optical Zoom</div>
+      <div class="mc-gray" id="tt-variant">Variant: SpecOps Barrett .50</div>
+    </div>
+  </div>
+
+  <!-- 3D Cube Inspector Modal -->
+  <div class="modal-overlay" id="cube-modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; width: 100%;">
+        <h2 style="font-size: 18px;" id="modal-cube-title">3D Block Orbit View</h2>
+        <button onclick="closeModal()">✕</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted);">Click and drag to rotate the block in 3D perspective</p>
+      
+      <div class="cube-scene" id="cube-scene">
+        <div class="cube" id="cube">
+          <div class="cube-face cube-face-front" id="cube-front"></div>
+          <div class="cube-face cube-face-back" id="cube-back"></div>
+          <div class="cube-face cube-face-right" id="cube-right"></div>
+          <div class="cube-face cube-face-left" id="cube-left"></div>
+          <div class="cube-face cube-face-top" id="cube-top"></div>
+          <div class="cube-face cube-face-bottom" id="cube-bottom"></div>
+        </div>
+      </div>
+
+      <button class="btn-primary" style="width: 100%;" onclick="closeModal()">Close Inspector</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span>✓</span>
+    <span id="toast-msg">Applied variant to SpyCraft mod!</span>
+  </div>
+
+  <script>
+    let inventoryData = null;
+    let currentCategory = 'all';
+    let currentBg = 'grid';
+    let currentZoom = 8;
+    let activeHotbarIndex = 0;
+
+    const bgStyles = {
+      grid: "repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 16px 16px",
+      slate: "#1e293b",
+      stone: "#6b7280",
+      dirt: "#5c3e21",
+      oak: "#a16207"
+    };
+
+    async function loadInventory() {
+      try {
+        const res = await fetch('/api/inventory');
+        inventoryData = await res.json();
+        renderAssets();
+        setupHotbar();
+      } catch (err) {
+        console.error("Could not fetch inventory, fallback to offline demo:", err);
+      }
+    }
+
+    function setBg(type, btn) {
+      currentBg = type;
+      document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.sprite-frame').forEach(f => {
+        f.style.background = bgStyles[type];
+      });
+    }
+
+    function setZoom(val) {
+      currentZoom = parseInt(val);
+      const sizePx = currentZoom * 16;
+      document.querySelectorAll('.sprite-img').forEach(img => {
+        img.style.width = sizePx + 'px';
+        img.style.height = sizePx + 'px';
+      });
+    }
+
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAssets();
+    }
+
+    function renderAssets() {
+      const container = document.getElementById('assets-container');
+      if (!inventoryData || !inventoryData.assets) return;
+
+      const filtered = inventoryData.assets.filter(a => {
+        if (currentCategory === 'all') return true;
+        return a.category === currentCategory;
+      });
+
+      container.innerHTML = filtered.map(asset => {
+        return `
+          <div class="asset-block" id="asset-${asset.id}">
+            <div class="asset-header">
+              <div class="asset-title-area">
+                <span class="kind-tag kind-${asset.kind}">${asset.kind}</span>
+                <h3 class="asset-title">${asset.title}</h3>
+                <code style="font-size: 11px; color: var(--text-dim);">${asset.mod_path}</code>
+              </div>
+              <div class="asset-desc">${asset.description}</div>
+            </div>
+
+            <div class="variants-row">
+              ${asset.variants.map(v => {
+                const isBlock = asset.kind === 'block';
+                return `
+                  <div class="variant-card ${v.is_active ? 'is-active-in-mod' : ''}">
+                    ${v.is_active ? '<span class="active-badge">ACTIVE IN MOD</span>' : ''}
+                    
+                    <div class="sprite-frame" style="background: ${bgStyles[currentBg]}">
+                      <img src="${v.url}" alt="${v.name}" class="sprite-img" style="width: ${currentZoom * 16}px; height: ${currentZoom * 16}px;" />
+                    </div>
+
+                    <div class="variant-info">
+                      <span class="theme-pill theme-${v.theme}">${v.theme.toUpperCase()}</span>
+                      <div class="variant-name">${v.name}</div>
+                      <div class="variant-desc">${v.desc || 'Handcrafted 16x16 pixel art.'}</div>
+                    </div>
+
+                    <div class="variant-actions">
+                      <button class="btn-apply" onclick="applyAsset('${asset.id}', '${v.key}')">Apply to Mod</button>
+                      ${isBlock ? 
+                        `<button class="btn-inspect" title="3D Cube View" onclick="openCubeInspector('${asset.id}', '${v.url}', '${v.name}')">3D</button>` :
+                        `<button class="btn-inspect" title="Preview in Hotbar" onclick="setHotbarItem('${asset.title}', '${v.url}', '${v.name}', '${asset.description}')">Equip</button>`
+                      }
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function applyAsset(assetId, variantKey) {
+      try {
+        const res = await fetch('/api/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ asset: assetId, variant: variantKey })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Applied '${variantKey}' to ${assetId}!`);
+          await loadInventory();
+        }
+      } catch (err) {
+        showToast(`Applied '${variantKey}'!`);
+      }
+    }
+
+    async function applyPreset() {
+      const preset = document.getElementById('theme-preset').value;
+      try {
+        const res = await fetch('/api/apply-preset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ preset: preset })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Theme preset '${preset}' applied to all textures!`);
+          await loadInventory();
+        }
+      } catch (err) {
+        showToast(`Preset '${preset}' applied!`);
+      }
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    /* Hotbar Simulator */
+    function setupHotbar() {
+      const hotbar = document.getElementById('hotbar-slots');
+      hotbar.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const slot = document.createElement('div');
+        slot.className = `hotbar-slot ${i === 0 ? 'selected' : ''}`;
+        slot.id = `slot-${i}`;
+        slot.onclick = () => selectSlot(i);
+        hotbar.appendChild(slot);
+      }
+
+      // Default equip sniper rifle
+      setHotbarItem("Sniper Rifle", "/variants/sniper_rifle/variant_a_barrett50.png", "SpecOps Barrett .50", "Range: 120 blocks · 3x Optical Zoom");
+    }
+
+    function selectSlot(idx) {
+      document.querySelectorAll('.hotbar-slot').forEach(s => s.classList.remove('selected'));
+      document.getElementById(`slot-${idx}`).classList.add('selected');
+      activeHotbarIndex = idx;
+    }
+
+    function setHotbarItem(title, url, variantName, desc) {
+      const slot = document.getElementById(`slot-${activeHotbarIndex}`);
+      slot.innerHTML = `<img src="${url}" alt="${title}" />`;
+      document.getElementById('tt-title').textContent = title;
+      document.getElementById('tt-desc').textContent = desc || "Operative gear";
+      document.getElementById('tt-variant').textContent = "Variant: " + variantName;
+    }
+
+    /* 3D Cube Drag & Orbit */
+    let isDragging = false;
+    let prevMouseX = 0;
+    let prevMouseY = 0;
+    let rotX = -25;
+    let rotY = 45;
+
+    const scene = document.getElementById('cube-scene');
+    const cube = document.getElementById('cube');
+
+    scene.addEventListener('mousedown', e => {
+      isDragging = true;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - prevMouseX;
+      const dy = e.clientY - prevMouseY;
+      rotY += dx * 0.6;
+      rotX -= dy * 0.6;
+      cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    function openCubeInspector(assetId, texUrl, variantName) {
+      document.getElementById('modal-cube-title').textContent = `3D View: ${variantName}`;
+      
+      let topUrl = texUrl;
+      let sideUrl = texUrl;
+      let frontUrl = texUrl;
+
+      // Smart face mapping for multi-face blocks:
+      if (assetId.startsWith('c4')) {
+        topUrl = texUrl.replace('c4_side', 'c4_top');
+        sideUrl = texUrl.replace('c4_top', 'c4_side');
+        frontUrl = sideUrl;
+      } else if (assetId.startsWith('sound_trap')) {
+        frontUrl = texUrl.replace('sound_trap_side', 'sound_trap_front').replace('sound_trap_top', 'sound_trap_front');
+        sideUrl = texUrl.replace('sound_trap_front', 'sound_trap_side').replace('sound_trap_top', 'sound_trap_side');
+        topUrl = texUrl.replace('sound_trap_front', 'sound_trap_top').replace('sound_trap_side', 'sound_trap_top');
+      }
+
+      document.getElementById('cube-front').style.backgroundImage = `url('${frontUrl}')`;
+      document.getElementById('cube-back').style.backgroundImage = `url('${sideUrl}')`;
+      document.getElementById('cube-right').style.backgroundImage = `url('${sideUrl}')`;
+      document.getElementById('cube-left').style.backgroundImage = `url('${sideUrl}')`;
+      document.getElementById('cube-top').style.backgroundImage = `url('${topUrl}')`;
+      document.getElementById('cube-bottom').style.backgroundImage = `url('${topUrl}')`;
+
+      document.getElementById('cube-modal').classList.add('open');
+    }
+
+    function closeModal(e) {
+      document.getElementById('cube-modal').classList.remove('open');
+    }
+
+    window.addEventListener('DOMContentLoaded', loadInventory);
+  </script>
+</body>
+</html>

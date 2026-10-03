@@ -101,5 +101,18 @@ Run these inside `~/Develop/mc/spycraft`:
 | Command | What it Does |
 | :--- | :--- |
 | `./gradlew runClient` | Boots up Minecraft with SpyCraft for live testing |
+| `./gradlew test` | Runs JUnit 5 automated test suite |
 | `./gradlew build` | Compiles into `build/libs/spycraft-1.0.0.jar` |
 | `./gradlew runServer` | Starts dedicated multiplayer test server |
+| `python3 tools/asset-harness/server.py` | Starts Asset Studio web harness at `http://127.0.0.1:8088` |
+| `python3 tools/asset-harness/cli_apply.py apply-preset specops` | Applies SpecOps tactical texture preset |
+
+---
+
+## 🎨 Asset Studio & Texture Variants
+
+SpyCraft includes a dedicated interactive web harness and CLI tool to preview, compare, inspect in 3D, and switch texture variants for items and blocks:
+- **Web UI:** [`http://127.0.0.1:8088`](http://127.0.0.1:8088) (run `python3 spycraft/tools/asset-harness/server.py`)
+- **Themes Available:** SpecOps Tactical, Cyberpunk Neon, Steampunk / Vanilla Friendly, Baseline Prototype.
+- **Documentation:** See [`docs/06-asset-harness.md`](docs/06-asset-harness.md) for full instructions.
+
