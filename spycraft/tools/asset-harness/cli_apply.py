@@ -34,6 +34,12 @@ ASSET_MAP = {
     "laser_pylon_base": ("block/laser_pylon_base.png", "block"),
     "laser_pylon_post": ("block/laser_pylon_post.png", "block"),
     "laser_pylon_emitter": ("block/laser_pylon_emitter.png", "block"),
+    "mission_beacon": ("item/mission_beacon.png", "item"),
+    "thermal_goggles": ("item/thermal_goggles.png", "item"),
+    "hologram_projector": ("item/hologram_projector.png", "item"),
+    "tranquilizer_gun": ("item/tranquilizer_gun.png", "item"),
+    "smoke_grenade": ("item/smoke_grenade.png", "item"),
+    "climbing_gloves": ("item/climbing_gloves.png", "item"),
 }
 
 THEME_PRESETS = {

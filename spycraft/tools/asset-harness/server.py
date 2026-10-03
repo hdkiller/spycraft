@@ -245,6 +245,54 @@ METADATA = {
             "variant_b_plasma_energy": {"name": "Plasma Throwing Glaive", "desc": "High-velocity throwing star glowing with cyan plasma energy blades.", "theme": "cyberpunk"},
             "variant_c_royal_relic": {"name": "Royal Gilded Star", "desc": "Gilded ceremonial throwing star with emerald center & ruby tips.", "theme": "steampunk"},
         }
+    },
+    "mission_beacon": {
+        "title": "Mission Beacon (Küldetés Jeladó)",
+        "category": "surveillance",
+        "description": "Orbital beacon deployer summoning the 96-story Spy Base Skyscraper with guard units and laser defenses.",
+        "variants": {
+            "current": {"name": "Cyber Uplink Beacon", "desc": "Dark slate frame with cyber-cyan crystal core and red telemetry antenna.", "theme": "cyberpunk"}
+        }
+    },
+    "thermal_goggles": {
+        "title": "Thermal Vision Goggles (Hőkamera)",
+        "category": "surveillance",
+        "description": "Tactical headgear with thermal heat spectrum lenses detecting entities through solid walls.",
+        "variants": {
+            "current": {"name": "FLIR Thermal Visor", "desc": "Reinforced brow frame with red-to-white heat-signature spectrum lens array.", "theme": "specops"}
+        }
+    },
+    "hologram_projector": {
+        "title": "Hologram Decoy Projector",
+        "category": "surveillance",
+        "description": "Deployable cyber puck emitting a taunting holographic decoy that draws hostile mob aggro.",
+        "variants": {
+            "current": {"name": "Cyber Holo Puck", "desc": "Dark slate puck with radiating cyan holographic emitter rings.", "theme": "cyberpunk"}
+        }
+    },
+    "tranquilizer_gun": {
+        "title": "Tranquilizer Dart Gun (Altató Nyílpuska)",
+        "category": "weapons",
+        "description": "Silent dart pistol firing neurotoxin sleep darts that immobilize and disarm hostiles.",
+        "variants": {
+            "current": {"name": "SpecOps Tranq Pistol", "desc": "Matte black tactical chassis with luminous green sleep-toxin syringe vial.", "theme": "specops"}
+        }
+    },
+    "smoke_grenade": {
+        "title": "Tactical Smoke Grenade (Füstgránát)",
+        "category": "weapons",
+        "description": "Deployable canister generating an 11-meter dense smoke cloud for stealth infiltration and escape.",
+        "variants": {
+            "current": {"name": "Mil-Spec Smoke Canister", "desc": "Tactical slate cylinder with white designation band and steel pull ring.", "theme": "specops"}
+        }
+    },
+    "climbing_gloves": {
+        "title": "Magnetic Climbing Gloves (Mászókesztyű)",
+        "category": "weapons",
+        "description": "Reinforced tactical gloves with electromagnetic micro-nodes allowing vertical wall-scaling and suspended clinging.",
+        "variants": {
+            "current": {"name": "Cyber Mag-Grip Gloves", "desc": "Reinforced fingerless gloves with pulsing cyan magnetic node tips.", "theme": "cyberpunk"}
+        }
     }
 }
 
