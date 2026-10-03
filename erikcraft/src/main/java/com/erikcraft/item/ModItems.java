@@ -25,6 +25,12 @@ public class ModItems {
         ))
     );
 
+    // Tactical Sniper Rifle - Long-range zoom scope & supersonic bullet
+    public static final Item SNIPER_RIFLE = registerItem(
+        "sniper_rifle",
+        new SniperRifleItem(new Item.Properties().rarity(Rarity.EPIC).durability(600))
+    );
+
     // Grappling Hook Gun - Tactical spy infiltration tool
     public static final Item GRAPPLING_HOOK_GUN = registerItem(
         "grappling_hook_gun",
