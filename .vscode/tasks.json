@@ -60,6 +60,19 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Deploy: Sync to Steam Deck",
+      "type": "shell",
+      "command": "./scripts/sync-steamdeck.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
     }
   ]
 }

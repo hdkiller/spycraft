@@ -256,11 +256,15 @@ def file_sha256(path):
 
 class HarnessHandler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
-        # Serve files from BASE_DIR
         parsed = urllib.parse.urlparse(path).path
         if parsed.startswith("/variants/"):
             rel = parsed[len("/variants/"):]
             return os.path.join(VARIANTS_DIR, rel)
+        elif parsed == "/spycraft-1.0.0.jar":
+            jar_path = os.path.join(BASE_DIR, "../../build/libs/spycraft-1.0.0.jar")
+            if os.path.exists(jar_path):
+                return jar_path
+            return os.path.join(BASE_DIR, "spycraft-1.0.0.jar")
         elif parsed == "/" or parsed == "/index.html":
             return os.path.join(BASE_DIR, "index.html")
         return os.path.join(BASE_DIR, parsed.lstrip("/"))
@@ -365,10 +369,10 @@ class HarnessHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
 def run_server(port=PORT):
-    server = HTTPServer(("127.0.0.1", port), HarnessHandler)
+    server = HTTPServer(("0.0.0.0", port), HarnessHandler)
     print(f"============================================================")
     print(f"  SpyCraft Asset Studio & Live Harness Running!")
-    print(f"  Open in Browser: http://127.0.0.1:{port}")
+    print(f"  Open in Browser: http://0.0.0.0:{port} or http://127.0.0.1:{port}")
     print(f"============================================================")
     try:
         server.serve_forever()
