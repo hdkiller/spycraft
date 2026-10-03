@@ -21,23 +21,41 @@ Minecraft 1.21.1 will boot up with **ErikCraft** already loaded!
 
 ---
 
-## 📦 What's Inside `ErikCraft` Right Now
+## 🕵️‍♂️ Erik's Secret Agent & Spy Arsenal
 
-We built a complete, working starter mod named **`erikcraft`** with real custom items ready to try:
+We built a complete spy toolkit inside **`ErikCraft`**, available in the **"ErikCraft Spy & Adventure Gear"** creative tab:
 
-1. **⚡ Erik's Star** ([`EriksStarItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/EriksStarItem.java)):
-   - A glowing golden artifact.
-   - **Right-click anywhere** to summon a thunderous lightning bolt right where you're aiming, complete with sound effects and a chat announcement!
-2. **🗡️ Erik's Lightning Sword** ([`ModItems.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/ModItems.java)):
-   - A custom Netherite-grade sword with boosted attack damage (+7) and fast attack speed.
-3. **🎨 Custom Creative Tab** ([`ModItemGroups.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/ModItemGroups.java)):
-   - Open Creative Inventory in-game — you'll see a dedicated **"ErikCraft Items"** tab displaying Erik's Star and Sword!
-4. **🎨 Pixel Art Textures**:
-   - 16x16 hand-crafted textures for both items in [`src/main/resources/assets/erikcraft/textures/item/`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/resources/assets/erikcraft/textures/item/).
+### 1. 🔫 Tactical Grappling Hook Gun ([`GrapplingHookGunItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/GrapplingHookGunItem.java))
+- Aim at any wall, roof, or mountain ledge up to 32 blocks away and right-click.
+- Shoots a cable with critical-spark particle trails and reels Erik up to the ledge!
+- Grants 3 seconds of soft landing (Slow Falling) so Erik doesn't take fall damage when infiltrating.
+
+### 2. 📡 Spy Bug & Radar Tracker ([`MobTrackerItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/MobTrackerItem.java))
+- **Mount on Mobs or Players**: Right-click ANY mob (or Dad!) to plant a live tracking bug. The target glows through walls for 10 minutes!
+- **Plant GPS Beacon on Blocks**: Right-click ANY block (secret base door, vault chest, diamond ore) to mark it as a permanent beacon.
+- **Sonar Ping**: Right-click in the air anytime to ping the radar — it gives live distance in meters, elevation (Above ⬆ / Below ⬇), and compass heading (North, South, East, West)!
+
+### 3. 🕶️ Tactical Spy Goggles ([`SpyGogglesItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/SpyGogglesItem.java))
+- Wear them in your Helmet armor slot!
+- **Night Vision**: Instant, permanent clear vision in pitch-black caves and underwater.
+- **Beacon Light Pillar**: Projects a vertical pillar of glowing light straight up from your tracked Block Beacon through terrain and walls!
+- **Target Wall-Hack**: Tracked mobs continuously glow through solid walls.
+- **Live Action-Bar HUD**: Displays a real-time tactical readout directly above your hotbar (`[SPY HUD | 📍 Base: 24m | 📡 Target: 12m | 💣 Armed C4: 2]`).
+
+### 4. 💣 Tactical C4 Explosive & Remote Detonator ([`C4Block.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/block/C4Block.java) & [`RemoteDetonatorItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/RemoteDetonatorItem.java))
+- Place 1 or more C4 explosive blocks on the ground, walls, or enemy doors.
+- **Arm / Sync**: Right-click the placed C4 blocks with the Remote Detonator (the detonator beeps and links to the charges).
+- **Detonate**: Walk away to a safe distance (or grapple up to a roof!), and right-click the Detonator in the air:
+  - *CLICK! BEEP-BEEP-BEEP...* **BOOOOOM!**
+  - All linked C4 blocks explode simultaneously in a coordinated breach!
+
+### 5. ⚡ Classic Weapons
+- **Erik's Star** ([`EriksStarItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/EriksStarItem.java)): Right-click to summon lightning where you look.
+- **Erik's Lightning Sword** ([`ModItems.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/ModItems.java)): Netherite-grade blade (+7 attack, fast swing speed).
 
 ---
 
-## 🧭 How Everything Fits Together
+## 🧭 Project Layout
 
 ```
 ~/Develop/mc/
@@ -48,54 +66,46 @@ We built a complete, working starter mod named **`erikcraft`** with real custom 
 │   ├── 03-making-textures-and-models.md
 │   └── 04-playing-multiplayer-with-erik.md
 └── erikcraft/                     # The Fabric mod project
-    ├── build.gradle               # Build & Loom configuration
-    ├── gradle.properties          # Java 21 & Fabric versions
-    ├── .vscode/                   # Cursor / VS Code launch & debug settings
+    ├── build.gradle               # Build configuration (Fabric Loom 1.17 + Java 21)
+    ├── gradle.properties          # Minecraft 1.21.1 & Java 21 toolchain
+    ├── .vscode/                   # Cursor / VS Code launch & debug settings (F5 ready!)
     ├── src/main/java/com/erikcraft/
     │   ├── ErikCraftMod.java      # Main mod entrypoint
+    │   ├── block/
+    │   │   ├── C4Block.java       # Remote explosive block logic
+    │   │   └── ModBlocks.java     # Block registry
     │   └── item/
-    │       ├── ModItems.java      # Item registry
-    │       ├── ModItemGroups.java  # Custom creative tab
-    │       └── EriksStarItem.java # Lightning ability logic
-    └── src/main/resources/
-        ├── fabric.mod.json        # Mod metadata (ID, version, name)
-        └── assets/erikcraft/
-            ├── lang/en_us.json    # Item display names
-            ├── models/item/       # 3D/2D item models
-            └── textures/item/     # 16x16 PNG pixel art
+    │       ├── GrapplingHookGunItem.java # Pull physics & cable particles
+    │       ├── MobTrackerItem.java       # Mob & block beacon tracking
+    │       ├── SpyGogglesItem.java       # Night vision, HUD & beacon beam
+    │       ├── RemoteDetonatorItem.java  # Multi-charge C4 remote detonation
+    │       ├── EriksStarItem.java        # Lightning strike
+    │       ├── ModItems.java             # Items registry
+    │       └── ModItemGroups.java        # Custom creative tab
+    └── src/main/resources/assets/erikcraft/
+        ├── lang/en_us.json        # Display names
+        ├── models/                # 3D/2D models
+        └── textures/              # 16x16 PNG pixel art
 ```
 
 ---
 
-## 🛠️ Common Commands Cheatsheet
+## 🛠️ Common Commands
 
 Run these inside `~/Develop/mc/erikcraft`:
 
 | Command | What it Does |
 | :--- | :--- |
-| `./gradlew runClient` | Boots up Minecraft with your mod for testing |
-| `./gradlew build` | Compiles your mod into `build/libs/erikcraft-1.0.0.jar` |
-| `./gradlew runServer` | Runs a dedicated local test server |
-| `./gradlew --status` | Checks running Gradle daemons |
+| `./gradlew runClient` | Boots up Minecraft with ErikCraft for live testing |
+| `./gradlew build` | Compiles into `build/libs/erikcraft-1.0.0.jar` |
+| `./gradlew runServer` | Runs a local dedicated test server |
 
 ---
 
 ## 🤝 Playing Together with Erik on Home Wi-Fi
 
 1. Run `./gradlew build` in `~/Develop/mc/erikcraft`.
-2. Find the output file: `build/libs/erikcraft-1.0.0.jar`.
-3. Open **Prism Launcher** (already installed in `/Applications/Prism Launcher.app`).
-4. Create a **1.21.1 Fabric** instance and drop `erikcraft-1.0.0.jar` + `Fabric API` into the `mods` folder.
-5. In game: Press `Esc` -> **Open to LAN**. The other player can join immediately from the **Multiplayer** menu over your home Wi-Fi!
-
-*(See [docs/04-playing-multiplayer-with-erik.md](file:///Users/hdkiller/Develop/mc/docs/04-playing-multiplayer-with-erik.md) for full screenshots and walkthrough).*
-
----
-
-## 🎨 Recommended Next Tool for Erik: Blockbench
-
-To draw custom textures or create 3D blocks and custom creatures together:
-```bash
-brew install --cask blockbench
-```
-Blockbench is free, built specifically for Minecraft, and lets you paint pixel art directly onto 3D models!
+2. Find `build/libs/erikcraft-1.0.0.jar`.
+3. Open **Prism Launcher** (installed in `/Applications/Prism Launcher.app`).
+4. Create a **1.21.1 Fabric** instance and drop `erikcraft-1.0.0.jar` + `Fabric API` into `mods`.
+5. In game: Press `Esc` -> **Open to LAN**. Erik joins from the **Multiplayer** menu!

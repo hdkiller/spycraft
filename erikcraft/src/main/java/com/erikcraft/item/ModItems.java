@@ -24,6 +24,30 @@ public class ModItems {
         ))
     );
 
+    // Grappling Hook Gun - Tactical spy infiltration tool
+    public static final Item GRAPPLING_HOOK_GUN = registerItem(
+        "grappling_hook_gun",
+        new GrapplingHookGunItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1))
+    );
+
+    // Spy Bug & Radar Tracker - Mount on mobs or blocks, ping radar
+    public static final Item SPY_TRACKER = registerItem(
+        "spy_tracker",
+        new MobTrackerItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
+    );
+
+    // Tactical Spy Goggles - Night Vision & live Beacon HUD
+    public static final Item SPY_GOGGLES = registerItem(
+        "spy_goggles",
+        new SpyGogglesItem(new Item.Properties().rarity(Rarity.EPIC).durability(450))
+    );
+
+    // Remote Detonator - Syncs to placed C4 and detonates on command!
+    public static final Item REMOTE_DETONATOR = registerItem(
+        "remote_detonator",
+        new RemoteDetonatorItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,

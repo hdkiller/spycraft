@@ -1,5 +1,6 @@
 package com.erikcraft;
 
+import com.erikcraft.block.ModBlocks;
 import com.erikcraft.item.ModItemGroups;
 import com.erikcraft.item.ModItems;
 import net.fabricmc.api.ModInitializer;
@@ -19,14 +20,21 @@ public class ErikCraftMod implements ModInitializer {
         LOGGER.info("  ErikCraft Mod initialized! Welcome Erik!  ");
         LOGGER.info("==========================================");
 
+        // Register custom blocks (C4 Explosive)
+        ModBlocks.registerModBlocks();
+
         // Register custom items
         ModItems.registerModItems();
 
         // Register custom creative tab
         ModItemGroups.registerItemGroups();
 
-        // Also add items to standard Combat & Tools tabs for convenience
+        // Also add items to standard Combat & Tools tabs
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
+            entries.accept(ModItems.SPY_GOGGLES);
+            entries.accept(ModItems.GRAPPLING_HOOK_GUN);
+            entries.accept(ModItems.REMOTE_DETONATOR);
+            entries.accept(ModBlocks.C4_BLOCK);
             entries.accept(ModItems.ERIKS_SWORD);
             entries.accept(ModItems.ERIKS_STAR);
         });

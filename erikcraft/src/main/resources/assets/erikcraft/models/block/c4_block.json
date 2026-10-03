@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "erikcraft:block/c4_top",
+    "bottom": "erikcraft:block/c4_top",
+    "side": "erikcraft:block/c4_side"
+  }
+}

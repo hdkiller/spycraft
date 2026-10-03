@@ -1,6 +1,7 @@
 package com.erikcraft.item;
 
 import com.erikcraft.ErikCraftMod;
+import com.erikcraft.block.ModBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,11 +22,16 @@ public class ModItemGroups {
         BuiltInRegistries.CREATIVE_MODE_TAB,
         ERIK_GROUP,
         FabricItemGroup.builder()
-            .icon(() -> new ItemStack(ModItems.ERIKS_STAR))
+            .icon(() -> new ItemStack(ModItems.SPY_GOGGLES))
             .title(Component.translatable("itemGroup.erikcraft.erikcraft_tab"))
             .displayItems((displayContext, entries) -> {
-                entries.accept(ModItems.ERIKS_STAR);
+                entries.accept(ModItems.SPY_GOGGLES);
+                entries.accept(ModItems.GRAPPLING_HOOK_GUN);
+                entries.accept(ModItems.SPY_TRACKER);
+                entries.accept(ModBlocks.C4_BLOCK);
+                entries.accept(ModItems.REMOTE_DETONATOR);
                 entries.accept(ModItems.ERIKS_SWORD);
+                entries.accept(ModItems.ERIKS_STAR);
             })
             .build()
     );
