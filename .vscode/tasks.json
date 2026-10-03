@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Minecraft Client",
+      "type": "shell",
+      "command": "./gradlew runClient",
+      "options": {
+        "cwd": "${workspaceFolder}/spycraft"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build SpyCraft Mod (JAR)",
+      "type": "shell",
+      "command": "./gradlew build",
+      "options": {
+        "cwd": "${workspaceFolder}/spycraft"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Minecraft Dedicated Server",
+      "type": "shell",
+      "command": "./gradlew runServer",
+      "options": {
+        "cwd": "${workspaceFolder}/spycraft"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate Loom IDE Runs",
+      "type": "shell",
+      "command": "./gradlew vscode",
+      "options": {
+        "cwd": "${workspaceFolder}/spycraft"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

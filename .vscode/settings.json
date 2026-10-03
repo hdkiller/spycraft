@@ -1,0 +1,27 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.jdt.ls.java.home": "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-21",
+      "path": "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
+      "default": true
+    }
+  ],
+  "java.import.gradle.wrapper.enabled": true,
+  "java.import.gradle.java.home": "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/build": true,
+    "**/.gradle": true,
+    "**/classes": true,
+    "erikcraft/run": false
+  },
+  "search.exclude": {
+    "**/build": true,
+    "**/.gradle": true,
+    "**/run/logs": true,
+    "**/run/crash-reports": true
+  }
+}

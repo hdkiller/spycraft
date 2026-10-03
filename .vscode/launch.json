@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Minecraft Client (Debug)",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/spycraft/run",
+      "console": "integratedTerminal",
+      "stopOnEntry": false,
+      "mainClass": "net.fabricmc.devlaunchinjector.Main",
+      "vmArgs": "-Dfabric.dli.config=${workspaceFolder}/spycraft/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotClient -XX:StackShadowPages=32 -XstartOnFirstThread",
+      "args": "",
+      "env": {},
+      "projectName": "spycraft"
+    },
+    {
+      "type": "java",
+      "name": "Minecraft Server (Debug)",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/spycraft/run",
+      "console": "integratedTerminal",
+      "stopOnEntry": false,
+      "mainClass": "net.fabricmc.devlaunchinjector.Main",
+      "vmArgs": "-Dfabric.dli.config=${workspaceFolder}/spycraft/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=server -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotServer",
+      "args": "nogui",
+      "env": {},
+      "projectName": "spycraft"
+    }
+  ]
+}

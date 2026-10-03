@@ -1,0 +1,19 @@
+{
+  "item.spycraft.eriks_star": "Erik's Star",
+  "item.spycraft.eriks_sword": "Erik's Lightning Sword",
+  "item.spycraft.sniper_rifle": "Mesterlövész Puska (Tactical Sniper Rifle)",
+  "item.spycraft.grappling_hook_gun": "Tactical Grappling Hook Gun",
+  "item.spycraft.spy_tracker": "Spy Bug & Radar Tracker",
+  "item.spycraft.spy_goggles": "Tactical Spy Goggles",
+  "item.spycraft.gps_navigator_goggles": "GPS Waypoint Navigator Visor",
+  "item.spycraft.villager_disguise_robe": "Falusi Álcaköpeny (Villager Disguise Robe)",
+  "item.spycraft.villager_disguise_mask": "Falusi Álcamaszk (Villager Disguise Mask)",
+  "item.spycraft.laser_remote": "Lézerfal Távirányító (Laser Forcefield Remote)",
+  "block.spycraft.laser_pylon": "Lézeroszlop (Laser Security Pylon)",
+  "block.spycraft.c4_block": "Tactical C4 Explosive",
+  "item.spycraft.remote_detonator": "Remote C4 Detonator",
+  "item.spycraft.recon_drone": "Felderítő Drón (Tactical Recon Drone)",
+  "block.spycraft.sound_trap": "Hangcsapda (Sonic Decoy Trap)",
+  "effect.spycraft.drone_piloting": "Drón Irányítás (Drone Piloting)",
+  "itemGroup.spycraft.erikcraft_tab": "ErikCraft Spy & Adventure Gear"
+}

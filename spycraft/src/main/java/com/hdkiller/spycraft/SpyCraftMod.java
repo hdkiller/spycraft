@@ -1,0 +1,72 @@
+package com.hdkiller.spycraft;
+
+import com.hdkiller.spycraft.block.ModBlocks;
+import com.hdkiller.spycraft.drone.ReconDroneManager;
+import com.hdkiller.spycraft.effect.ModEffects;
+import com.hdkiller.spycraft.item.ModItemGroups;
+import com.hdkiller.spycraft.item.ModItems;
+import com.hdkiller.spycraft.laser.LaserForcefieldManager;
+import com.hdkiller.spycraft.sound.SoundTrapManager;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTabs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class SpyCraftMod implements ModInitializer {
+    public static final String MOD_ID = "spycraft";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    @Override
+    public void onInitialize() {
+        LOGGER.info("==========================================");
+        LOGGER.info("  ErikCraft Mod initialized! Welcome Erik!  ");
+        LOGGER.info("==========================================");
+
+        // Register custom effects (Drone Piloting)
+        ModEffects.registerModEffects();
+
+        // Register custom blocks (C4 Canister, Laser Pylon)
+        ModBlocks.registerModBlocks();
+
+        // Register custom items
+        ModItems.registerModItems();
+
+        // Register custom creative tab
+        ModItemGroups.registerItemGroups();
+
+        // Register server tick events
+        ServerTickEvents.END_WORLD_TICK.register(LaserForcefieldManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(ReconDroneManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(SoundTrapManager::tick);
+
+        // Register disconnect event for safe cleanup
+        net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            ReconDroneManager.onPlayerDisconnect(handler.getPlayer());
+        });
+
+        // Add items to standard Combat & Tools tabs
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
+            entries.accept(ModBlocks.SOUND_TRAP);
+            entries.accept(ModItems.RECON_DRONE);
+            entries.accept(ModItems.SNIPER_RIFLE);
+            entries.accept(ModItems.VILLAGER_DISGUISE_MASK);
+            entries.accept(ModItems.VILLAGER_DISGUISE_ROBE);
+            entries.accept(ModItems.SPY_GOGGLES);
+            entries.accept(ModItems.GPS_NAVIGATOR_GOGGLES);
+            entries.accept(ModItems.GRAPPLING_HOOK_GUN);
+            entries.accept(ModItems.LASER_REMOTE);
+            entries.accept(ModBlocks.LASER_PYLON);
+            entries.accept(ModItems.REMOTE_DETONATOR);
+            entries.accept(ModBlocks.C4_BLOCK);
+            entries.accept(ModItems.ERIKS_SWORD);
+            entries.accept(ModItems.ERIKS_STAR);
+        });
+    }
+
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+}

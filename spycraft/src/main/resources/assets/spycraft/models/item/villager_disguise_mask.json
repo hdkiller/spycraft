@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "spycraft:item/villager_disguise_mask"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "spycraft",
+  "version": "${version}",
+  "name": "SpyCraft",
+  "description": "A custom Minecraft mod built for Erik by Dad!",
+  "authors": [
+    "László & Erik"
+  ],
+  "contact": {
+    "homepage": "https://github.com/hdkiller/mc"
+  },
+  "license": "MIT",
+  "icon": "assets/spycraft/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.hdkiller.spycraft.SpyCraftMod"
+    ],
+    "client": [
+      "com.hdkiller.spycraft.client.SpyCraftModClient"
+    ]
+  },
+  "mixins": [
+    "spycraft.mixins.json",
+    {
+      "config": "spycraft.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

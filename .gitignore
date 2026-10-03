@@ -1,2 +1,34 @@
+# OS
 .DS_Store
 *.log
+*.hprof
+*.jfr
+hs_err_*.log
+
+# Gradle & Build Artifacts
+.gradle/
+build/
+out/
+classes/
+bin/
+*.class
+
+# Fabric Run Environment
+run/
+spycraft/run/
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+
+# VS Code - preserve config, ignore workspace cache
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
