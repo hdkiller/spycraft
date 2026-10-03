@@ -6,6 +6,7 @@ import com.erikcraft.effect.ModEffects;
 import com.erikcraft.item.ModItemGroups;
 import com.erikcraft.item.ModItems;
 import com.erikcraft.laser.LaserForcefieldManager;
+import com.erikcraft.sound.SoundTrapManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -39,9 +40,11 @@ public class ErikCraftMod implements ModInitializer {
         // Register server tick events
         ServerTickEvents.END_WORLD_TICK.register(LaserForcefieldManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(ReconDroneManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(SoundTrapManager::tick);
 
         // Add items to standard Combat & Tools tabs
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
+            entries.accept(ModBlocks.SOUND_TRAP);
             entries.accept(ModItems.RECON_DRONE);
             entries.accept(ModItems.SNIPER_RIFLE);
             entries.accept(ModItems.VILLAGER_DISGUISE_MASK);

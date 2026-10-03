@@ -31,6 +31,15 @@ public class ModBlocks {
             .lightLevel(state -> 8))
     );
 
+    // Sonic Decoy Sound Trap (Hangcsapda)
+    public static final Block SOUND_TRAP = registerBlock(
+        "sound_trap",
+        new SoundTrapBlock(BlockBehaviour.Properties.of()
+            .strength(1.0f)
+            .sound(SoundType.STONE)
+            .noOcclusion())
+    );
+
     private static Block registerBlock(String name, Block block) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ErikCraftMod.MOD_ID, name);
         Registry.register(

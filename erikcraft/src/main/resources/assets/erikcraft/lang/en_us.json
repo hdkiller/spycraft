@@ -13,6 +13,7 @@
   "block.erikcraft.c4_block": "Tactical C4 Explosive",
   "item.erikcraft.remote_detonator": "Remote C4 Detonator",
   "item.erikcraft.recon_drone": "Felderítő Drón (Tactical Recon Drone)",
+  "block.erikcraft.sound_trap": "Hangcsapda (Sonic Decoy Trap)",
   "effect.erikcraft.drone_piloting": "Drón Irányítás (Drone Piloting)",
   "itemGroup.erikcraft.erikcraft_tab": "ErikCraft Spy & Adventure Gear"
 }

@@ -29,6 +29,7 @@ public class ModItemGroups {
                 entries.accept(ModItems.SNIPER_RIFLE);
                 entries.accept(ModItems.LASER_REMOTE);
                 entries.accept(ModBlocks.LASER_PYLON);
+                entries.accept(ModBlocks.SOUND_TRAP);
                 entries.accept(ModItems.VILLAGER_DISGUISE_MASK);
                 entries.accept(ModItems.VILLAGER_DISGUISE_ROBE);
                 entries.accept(ModItems.SPY_GOGGLES);

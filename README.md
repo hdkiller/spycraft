@@ -80,6 +80,12 @@ All tools are in the **"ErikCraft Spy & Adventure Gear"** creative tab:
   - **Csepptöltés**: Ha a drón a hátizsákban pihen, magától is lassan újratöltődik.
 - **Radar & Szkenner**: Folyamatosan pásztázza a környező mobokat (32m hatótáv), Glowing körvonalat ad nekik és szinkronizál a Trackerekkel és a Navigációs Szemüvegekkel!
 
+### 10. 🔊 Hangcsapda (Sonic Decoy Sound Trap) ([`SoundTrapBlock.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/block/SoundTrapBlock.java))
+- **Creeper sziszegés hang**: 3 másodpercenként élethű, félelmetes Creeper sziszegést (`CREEPER_PRIMED`) bocsát ki 2.5x-es hangerővel (akár 40 blokk távolságig hallatszik)!
+- **Mob vonzás & csalizás**: 32 méteres körzetben minden ellenséges és békés mobot (Zombik, Csontvázak, Creeper-ek, Pókok, stb.) közvetlenül magához vonz; a mobok odasétálnak és gyanakvóan nézik a csapdát!
+- **Játékos megtévesztés**: Barlangban vagy bázison elrejtve a játékosok a sziszegést hallva pánikszerűen keresni kezdik a nem létező Creepert.
+- **Kiütésre megszűnik**: Ha kiütöd vagy elbontod a blokkot, a sziszegés azonnal elhallgat, és a mobok elhagyják a helyszínt. Kézzel jobb klikkelve csendes készenléti módba is kapcsolható.
+
 ---
 
 ## 🛠️ Common Commands

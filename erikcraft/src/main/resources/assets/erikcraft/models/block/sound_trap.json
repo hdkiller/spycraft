@@ -1,0 +1,25 @@
+{
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "erikcraft:block/sound_trap_side",
+    "side": "erikcraft:block/sound_trap_side",
+    "front": "erikcraft:block/sound_trap_front",
+    "top": "erikcraft:block/sound_trap_top",
+    "bottom": "erikcraft:block/sound_trap_side"
+  },
+  "elements": [
+    {
+      "name": "speaker_cabinet",
+      "from": [3, 0, 3],
+      "to": [13, 13, 13],
+      "faces": {
+        "north": {"uv": [3, 3, 13, 16], "texture": "#front"},
+        "south": {"uv": [3, 3, 13, 16], "texture": "#side"},
+        "east": {"uv": [3, 3, 13, 16], "texture": "#side"},
+        "west": {"uv": [3, 3, 13, 16], "texture": "#side"},
+        "up": {"uv": [3, 3, 13, 13], "texture": "#top"},
+        "down": {"uv": [3, 3, 13, 13], "texture": "#bottom"}
+      }
+    }
+  ]
+}
