@@ -4,6 +4,7 @@ import com.erikcraft.ErikCraftMod;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
@@ -46,6 +47,18 @@ public class ModItems {
     public static final Item GPS_NAVIGATOR_GOGGLES = registerItem(
         "gps_navigator_goggles",
         new GpsNavigatorGogglesItem(new Item.Properties().rarity(Rarity.EPIC).durability(450))
+    );
+
+    // Villager Spy Disguise Robe - Morphs player into a real Villager!
+    public static final Item VILLAGER_DISGUISE_ROBE = registerItem(
+        "villager_disguise_robe",
+        new VillagerDisguiseItem(ArmorItem.Type.CHESTPLATE, new Item.Properties().rarity(Rarity.EPIC).durability(350))
+    );
+
+    // Villager Spy Disguise Mask - Big nose & unibrow mask
+    public static final Item VILLAGER_DISGUISE_MASK = registerItem(
+        "villager_disguise_mask",
+        new VillagerDisguiseItem(ArmorItem.Type.HELMET, new Item.Properties().rarity(Rarity.EPIC).durability(350))
     );
 
     // Remote Detonator - Syncs to placed C4 and detonates on command (3 yield levels)

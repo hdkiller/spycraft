@@ -3,7 +3,8 @@
   "package": "com.erikcraft.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ExampleClientMixin"
+    "ExampleClientMixin",
+    "PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

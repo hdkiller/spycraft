@@ -22,9 +22,11 @@ public class ModItemGroups {
         BuiltInRegistries.CREATIVE_MODE_TAB,
         ERIK_GROUP,
         FabricItemGroup.builder()
-            .icon(() -> new ItemStack(ModItems.GPS_NAVIGATOR_GOGGLES))
+            .icon(() -> new ItemStack(ModItems.VILLAGER_DISGUISE_MASK))
             .title(Component.translatable("itemGroup.erikcraft.erikcraft_tab"))
             .displayItems((displayContext, entries) -> {
+                entries.accept(ModItems.VILLAGER_DISGUISE_MASK);
+                entries.accept(ModItems.VILLAGER_DISGUISE_ROBE);
                 entries.accept(ModItems.SPY_GOGGLES);
                 entries.accept(ModItems.GPS_NAVIGATOR_GOGGLES);
                 entries.accept(ModItems.GRAPPLING_HOOK_GUN);
