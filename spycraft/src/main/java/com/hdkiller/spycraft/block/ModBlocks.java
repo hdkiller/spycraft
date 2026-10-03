@@ -28,7 +28,7 @@ public class ModBlocks {
             .strength(1.5f)
             .sound(SoundType.METAL)
             .noOcclusion()
-            .lightLevel(state -> 8))
+            .lightLevel(state -> state.getValue(LaserPylonBlock.ACTIVE) ? 12 : 2))
     );
 
     // Sonic Decoy Sound Trap (Hangcsapda)

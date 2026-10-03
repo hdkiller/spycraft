@@ -115,4 +115,21 @@ class LaserForcefieldMathTest {
         // Clean up
         LaserForcefieldManager.clearNetwork(owner);
     }
+
+    @Test
+    @DisplayName("setNetworkPylonsActive updates active flag and state cleanly")
+    void testSetNetworkPylonsActive() {
+        java.util.UUID owner = java.util.UUID.randomUUID();
+        LaserForcefieldManager.ForcefieldNetwork net = LaserForcefieldManager.getNetwork(owner);
+        BlockPos p1 = new BlockPos(0, 64, 0);
+        net.pylons.add(p1);
+
+        LaserForcefieldManager.setNetworkPylonsActive(null, net, true);
+        assertTrue(net.active);
+
+        LaserForcefieldManager.setNetworkPylonsActive(null, net, false);
+        assertFalse(net.active);
+
+        LaserForcefieldManager.clearNetwork(owner);
+    }
 }

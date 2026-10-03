@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "spycraft:block/laser_pylon"
+    "active=false": {
+      "model": "spycraft:block/laser_pylon_inactive"
+    },
+    "active=true": {
+      "model": "spycraft:block/laser_pylon_active"
     }
   }
 }

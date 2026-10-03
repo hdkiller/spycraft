@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 import java.util.Iterator;
 
@@ -44,7 +45,7 @@ public class LaserRemoteItem extends Item {
         // Sneak + click to reset network
         if (player.isShiftKeyDown()) {
             if (!level.isClientSide) {
-                LaserForcefieldManager.clearNetwork(player.getUUID());
+                LaserForcefieldManager.clearNetwork(player.getUUID(), level);
                 player.sendSystemMessage(Component.literal("§e🗑️ [LÉZER HÁLÓZAT TÖRLVE] §7Minden összekötött oszlop leválasztva."));
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.2f);
@@ -56,7 +57,7 @@ public class LaserRemoteItem extends Item {
             if (!level.isClientSide) {
                 var network = LaserForcefieldManager.getNetwork(player.getUUID());
                 if (network.dimension != null && !network.dimension.equals(level.dimension())) {
-                    LaserForcefieldManager.clearNetwork(player.getUUID());
+                    LaserForcefieldManager.clearNetwork(player.getUUID(), level);
                     network = LaserForcefieldManager.getNetwork(player.getUUID());
                     player.sendSystemMessage(Component.literal("§e⚠️ Dimenzióváltás: a korábbi hálózat törölve lett. Új hálózat indult."));
                 }
@@ -93,7 +94,12 @@ public class LaserRemoteItem extends Item {
                     // Right clicking an already connected pylon unlinks it!
                     network.pylons.remove(pos);
                     boolean wasActive = network.active;
-                    network.active = false; // Always shut down the forcefield when geometry is altered
+                    if (level.getBlockState(pos).is(ModBlocks.LASER_PYLON) && level.getBlockState(pos).hasProperty(com.hdkiller.spycraft.block.LaserPylonBlock.ACTIVE)) {
+                        level.setBlock(pos, level.getBlockState(pos).setValue(com.hdkiller.spycraft.block.LaserPylonBlock.ACTIVE, false), Block.UPDATE_ALL);
+                    }
+                    if (wasActive) {
+                        LaserForcefieldManager.setNetworkPylonsActive(level, network, false);
+                    }
 
                     if (level instanceof ServerLevel serverLevel) {
                         serverLevel.sendParticles(ParticleTypes.SMOKE,
@@ -133,7 +139,7 @@ public class LaserRemoteItem extends Item {
         if (!level.isClientSide) {
             // Sneak + click in air clears network
             if (player.isShiftKeyDown()) {
-                LaserForcefieldManager.clearNetwork(player.getUUID());
+                LaserForcefieldManager.clearNetwork(player.getUUID(), level);
                 player.sendSystemMessage(Component.literal("§e🗑️ [LÉZER HÁLÓZAT TÖRLVE] §7Minden összekötött oszlop leválasztva."));
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.2f);
@@ -159,7 +165,7 @@ public class LaserRemoteItem extends Item {
                 }
             }
             if (prunedAny) {
-                network.active = false;
+                LaserForcefieldManager.setNetworkPylonsActive(level, network, false);
             }
 
             int count = network.pylons.size();
@@ -174,7 +180,8 @@ public class LaserRemoteItem extends Item {
             }
 
             // Toggle active state
-            network.active = !network.active;
+            boolean newActive = !network.active;
+            LaserForcefieldManager.setNetworkPylonsActive(level, network, newActive);
 
             if (network.active) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),

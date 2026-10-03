@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -38,8 +39,31 @@ public class LaserForcefieldManager {
         return NETWORKS.computeIfAbsent(owner, ForcefieldNetwork::new);
     }
 
+    public static void setNetworkPylonsActive(Level level, ForcefieldNetwork network, boolean active) {
+        network.active = active;
+        if (level != null && !level.isClientSide) {
+            for (BlockPos p : network.pylons) {
+                if (level.isLoaded(p)) {
+                    var state = level.getBlockState(p);
+                    if (state.is(ModBlocks.LASER_PYLON) && state.hasProperty(com.hdkiller.spycraft.block.LaserPylonBlock.ACTIVE)) {
+                        if (state.getValue(com.hdkiller.spycraft.block.LaserPylonBlock.ACTIVE) != active) {
+                            level.setBlock(p, state.setValue(com.hdkiller.spycraft.block.LaserPylonBlock.ACTIVE, active), Block.UPDATE_ALL);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void clearNetwork(UUID owner, Level level) {
+        ForcefieldNetwork net = NETWORKS.remove(owner);
+        if (net != null && level != null && !level.isClientSide) {
+            setNetworkPylonsActive(level, net, false);
+        }
+    }
+
     public static void clearNetwork(UUID owner) {
-        NETWORKS.remove(owner);
+        clearNetwork(owner, null);
     }
 
     public static void onPylonBroken(Level level, BlockPos pos) {
@@ -48,7 +72,7 @@ public class LaserForcefieldManager {
                 if (net.pylons.remove(pos)) {
                     // Breaking ANY pylon immediately shuts off and removes the active laser forcefield!
                     boolean wasActive = net.active;
-                    net.active = false;
+                    setNetworkPylonsActive(level, net, false);
 
                     if (level instanceof ServerLevel slevel) {
                         slevel.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.5f, 0.6f);
@@ -94,7 +118,7 @@ public class LaserForcefieldManager {
             }
 
             if (anyPylonRemoved) {
-                net.active = false;
+                setNetworkPylonsActive(level, net, false);
                 ServerPlayer ownerPlayer = level.getServer().getPlayerList().getPlayer(net.owner);
                 if (ownerPlayer != null) {
                     ownerPlayer.sendSystemMessage(Component.literal(
@@ -125,6 +149,20 @@ public class LaserForcefieldManager {
             cx /= count;
             cz /= count;
             Vec3 centroid = new Vec3(cx, minY, cz);
+
+            // Periodic check to guarantee all loaded pylons stay visually synchronized (red active)
+            if (level.getGameTime() % 20 == 0) {
+                setNetworkPylonsActive(level, net, true);
+            }
+
+            // Emitter top energy sparks
+            if (level.getGameTime() % 10 == 0) {
+                for (BlockPos p : pylons) {
+                    level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                        p.getX() + 0.5, p.getY() + 1.0, p.getZ() + 0.5,
+                        2, 0.05, 0.05, 0.05, 0.02);
+                }
+            }
 
             // 1. Render Laser Walls (every 2 ticks for smooth performance)
             if (level.getGameTime() % 2 == 0) {

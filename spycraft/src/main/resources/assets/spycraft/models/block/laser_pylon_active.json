@@ -1,0 +1,9 @@
+{
+  "parent": "spycraft:block/laser_pylon",
+  "textures": {
+    "particle": "spycraft:block/laser_pylon_post_active",
+    "base": "spycraft:block/laser_pylon_base",
+    "post": "spycraft:block/laser_pylon_post_active",
+    "emitter": "spycraft:block/laser_pylon_emitter_active"
+  }
+}
