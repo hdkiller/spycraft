@@ -1,6 +1,8 @@
 package com.erikcraft;
 
 import com.erikcraft.block.ModBlocks;
+import com.erikcraft.drone.ReconDroneManager;
+import com.erikcraft.effect.ModEffects;
 import com.erikcraft.item.ModItemGroups;
 import com.erikcraft.item.ModItems;
 import com.erikcraft.laser.LaserForcefieldManager;
@@ -22,6 +24,9 @@ public class ErikCraftMod implements ModInitializer {
         LOGGER.info("  ErikCraft Mod initialized! Welcome Erik!  ");
         LOGGER.info("==========================================");
 
+        // Register custom effects (Drone Piloting)
+        ModEffects.registerModEffects();
+
         // Register custom blocks (C4 Canister, Laser Pylon)
         ModBlocks.registerModBlocks();
 
@@ -31,11 +36,14 @@ public class ErikCraftMod implements ModInitializer {
         // Register custom creative tab
         ModItemGroups.registerItemGroups();
 
-        // Register server tick event for active laser forcefields
+        // Register server tick events
         ServerTickEvents.END_WORLD_TICK.register(LaserForcefieldManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(ReconDroneManager::tick);
 
         // Add items to standard Combat & Tools tabs
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
+            entries.accept(ModItems.RECON_DRONE);
+            entries.accept(ModItems.SNIPER_RIFLE);
             entries.accept(ModItems.VILLAGER_DISGUISE_MASK);
             entries.accept(ModItems.VILLAGER_DISGUISE_ROBE);
             entries.accept(ModItems.SPY_GOGGLES);

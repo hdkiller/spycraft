@@ -79,6 +79,12 @@ public class ModItems {
         new LaserRemoteItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
     );
 
+    // Recon Drone - Launchable flying recon drone with laser tag & kamikaze
+    public static final Item RECON_DRONE = registerItem(
+        "recon_drone",
+        new ReconDroneItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,

@@ -25,6 +25,7 @@ public class ModItemGroups {
             .icon(() -> new ItemStack(ModItems.SNIPER_RIFLE))
             .title(Component.translatable("itemGroup.erikcraft.erikcraft_tab"))
             .displayItems((displayContext, entries) -> {
+                entries.accept(ModItems.RECON_DRONE);
                 entries.accept(ModItems.SNIPER_RIFLE);
                 entries.accept(ModItems.LASER_REMOTE);
                 entries.accept(ModBlocks.LASER_PYLON);

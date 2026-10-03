@@ -57,6 +57,10 @@ public class MobTrackerItem extends Item {
         return null;
     }
 
+    public static void setTrackedMob(UUID playerUuid, UUID mobId) {
+        TRACKED_MOBS.put(playerUuid, mobId);
+    }
+
     /**
      * Plant tracking bug on a MOB or PLAYER
      */

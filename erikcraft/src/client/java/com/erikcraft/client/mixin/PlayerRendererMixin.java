@@ -22,6 +22,11 @@ public class PlayerRendererMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
     private void renderVillagerDisguise(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
+        if (player.hasEffect(com.erikcraft.effect.ModEffects.DRONE_PILOTING)) {
+            ci.cancel(); // Player is flying as the drone, hide player humanoid model
+            return;
+        }
+
         if (VillagerDisguiseItem.isDisguised(player)) {
             Minecraft mc = Minecraft.getInstance();
             if (player.level() != null) {

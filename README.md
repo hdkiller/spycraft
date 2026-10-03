@@ -67,6 +67,14 @@ All tools are in the **"ErikCraft Spy & Adventure Gear"** creative tab:
 - **3 Robbanási Fokozat**: 1x Alap (4.5x), 2x Dupla (9.0x), 3x MEGA (18.0x óriási kráter)!
 - Right-click detonator in the air to trigger simultaneous breach!
 
+### 9. 🛸 Felderítő Drón (Tactical Recon Drone) ([`ReconDroneItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/ReconDroneItem.java))
+- **Irányítható repülés (15s)**: Jobb klikk és a játékos átveszi a drón irányítását szabad 3D repüléssel, propellerekkel és LED fényekkel!
+- **Taktikai Drón HUD**: Teljes képernyős HUD akkumulátor töltöttségjelzővel, magasságmérővel, radarképpel és célkereszttel.
+- **Radar & Szkenner**: Folyamatosan pásztázza a környező mobokat (32m hatótáv), Glowing körvonalat ad nekik és szinkronizál a Trackerekkel és Szemüvegekkel!
+- **🎯 Lézeres Célmegjelölés (Laser Tag)**: Célpontra nézve jobb klikk lead egy vörös lézersugarat, 96 blokk magas beacon fénysugarat helyez a célpontra és rögzíti a koordinátáit!
+- **💥 Kamikaze Önmegsemmisítés**: Shift + Jobb klikk hatására a drón lecsap és masszív taktikai robbanással megsemmisíti a célterületet, a pilóta pedig biztonságban visszakerül a bázisra.
+- **🏠 Visszahívás**: Ég felé nézve jobb klikk (vagy az akku lejárta) azonnal és biztonságosan visszateportálja a pilótát a kiindulási pontra.
+
 ---
 
 ## 🛠️ Common Commands

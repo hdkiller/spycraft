@@ -10,7 +10,9 @@
   "item.erikcraft.villager_disguise_mask": "Falusi Álcamaszk (Villager Disguise Mask)",
   "item.erikcraft.laser_remote": "Lézerfal Távirányító (Laser Forcefield Remote)",
   "block.erikcraft.laser_pylon": "Lézeroszlop (Laser Security Pylon)",
-  "item.erikcraft.remote_detonator": "Remote C4 Detonator",
   "block.erikcraft.c4_block": "Tactical C4 Explosive",
+  "item.erikcraft.remote_detonator": "Remote C4 Detonator",
+  "item.erikcraft.recon_drone": "Felderítő Drón (Tactical Recon Drone)",
+  "effect.erikcraft.drone_piloting": "Drón Irányítás (Drone Piloting)",
   "itemGroup.erikcraft.erikcraft_tab": "ErikCraft Spy & Adventure Gear"
 }
