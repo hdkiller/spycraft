@@ -29,6 +29,14 @@ import java.util.List;
 public abstract class GuiMixin {
     @Shadow @Final private Minecraft minecraft;
 
+    // Hide vanilla hotbar while piloting drone
+    @Inject(method = "renderItemHotbar", at = @At("HEAD"), cancellable = true)
+    private void erikcraft$hideHotbarInDrone(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (this.minecraft.player != null && this.minecraft.player.hasEffect(ModEffects.DRONE_PILOTING)) {
+            ci.cancel();
+        }
+    }
+
     // Sniper Reticle
     @Inject(method = "renderSpyglassOverlay", at = @At("RETURN"))
     private void erikcraft$renderSniperReticle(GuiGraphics guiGraphics, float scopeScale, CallbackInfo ci) {
@@ -76,7 +84,7 @@ public abstract class GuiMixin {
         guiGraphics.fill(cx + bOffset - bSize, cy - bOffset, cx + bOffset, cy - bOffset + 1, accentColor);
         guiGraphics.fill(cx + bOffset - 1, cy - bOffset, cx + bOffset, cy - bOffset + bSize, accentColor);
         guiGraphics.fill(cx - bOffset, cy + bOffset - 1, cx - bOffset + bSize, cy + bOffset, accentColor);
-        guiGraphics.fill(cx - bOffset, cy + bOffset - bSize, cx - bOffset + 1, cy + bOffset, accentColor);
+        guiGraphics.fill(cx - bOffset, cy + bOffset - sizeSafe(bSize), cx - bOffset + 1, cy + bOffset, accentColor);
         guiGraphics.fill(cx + bOffset - bSize, cy + bOffset - 1, cx + bOffset, cy + bOffset, accentColor);
         guiGraphics.fill(cx + bOffset - 1, cy + bOffset - bSize, cx + bOffset, cy + bOffset, accentColor);
 
@@ -125,6 +133,10 @@ public abstract class GuiMixin {
         }
     }
 
+    private static int sizeSafe(int s) {
+        return s;
+    }
+
     // Drone Tactical HUD
     @Inject(method = "render", at = @At("RETURN"))
     private void erikcraft$renderDroneHUD(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
@@ -140,8 +152,8 @@ public abstract class GuiMixin {
         Font font = this.minecraft.font;
 
         MobEffectInstance effect = player.getEffect(ModEffects.DRONE_PILOTING);
-        int duration = effect != null ? effect.getDuration() : 300;
-        float batteryPct = Math.clamp(duration / 300.0f, 0.0f, 1.0f);
+        int duration = effect != null ? effect.getDuration() : 1200;
+        float batteryPct = Math.clamp(duration / 1200.0f, 0.0f, 1.0f);
         int secsRemaining = (duration + 19) / 20;
 
         // 1. Tactical HUD Corner Brackets
@@ -162,21 +174,21 @@ public abstract class GuiMixin {
         guiGraphics.fill(width - m - bLen, height - m - 2, width - m, height - m, frameColor);
         guiGraphics.fill(width - m - 2, height - m - bLen, width - m, height - m, frameColor);
 
-        // 2. Top Battery & Telemetry Banner
-        int topBoxW = 120;
-        int topBoxH = 22;
+        // 2. Top 60s Battery & Telemetry Banner
+        int topBoxW = 135;
+        int topBoxH = 24;
         guiGraphics.fill(cx - topBoxW, 8, cx + topBoxW, 8 + topBoxH, 0x88001015);
         guiGraphics.fill(cx - topBoxW, 8, cx + topBoxW, 9, frameColor);
         guiGraphics.fill(cx - topBoxW, 8 + topBoxH - 1, cx + topBoxW, 8 + topBoxH, frameColor);
 
-        String title = "§b🛸 FELDERÍTŐ DRÓN §8| §fAKKU: §e" + (int)(batteryPct * 100) + "% §8(§f" + secsRemaining + "s§8)";
+        String title = "§b🛸 FELDERÍTŐ DRÓN §8| §fAKKU: §e" + (int)(batteryPct * 100) + "% §8(§f" + secsRemaining + "s / 60s§8)";
         guiGraphics.drawString(font, title, cx - font.width(title) / 2, 11, 0xFFFFFF, true);
 
         // Battery gauge bar
-        int barTotalW = 140;
+        int barTotalW = 160;
         int barH = 3;
         int barX = cx - barTotalW / 2;
-        int barY = 22;
+        int barY = 24;
         guiGraphics.fill(barX, barY, barX + barTotalW, barY + barH, 0x55222222);
 
         int filledW = (int) (barTotalW * batteryPct);
@@ -237,19 +249,66 @@ public abstract class GuiMixin {
             int d = (int) player.distanceTo(target);
             String targetMsg = "§c🎯 CÉLPONT ZÁROLVA: §f" + target.getName().getString() + " §8[§e" + d + "m§8]";
             guiGraphics.drawString(font, targetMsg, cx - font.width(targetMsg) / 2, cy - 24, 0xFFFFFF, true);
-
-            String actionMsg = "§c[JOBB KLIKK: LÉZER JELÖLÉS]";
-            guiGraphics.drawString(font, actionMsg, cx - font.width(actionMsg) / 2, cy + 16, 0xFF5555, true);
-        } else {
-            String scanMsg = "§b[JOBB KLIKK: LÉZER / GPS JELÖLÉS]";
-            guiGraphics.drawString(font, scanMsg, cx - font.width(scanMsg) / 2, cy + 16, 0x00EEEE, true);
         }
 
-        // 6. Bottom Tactical Action Bar
-        String botToolbar = "§b[JOBB KLIKK: 🎯 Lézer] §8| §c[SHIFT+KLIKK: 💥 Kamikaze] §8| §e[ÉGRE NÉZVE KLIKK: 🏠 Visszatérés]";
-        int botW = font.width(botToolbar) + 20;
-        guiGraphics.fill(cx - botW / 2, height - 30, cx + botW / 2, height - 12, 0x88001015);
-        guiGraphics.fill(cx - botW / 2, height - 30, cx + botW / 2, height - 29, frameColor);
-        guiGraphics.drawString(font, botToolbar, cx - font.width(botToolbar) / 2, height - 23, 0xFFFFFF, true);
+        // 6. Tactical Drone Action Dock (Replaces vanilla Hotbar)
+        int selectedSlot = player.getInventory().selected % 4;
+
+        String[] slotTitles = {
+            "1. 🎯 LÉZER",
+            "2. 💤 ALTATÓ",
+            "3. 💥 KAMIKAZE",
+            "4. 🏠 BÁZIS"
+        };
+
+        String[] slotSubtexts = {
+            "Beacon & Glow",
+            "5x Kábító Lőszer",
+            "Önmegsemmisítés",
+            "Biztonságos Visszatérés"
+        };
+
+        int slotWidth = 76;
+        int slotHeight = 26;
+        int gap = 5;
+        int totalDockWidth = 4 * slotWidth + 3 * gap;
+        int startX = cx - totalDockWidth / 2;
+        int startY = height - slotHeight - 8;
+
+        String dockPrompt = "§7Választás: §e[1] [2] [3] [4] §7vagy görgő | §bJobb klikk: Végrehajtás";
+        guiGraphics.drawString(font, dockPrompt, cx - font.width(dockPrompt) / 2, startY - 11, 0xCCCCCC, true);
+
+        for (int i = 0; i < 4; i++) {
+            int sx = startX + i * (slotWidth + gap);
+            boolean isSelected = (i == selectedSlot);
+
+            int slotBg = isSelected ? 0x99003545 : 0x77001015;
+            int slotBorder = isSelected ? 0xFF00FFEE : 0x44007788;
+
+            // Background & border
+            guiGraphics.fill(sx, startY, sx + slotWidth, startY + slotHeight, slotBg);
+            guiGraphics.fill(sx, startY, sx + slotWidth, startY + 1, slotBorder);
+            guiGraphics.fill(sx, startY + slotHeight - 1, sx + slotWidth, startY + slotHeight, slotBorder);
+            guiGraphics.fill(sx, startY, sx + 1, startY + slotHeight, slotBorder);
+            guiGraphics.fill(sx + slotWidth - 1, startY, sx + slotWidth, startY + slotHeight, slotBorder);
+
+            if (isSelected) {
+                // Glow accent corners
+                guiGraphics.fill(sx, startY, sx + 4, startY + 2, 0xFF00FFEE);
+                guiGraphics.fill(sx + slotWidth - 4, startY, sx + slotWidth, startY + 2, 0xFF00FFEE);
+                guiGraphics.fill(sx, startY + slotHeight - 2, sx + 4, startY + slotHeight, 0xFF00FFEE);
+                guiGraphics.fill(sx + slotWidth - 4, startY + slotHeight - 2, sx + slotWidth, startY + slotHeight, 0xFF00FFEE);
+            }
+
+            // Title
+            String sTitle = (isSelected ? "§f▶ " : "§7") + slotTitles[i];
+            int titleW = font.width(sTitle);
+            guiGraphics.drawString(font, sTitle, sx + (slotWidth - titleW) / 2, startY + 4, isSelected ? 0xFFFFFF : 0xAAAAAA, true);
+
+            // Subtext
+            String sub = isSelected ? "§e" + slotSubtexts[i] : "§8" + slotSubtexts[i];
+            int subW = font.width(sub);
+            guiGraphics.drawString(font, sub, sx + (slotWidth - subW) / 2, startY + 14, 0x888888, true);
+        }
     }
 }

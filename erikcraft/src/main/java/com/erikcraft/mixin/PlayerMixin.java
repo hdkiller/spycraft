@@ -12,6 +12,10 @@ public abstract class PlayerMixin {
     @Inject(method = "isScoping", at = @At("HEAD"), cancellable = true)
     private void erikcraft$isScoping(CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
+        if (player.hasEffect(com.erikcraft.effect.ModEffects.DRONE_PILOTING)) {
+            cir.setReturnValue(false);
+            return;
+        }
         if (player.isUsingItem() && player.getUseItem().is(ModItems.SNIPER_RIFLE)) {
             cir.setReturnValue(true);
         }

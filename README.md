@@ -68,12 +68,17 @@ All tools are in the **"ErikCraft Spy & Adventure Gear"** creative tab:
 - Right-click detonator in the air to trigger simultaneous breach!
 
 ### 9. 🛸 Felderítő Drón (Tactical Recon Drone) ([`ReconDroneItem.java`](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/ReconDroneItem.java))
-- **Irányítható repülés (15s)**: Jobb klikk és a játékos átveszi a drón irányítását szabad 3D repüléssel, propellerekkel és LED fényekkel!
-- **Taktikai Drón HUD**: Teljes képernyős HUD akkumulátor töltöttségjelzővel, magasságmérővel, radarképpel és célkereszttel.
-- **Radar & Szkenner**: Folyamatosan pásztázza a környező mobokat (32m hatótáv), Glowing körvonalat ad nekik és szinkronizál a Trackerekkel és Szemüvegekkel!
-- **🎯 Lézeres Célmegjelölés (Laser Tag)**: Célpontra nézve jobb klikk lead egy vörös lézersugarat, 96 blokk magas beacon fénysugarat helyez a célpontra és rögzíti a koordinátáit!
-- **💥 Kamikaze Önmegsemmisítés**: Shift + Jobb klikk hatására a drón lecsap és masszív taktikai robbanással megsemmisíti a célterületet, a pilóta pedig biztonságban visszakerül a bázisra.
-- **🏠 Visszahívás**: Ég felé nézve jobb klikk (vagy az akku lejárta) azonnal és biztonságosan visszateportálja a pilótát a kiindulási pontra.
+- **Irányítható repülés (60s akku)**: Jobb klikk és a játékos átveszi a drón irányítását szabad 3D repüléssel, propellerekkel és LED fényekkel.
+- **Speciális Drón Műszerfal GUI**: A játékos normál inventory hotbarja és keze teljesen elrejtőzik, helyette a képernyő alján megjelenik a 4-gombos **Drón Vezérlő Dokk**:
+  - `[1: 🎯 LÉZER JELÖLŐ]` — Vörös lézersugár & 96 blokk magas felhőkig érő Beacon fénysugár a célpontra.
+  - `[2: 💤 ALTATÓ LÖVEDÉK (5/5)]` — Pneumatikus kábító lövedék, a célpont elalszik (15 másodpercre mozdulatlanul megdermed, békés Zzz kotta hangjegyek lebegnek a feje felett).
+  - `[3: 💥 KAMIKAZE CSAPÁS]` — Taktikai zuhanás & robbanás (yield 4.0), a pilóta azonnal biztonságban visszatér a bázisra.
+  - `[4: 🏠 BÁZIS VISSZATÉRÉS]` — Biztonságos visszatérés a kiindulópontra.
+- **Akcióválasztás**: Az `1`, `2`, `3`, `4` számbillentyűkkel vagy egérgörgővel választhatsz a 4 funkció közül, majd a **Jobb klikk** azonnal végrehajtja! Nem tudsz véletlenül fegyvert vagy sniper puskát elővenni.
+- **Töltés & Újratöltés**:
+  - **Gyors-töltés**: Guggolva Jobb klikk Redstone-nal a kézben azonnal 100%-ra (60mp) tölti az akkumulátort és újratölti az 5/5 altató lövedéket!
+  - **Csepptöltés**: Ha a drón a hátizsákban pihen, magától is lassan újratöltődik.
+- **Radar & Szkenner**: Folyamatosan pásztázza a környező mobokat (32m hatótáv), Glowing körvonalat ad nekik és szinkronizál a Trackerekkel és a Navigációs Szemüvegekkel!
 
 ---
 
