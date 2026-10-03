@@ -5,6 +5,7 @@ import com.erikcraft.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,10 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -31,15 +29,42 @@ import java.util.concurrent.ConcurrentHashMap;
  * Right-click a placed C4 canister repeatedly to cycle through the 3 power levels!
  */
 public class RemoteDetonatorItem extends Item {
-    // Player UUID -> Map of BlockPos -> Yield Level (1, 2, or 3)
-    private static final Map<UUID, Map<BlockPos, Integer>> ARMED_CHARGES = new ConcurrentHashMap<>();
+    public record ChargeLocation(ResourceKey<Level> dimension, BlockPos pos) {}
+
+    // Player UUID -> Map of ChargeLocation -> Yield Level (1, 2, or 3)
+    private static final Map<UUID, Map<ChargeLocation, Integer>> ARMED_CHARGES = new ConcurrentHashMap<>();
 
     public RemoteDetonatorItem(Properties properties) {
         super(properties);
     }
 
     public static Map<BlockPos, Integer> getArmedChargesMap(UUID playerUuid) {
-        return ARMED_CHARGES.getOrDefault(playerUuid, Map.of());
+        Map<ChargeLocation, Integer> map = ARMED_CHARGES.get(playerUuid);
+        if (map == null || map.isEmpty()) return Map.of();
+        Map<BlockPos, Integer> result = new HashMap<>();
+        for (Map.Entry<ChargeLocation, Integer> entry : map.entrySet()) {
+            result.put(entry.getKey().pos(), entry.getValue());
+        }
+        return result;
+    }
+
+    public static Map<BlockPos, Integer> getArmedChargesMap(UUID playerUuid, ResourceKey<Level> dimension) {
+        Map<ChargeLocation, Integer> map = ARMED_CHARGES.get(playerUuid);
+        if (map == null || map.isEmpty()) return Map.of();
+        Map<BlockPos, Integer> result = new HashMap<>();
+        for (Map.Entry<ChargeLocation, Integer> entry : map.entrySet()) {
+            if (entry.getKey().dimension().equals(dimension)) {
+                result.put(entry.getKey().pos(), entry.getValue());
+            }
+        }
+        return result;
+    }
+
+    public static void onC4Removed(Level level, BlockPos pos) {
+        ChargeLocation loc = new ChargeLocation(level.dimension(), pos);
+        for (Map<ChargeLocation, Integer> map : ARMED_CHARGES.values()) {
+            map.remove(loc);
+        }
     }
 
     /**
@@ -55,12 +80,13 @@ public class RemoteDetonatorItem extends Item {
 
         if (level.getBlockState(pos).is(ModBlocks.C4_BLOCK)) {
             if (!level.isClientSide) {
-                Map<BlockPos, Integer> playerCharges = ARMED_CHARGES.computeIfAbsent(player.getUUID(), k -> new ConcurrentHashMap<>());
-                int currentLevel = playerCharges.getOrDefault(pos, 0);
+                ChargeLocation loc = new ChargeLocation(level.dimension(), pos);
+                Map<ChargeLocation, Integer> playerCharges = ARMED_CHARGES.computeIfAbsent(player.getUUID(), k -> new ConcurrentHashMap<>());
+                int currentLevel = playerCharges.getOrDefault(loc, 0);
 
                 // Cycle: 0 -> 1 -> 2 -> 3 -> 1
                 int newLevel = currentLevel >= 3 ? 1 : currentLevel + 1;
-                playerCharges.put(pos, newLevel);
+                playerCharges.put(loc, newLevel);
 
                 if (level instanceof ServerLevel serverLevel) {
                     float pitch;
@@ -113,7 +139,7 @@ public class RemoteDetonatorItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide) {
-            Map<BlockPos, Integer> charges = ARMED_CHARGES.get(player.getUUID());
+            Map<ChargeLocation, Integer> charges = ARMED_CHARGES.get(player.getUUID());
 
             if (charges == null || charges.isEmpty()) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -130,23 +156,31 @@ public class RemoteDetonatorItem extends Item {
 
             int detonatedCount = 0;
             int maxLevel = 1;
-            List<BlockPos> toRemove = new ArrayList<>();
+            List<ChargeLocation> toRemove = new ArrayList<>();
 
-            for (Map.Entry<BlockPos, Integer> entry : charges.entrySet()) {
-                BlockPos pos = entry.getKey();
+            for (Map.Entry<ChargeLocation, Integer> entry : charges.entrySet()) {
+                ChargeLocation loc = entry.getKey();
                 int yieldLevel = entry.getValue();
                 if (yieldLevel > maxLevel) maxLevel = yieldLevel;
 
-                if (level.getBlockState(pos).is(ModBlocks.C4_BLOCK)) {
-                    float power = yieldLevel == 1 ? 4.5f : (yieldLevel == 2 ? 9.0f : 18.0f);
-                    C4Block.explodeWithPower(level, pos, power);
-                    detonatedCount++;
-                    toRemove.add(pos);
+                ServerLevel chargeLevel = level.getServer() != null ? level.getServer().getLevel(loc.dimension()) : null;
+                if (chargeLevel == null) {
+                    toRemove.add(loc);
+                    continue;
+                }
+
+                if (chargeLevel.isLoaded(loc.pos())) {
+                    if (chargeLevel.getBlockState(loc.pos()).is(ModBlocks.C4_BLOCK)) {
+                        float power = yieldLevel == 1 ? 4.5f : (yieldLevel == 2 ? 9.0f : 18.0f);
+                        C4Block.explodeWithPower(chargeLevel, loc.pos(), power);
+                        detonatedCount++;
+                    }
+                    toRemove.add(loc);
                 }
             }
 
-            for (BlockPos pos : toRemove) {
-                charges.remove(pos);
+            for (ChargeLocation loc : toRemove) {
+                charges.remove(loc);
             }
 
             if (detonatedCount > 0) {

@@ -1,12 +1,16 @@
 package com.erikcraft.laser;
 
+import com.erikcraft.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -19,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LaserForcefieldManager {
     public static class ForcefieldNetwork {
         public final UUID owner;
+        public ResourceKey<Level> dimension;
         public final List<BlockPos> pylons = new ArrayList<>();
         public boolean active = false;
 
@@ -37,9 +42,55 @@ public class LaserForcefieldManager {
         NETWORKS.remove(owner);
     }
 
+    public static void onPylonBroken(Level level, BlockPos pos) {
+        for (ForcefieldNetwork net : NETWORKS.values()) {
+            if (net.dimension != null && net.dimension.equals(level.dimension())) {
+                if (net.pylons.remove(pos)) {
+                    if (net.active && net.pylons.size() < 3) {
+                        net.active = false;
+                        if (level instanceof ServerLevel slevel) {
+                            ServerPlayer ownerPlayer = slevel.getServer().getPlayerList().getPlayer(net.owner);
+                            if (ownerPlayer != null) {
+                                ownerPlayer.sendSystemMessage(Component.literal(
+                                    "§c⚠️ [LÉZER ERŐPAJZS MEGSZŰNT] §7Egy lézeroszlop le lett bontva, a pajzs leállt!"
+                                ));
+                            }
+                            slevel.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.5f, 0.6f);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static void tick(ServerLevel level) {
         for (ForcefieldNetwork net : NETWORKS.values()) {
             if (!net.active || net.pylons.size() < 3) continue;
+            if (net.dimension != null && !net.dimension.equals(level.dimension())) continue;
+
+            // Check if any pylon was destroyed or missing in loaded chunks
+            boolean anyPylonRemoved = false;
+            Iterator<BlockPos> it = net.pylons.iterator();
+            while (it.hasNext()) {
+                BlockPos p = it.next();
+                if (level.isLoaded(p)) {
+                    if (!level.getBlockState(p).is(ModBlocks.LASER_PYLON)) {
+                        it.remove();
+                        anyPylonRemoved = true;
+                    }
+                }
+            }
+
+            if (anyPylonRemoved && net.pylons.size() < 3) {
+                net.active = false;
+                ServerPlayer ownerPlayer = level.getServer().getPlayerList().getPlayer(net.owner);
+                if (ownerPlayer != null) {
+                    ownerPlayer.sendSystemMessage(Component.literal(
+                        "§c⚠️ [LÉZER ERŐPAJZS MEGSZŰNT] §7Az egyik lézeroszlop megsemmisült, a pajzs leállt!"
+                    ));
+                }
+                continue;
+            }
 
             List<BlockPos> pylons = net.pylons;
             int count = pylons.size();

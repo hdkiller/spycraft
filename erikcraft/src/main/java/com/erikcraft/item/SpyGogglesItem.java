@@ -44,13 +44,13 @@ public class SpyGogglesItem extends ArmorItem {
 
             MobTrackerItem.TrackedBlock trackedBlock = MobTrackerItem.getTrackedBlock(player.getUUID());
             LivingEntity trackedMob = MobTrackerItem.getTrackedMob(player.getUUID(), level);
-            Map<BlockPos, Integer> armedC4 = RemoteDetonatorItem.getArmedChargesMap(player.getUUID());
+            Map<BlockPos, Integer> armedC4 = RemoteDetonatorItem.getArmedChargesMap(player.getUUID(), level.dimension());
 
             StringBuilder hud = new StringBuilder("§b🕶️ SPY HUD ");
             boolean hasSignals = false;
 
             // 2. Render Sky-High Beacon Light Pillar (up to 96 blocks into the sky!)
-            if (trackedBlock != null) {
+            if (trackedBlock != null && trackedBlock.dimension().equals(level.dimension())) {
                 BlockPos bpos = trackedBlock.pos();
                 double dist = Math.sqrt(player.blockPosition().distSqr(bpos));
                 hasSignals = true;
@@ -73,7 +73,7 @@ public class SpyGogglesItem extends ArmorItem {
             }
 
             // 3. Highlight Tracked Mob through walls
-            if (trackedMob != null && trackedMob.isAlive()) {
+            if (trackedMob != null && trackedMob.isAlive() && trackedMob.level().dimension().equals(level.dimension())) {
                 hasSignals = true;
                 int dist = (int) player.distanceTo(trackedMob);
                 trackedMob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 30, 0, false, false));

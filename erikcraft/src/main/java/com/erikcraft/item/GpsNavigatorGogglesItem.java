@@ -41,12 +41,12 @@ public class GpsNavigatorGogglesItem extends ArmorItem {
             Vec3 targetPos = null;
             String targetName = null;
 
-            // Prefer tracked block beacon, otherwise tracked mob
-            if (trackedBlock != null) {
+            // Prefer tracked block beacon, otherwise tracked mob (in same dimension)
+            if (trackedBlock != null && trackedBlock.dimension().equals(level.dimension())) {
                 BlockPos bpos = trackedBlock.pos();
                 targetPos = new Vec3(bpos.getX() + 0.5, bpos.getY() + 0.5, bpos.getZ() + 0.5);
                 targetName = "📍 " + trackedBlock.name();
-            } else if (trackedMob != null && trackedMob.isAlive()) {
+            } else if (trackedMob != null && trackedMob.isAlive() && trackedMob.level().dimension().equals(level.dimension())) {
                 targetPos = trackedMob.position();
                 targetName = "📡 " + trackedMob.getName().getString();
             }

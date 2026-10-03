@@ -163,9 +163,9 @@ public class SniperRifleItem extends Item {
             // Recoil kickback on player
             player.setDeltaMovement(player.getDeltaMovement().subtract(look.x * 0.22, 0, look.z * 0.22));
             player.hurtMarked = true;
-
-            // Tactical reload cooldown (1.25s)
-            player.getCooldowns().addCooldown(this, 25);
         }
+
+        // Tactical reload cooldown (1.25s) on both client & server
+        player.getCooldowns().addCooldown(this, 25);
     }
 }

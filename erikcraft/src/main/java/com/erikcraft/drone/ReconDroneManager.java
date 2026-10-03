@@ -40,8 +40,10 @@ public class ReconDroneManager {
     public static final int DEFAULT_MAX_BATTERY = 1200; // 60 seconds (1 minute)
     public static final int DEFAULT_MAX_DARTS = 5;
 
+    public record SleepingMobState(ResourceKey<Level> dimension, int ticksRemaining) {}
+
     private static final Map<UUID, DroneSession> SESSIONS = new ConcurrentHashMap<>();
-    private static final Map<LivingEntity, Integer> SLEEPING_MOBS = new ConcurrentHashMap<>();
+    private static final Map<UUID, SleepingMobState> SLEEPING_MOBS = new ConcurrentHashMap<>();
 
     public static class DroneSession {
         public final UUID playerUuid;
@@ -139,16 +141,21 @@ public class ReconDroneManager {
      * Server tick handler for all active drone sessions & sleeping mobs
      */
     public static void tick(ServerLevel level) {
-        // 1. Tick sleeping mobs and render Zzz note particles
+        // 1. Tick sleeping mobs and render Zzz note particles (dimension-isolated)
         if (!SLEEPING_MOBS.isEmpty()) {
-            for (Map.Entry<LivingEntity, Integer> entry : new HashMap<>(SLEEPING_MOBS).entrySet()) {
-                LivingEntity mob = entry.getKey();
-                int time = entry.getValue() - 1;
+            for (Map.Entry<UUID, SleepingMobState> entry : new HashMap<>(SLEEPING_MOBS).entrySet()) {
+                UUID mobUuid = entry.getKey();
+                SleepingMobState state = entry.getValue();
 
-                if (!mob.isAlive() || time <= 0) {
-                    SLEEPING_MOBS.remove(mob);
+                if (!state.dimension().equals(level.dimension())) continue;
+
+                var entity = level.getEntity(mobUuid);
+                int time = state.ticksRemaining() - 1;
+
+                if (entity == null || !entity.isAlive() || !(entity instanceof LivingEntity mob) || time <= 0) {
+                    SLEEPING_MOBS.remove(mobUuid);
                 } else {
-                    SLEEPING_MOBS.put(mob, time);
+                    SLEEPING_MOBS.put(mobUuid, new SleepingMobState(state.dimension(), time));
                     if (time % 10 == 0) {
                         level.sendParticles(ParticleTypes.NOTE,
                             mob.getX(), mob.getEyeY() + 0.4, mob.getZ(),
@@ -172,6 +179,18 @@ public class ReconDroneManager {
             ServerPlayer player = level.getServer().getPlayerList().getPlayer(uuid);
             if (player == null || !player.isAlive()) {
                 SESSIONS.remove(uuid);
+                continue;
+            }
+
+            // Void safety check: if player drops below world min height or enters void
+            if (player.getY() < level.getMinBuildHeight() - 5) {
+                recallPlayer(player, session, "§c⚠️ [VÉSZLEÁLLÍTÁS] A drón zuhanni kezdett a mélységbe! Vészhelyzeti visszatérés aktiválva.");
+                continue;
+            }
+
+            // Dimension safety check
+            if (!player.level().dimension().equals(session.dimension)) {
+                recallPlayer(player, session, "§c⚠️ [VÉSZLEÁLLÍTÁS] Dimenzióváltás észlelve! A drón visszatért a kiindulópontra.");
                 continue;
             }
 
@@ -312,7 +331,7 @@ public class ReconDroneManager {
                 mob.getNavigation().stop();
             }
 
-            SLEEPING_MOBS.put(hitEntity, 300);
+            SLEEPING_MOBS.put(hitEntity.getUUID(), new SleepingMobState(level.dimension(), 300));
 
             // Hit sound
             level.playSound(null, hitEntity.getX(), hitEntity.getY(), hitEntity.getZ(),
@@ -482,10 +501,15 @@ public class ReconDroneManager {
         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 0, false, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 4, false, false, false));
 
-        // Teleport back to exact launchpad
-        player.teleportTo(session.launchPos.x, session.launchPos.y, session.launchPos.z);
-        player.setYRot(session.launchYaw);
-        player.setXRot(session.launchPitch);
+        // Teleport back to exact launchpad (dimension-safe)
+        ServerLevel launchLevel = player.getServer() != null ? player.getServer().getLevel(session.dimension) : null;
+        if (launchLevel != null && player.serverLevel() != launchLevel) {
+            player.teleportTo(launchLevel, session.launchPos.x, session.launchPos.y, session.launchPos.z, session.launchYaw, session.launchPitch);
+        } else {
+            player.teleportTo(session.launchPos.x, session.launchPos.y, session.launchPos.z);
+            player.setYRot(session.launchYaw);
+            player.setXRot(session.launchPitch);
+        }
 
         // Reset abilities
         if (!player.isCreative() && !player.isSpectator()) {
@@ -503,5 +527,15 @@ public class ReconDroneManager {
             SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 1.0f, 1.5f);
 
         player.sendSystemMessage(Component.literal(reason));
+    }
+
+    /**
+     * Handle player disconnect: clean up active session and restore abilities
+     */
+    public static void onPlayerDisconnect(ServerPlayer player) {
+        DroneSession session = SESSIONS.get(player.getUUID());
+        if (session != null) {
+            recallPlayer(player, session, "§b🛸 [DRÓN] §eA pilóta bontotta a kapcsolatot. Drón visszatért a bázisra.");
+        }
     }
 }

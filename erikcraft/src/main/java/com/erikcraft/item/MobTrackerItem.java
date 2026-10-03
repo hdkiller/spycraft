@@ -3,6 +3,7 @@ package com.erikcraft.item;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -36,7 +37,7 @@ public class MobTrackerItem extends Item {
     private static final Map<UUID, UUID> TRACKED_MOBS = new ConcurrentHashMap<>();
     private static final Map<UUID, TrackedBlock> TRACKED_BLOCKS = new ConcurrentHashMap<>();
 
-    public record TrackedBlock(BlockPos pos, String name) {}
+    public record TrackedBlock(ResourceKey<Level> dimension, BlockPos pos, String name) {}
 
     public MobTrackerItem(Properties properties) {
         super(properties);
@@ -106,7 +107,7 @@ public class MobTrackerItem extends Item {
         String blockName = state.getBlock().getName().getString();
 
         if (!level.isClientSide) {
-            TRACKED_BLOCKS.put(player.getUUID(), new TrackedBlock(pos, blockName));
+            TRACKED_BLOCKS.put(player.getUUID(), new TrackedBlock(level.dimension(), pos, blockName));
 
             if (level instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.PORTAL,
@@ -150,46 +151,62 @@ public class MobTrackerItem extends Item {
 
             // 1. Report Mob Signal if active
             if (targetMob != null && targetMob.isAlive()) {
-                pingedAny = true;
-                int dist = (int) player.distanceTo(targetMob);
-                targetMob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * 15, 0, false, false));
+                if (targetMob.level().dimension().equals(level.dimension())) {
+                    pingedAny = true;
+                    int dist = (int) player.distanceTo(targetMob);
+                    targetMob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * 15, 0, false, false));
 
-                double dx = targetMob.getX() - player.getX();
-                double dz = targetMob.getZ() - player.getZ();
-                String heading = getDirectionLabel(dx, dz);
-                int elevationDiff = (int) (targetMob.getY() - player.getY());
-                String elevation = elevationDiff > 1 ? " [Above ⬆]" : (elevationDiff < -1 ? " [Below ⬇]" : " [Level ➡]");
+                    double dx = targetMob.getX() - player.getX();
+                    double dz = targetMob.getZ() - player.getZ();
+                    String heading = getDirectionLabel(dx, dz);
+                    int elevationDiff = (int) (targetMob.getY() - player.getY());
+                    String elevation = elevationDiff > 1 ? " [Above ⬆]" : (elevationDiff < -1 ? " [Below ⬇]" : " [Level ➡]");
 
-                player.sendSystemMessage(Component.literal(
-                    "§b📡 [MOB RADAR] §f" + targetMob.getName().getString() +
-                    " §8| §e" + dist + "m §8| §a" + heading + elevation +
-                    " §8[X: " + targetMob.getBlockX() + ", Y: " + targetMob.getBlockY() + ", Z: " + targetMob.getBlockZ() + "]"
-                ));
+                    player.sendSystemMessage(Component.literal(
+                        "§b📡 [MOB RADAR] §f" + targetMob.getName().getString() +
+                        " §8| §e" + dist + "m §8| §a" + heading + elevation +
+                        " §8[X: " + targetMob.getBlockX() + ", Y: " + targetMob.getBlockY() + ", Z: " + targetMob.getBlockZ() + "]"
+                    ));
+                } else {
+                    pingedAny = true;
+                    player.sendSystemMessage(Component.literal(
+                        "§b📡 [MOB RADAR] §f" + targetMob.getName().getString() +
+                        " §8| §cMásik dimenzióban található! (" + targetMob.level().dimension().location().getPath() + ")"
+                    ));
+                }
             }
 
             // 2. Report Block Beacon Signal if active
             if (trackedBlock != null) {
-                pingedAny = true;
-                BlockPos bpos = trackedBlock.pos();
-                double dist = Math.sqrt(player.blockPosition().distSqr(bpos));
+                if (trackedBlock.dimension().equals(level.dimension())) {
+                    pingedAny = true;
+                    BlockPos bpos = trackedBlock.pos();
+                    double dist = Math.sqrt(player.blockPosition().distSqr(bpos));
 
-                double dx = (bpos.getX() + 0.5) - player.getX();
-                double dz = (bpos.getZ() + 0.5) - player.getZ();
-                String heading = getDirectionLabel(dx, dz);
-                int elevationDiff = bpos.getY() - player.getBlockY();
-                String elevation = elevationDiff > 1 ? " [Above ⬆]" : (elevationDiff < -1 ? " [Below ⬇]" : " [Level ➡]");
+                    double dx = (bpos.getX() + 0.5) - player.getX();
+                    double dz = (bpos.getZ() + 0.5) - player.getZ();
+                    String heading = getDirectionLabel(dx, dz);
+                    int elevationDiff = bpos.getY() - player.getBlockY();
+                    String elevation = elevationDiff > 1 ? " [Above ⬆]" : (elevationDiff < -1 ? " [Below ⬇]" : " [Level ➡]");
 
-                if (level instanceof ServerLevel serverLevel && dist < 120) {
-                    serverLevel.sendParticles(ParticleTypes.END_ROD,
-                        bpos.getX() + 0.5, bpos.getY() + 1.2, bpos.getZ() + 0.5,
-                        10, 0.1, 0.3, 0.1, 0.05);
+                    if (level instanceof ServerLevel serverLevel && dist < 120) {
+                        serverLevel.sendParticles(ParticleTypes.END_ROD,
+                            bpos.getX() + 0.5, bpos.getY() + 1.2, bpos.getZ() + 0.5,
+                            10, 0.1, 0.3, 0.1, 0.05);
+                    }
+
+                    player.sendSystemMessage(Component.literal(
+                        "§6📍 [BASE BEACON] §f" + trackedBlock.name() +
+                        " §8| §e" + (int) dist + "m §8| §a" + heading + elevation +
+                        " §8[X: " + bpos.getX() + ", Y: " + bpos.getY() + ", Z: " + bpos.getZ() + "]"
+                    ));
+                } else {
+                    pingedAny = true;
+                    player.sendSystemMessage(Component.literal(
+                        "§6📍 [BASE BEACON] §f" + trackedBlock.name() +
+                        " §8| §cMásik dimenzióban található! (" + trackedBlock.dimension().location().getPath() + ")"
+                    ));
                 }
-
-                player.sendSystemMessage(Component.literal(
-                    "§6📍 [BASE BEACON] §f" + trackedBlock.name() +
-                    " §8| §e" + (int) dist + "m §8| §a" + heading + elevation +
-                    " §8[X: " + bpos.getX() + ", Y: " + bpos.getY() + ", Z: " + bpos.getZ() + "]"
-                ));
             }
 
             // 3. Fallback: if nothing tracked yet, auto-scan for nearest living mob

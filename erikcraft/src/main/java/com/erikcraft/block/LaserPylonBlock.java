@@ -27,4 +27,14 @@ public class LaserPylonBlock extends Block {
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
+
+    @Override
+    protected void onRemove(BlockState state, net.minecraft.world.level.Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            if (!level.isClientSide) {
+                com.erikcraft.laser.LaserForcefieldManager.onPylonBroken(level, pos);
+            }
+            super.onRemove(state, level, pos, newState, isMoving);
+        }
+    }
 }

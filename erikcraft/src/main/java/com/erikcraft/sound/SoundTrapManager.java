@@ -51,6 +51,7 @@ public class SoundTrapManager {
             }
 
             if (!state.getValue(SoundTrapBlock.ACTIVE)) {
+                traps.remove(pos);
                 continue;
             }
 

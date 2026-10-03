@@ -3,8 +3,10 @@ package com.erikcraft.block;
 import com.erikcraft.sound.SoundTrapManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -56,6 +58,16 @@ public class SoundTrapBlock extends Block {
         if (!level.isClientSide && state.getValue(ACTIVE)) {
             SoundTrapManager.registerTrap(level, pos);
             level.playSound(null, pos, SoundEvents.CREEPER_PRIMED, SoundSource.BLOCKS, 1.5f, 1.0f);
+            level.scheduleTick(pos, this, 20);
+        }
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ACTIVE)) {
+            // Re-register in SoundTrapManager in case of world reload/chunk load
+            SoundTrapManager.registerTrap(level, pos);
+            level.scheduleTick(pos, this, 40);
         }
     }
 
@@ -78,6 +90,7 @@ public class SoundTrapBlock extends Block {
             if (active) {
                 SoundTrapManager.registerTrap(level, pos);
                 level.playSound(null, pos, SoundEvents.CREEPER_PRIMED, SoundSource.BLOCKS, 1.5f, 1.0f);
+                level.scheduleTick(pos, this, 20);
                 player.displayClientMessage(Component.literal("§e🔊 [HANGCSAPDA] §aBEKAPCSOLVA §8| Még több mobot vonz (Creeper sziszegés)!"), true);
             } else {
                 SoundTrapManager.removeTrap(level, pos);

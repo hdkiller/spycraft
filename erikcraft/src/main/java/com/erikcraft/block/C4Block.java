@@ -33,6 +33,16 @@ public class C4Block extends Block {
         return SHAPE;
     }
 
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            if (!level.isClientSide) {
+                com.erikcraft.item.RemoteDetonatorItem.onC4Removed(level, pos);
+            }
+            super.onRemove(state, level, pos, newState, isMoving);
+        }
+    }
+
     /**
      * Explodes the C4 canister with the specified yield power.
      */

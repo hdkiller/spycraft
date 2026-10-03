@@ -42,6 +42,11 @@ public class ErikCraftMod implements ModInitializer {
         ServerTickEvents.END_WORLD_TICK.register(ReconDroneManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(SoundTrapManager::tick);
 
+        // Register disconnect event for safe cleanup
+        net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            ReconDroneManager.onPlayerDisconnect(handler.getPlayer());
+        });
+
         // Add items to standard Combat & Tools tabs
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
             entries.accept(ModBlocks.SOUND_TRAP);

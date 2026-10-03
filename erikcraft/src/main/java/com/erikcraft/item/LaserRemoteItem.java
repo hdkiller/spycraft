@@ -53,6 +53,13 @@ public class LaserRemoteItem extends Item {
         if (level.getBlockState(pos).is(ModBlocks.LASER_PYLON)) {
             if (!level.isClientSide) {
                 var network = LaserForcefieldManager.getNetwork(player.getUUID());
+                if (network.dimension != null && !network.dimension.equals(level.dimension())) {
+                    LaserForcefieldManager.clearNetwork(player.getUUID());
+                    network = LaserForcefieldManager.getNetwork(player.getUUID());
+                    player.sendSystemMessage(Component.literal("§e⚠️ Dimenzióváltás: a korábbi hálózat törölve lett. Új hálózat indult."));
+                }
+                network.dimension = level.dimension();
+
                 if (!network.pylons.contains(pos)) {
                     network.pylons.add(pos);
 
@@ -110,6 +117,13 @@ public class LaserRemoteItem extends Item {
             }
 
             var network = LaserForcefieldManager.getNetwork(player.getUUID());
+            if (network.dimension != null && !network.dimension.equals(level.dimension())) {
+                player.sendSystemMessage(Component.literal(
+                    "§c📡 [LÉZER CSAPDA] §7A csatlakoztatott oszlopok egy másik dimenzióban találhatók!"
+                ));
+                return InteractionResultHolder.sidedSuccess(stack, false);
+            }
+
             int count = network.pylons.size();
 
             if (count < 3) {
