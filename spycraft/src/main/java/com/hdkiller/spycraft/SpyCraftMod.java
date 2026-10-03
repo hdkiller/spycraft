@@ -42,6 +42,8 @@ public class SpyCraftMod implements ModInitializer {
         ServerTickEvents.END_WORLD_TICK.register(LaserForcefieldManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(ReconDroneManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(SoundTrapManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.HologramDecoyManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.SmokeCloudManager::tick);
 
         // Register disconnect event for safe cleanup
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -68,6 +70,11 @@ public class SpyCraftMod implements ModInitializer {
         // Add items to standard Combat & Tools tabs
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
             entries.accept(ModItems.MISSION_BEACON);
+            entries.accept(ModItems.THERMAL_GOGGLES);
+            entries.accept(ModItems.HOLOGRAM_PROJECTOR);
+            entries.accept(ModItems.TRANQUILIZER_GUN);
+            entries.accept(ModItems.SMOKE_GRENADE);
+            entries.accept(ModItems.CLIMBING_GLOVES);
             entries.accept(ModBlocks.SOUND_TRAP);
             entries.accept(ModItems.RECON_DRONE);
             entries.accept(ModItems.SNIPER_RIFLE);

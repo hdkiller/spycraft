@@ -26,6 +26,11 @@ public class ModItemGroups {
             .title(Component.translatable("itemGroup.erikcraft.spycraft_tab"))
             .displayItems((displayContext, entries) -> {
                 entries.accept(ModItems.MISSION_BEACON);
+                entries.accept(ModItems.THERMAL_GOGGLES);
+                entries.accept(ModItems.HOLOGRAM_PROJECTOR);
+                entries.accept(ModItems.TRANQUILIZER_GUN);
+                entries.accept(ModItems.SMOKE_GRENADE);
+                entries.accept(ModItems.CLIMBING_GLOVES);
                 entries.accept(ModItems.RECON_DRONE);
                 entries.accept(ModItems.SNIPER_RIFLE);
                 entries.accept(ModItems.LASER_REMOTE);

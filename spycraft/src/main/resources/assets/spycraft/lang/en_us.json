@@ -15,6 +15,11 @@
   "item.spycraft.recon_drone": "Felderítő Drón (Tactical Recon Drone)",
   "block.spycraft.sound_trap": "Hangcsapda (Sonic Decoy Trap)",
   "item.spycraft.mission_beacon": "Küldetés Jeladó (Mission Deployer Beacon)",
+  "item.spycraft.thermal_goggles": "Hőkamera Szemüveg (Thermal Vision Goggles)",
+  "item.spycraft.hologram_projector": "Hologram Projektor (Holographic Decoy)",
+  "item.spycraft.tranquilizer_gun": "Altató Nyílpuska (Tranquilizer Dart Gun)",
+  "item.spycraft.smoke_grenade": "Taktikai Füstgránát (Tactical Smoke Grenade)",
+  "item.spycraft.climbing_gloves": "Mágneses Mászókesztyű (Magnetic Climbing Gloves)",
   "effect.spycraft.drone_piloting": "Drón Irányítás (Drone Piloting)",
   "itemGroup.spycraft.erikcraft_tab": "ErikCraft Spy & Adventure Gear"
 }

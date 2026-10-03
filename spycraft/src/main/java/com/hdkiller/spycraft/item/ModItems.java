@@ -91,6 +91,36 @@ public class ModItems {
         new MissionBeaconItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
     );
 
+    // Thermal Vision Goggles - Heat detection through solid walls
+    public static final Item THERMAL_GOGGLES = registerItem(
+        "thermal_goggles",
+        new ThermalGogglesItem(new Item.Properties().rarity(Rarity.EPIC).durability(500))
+    );
+
+    // Hologram Decoy Projector - Spawns aggro-taunting duplicate of the player
+    public static final Item HOLOGRAM_PROJECTOR = registerItem(
+        "hologram_projector",
+        new HologramProjectorItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
+    );
+
+    // Tranquilizer Dart Gun - Ultra quiet sleep/freeze dart gun
+    public static final Item TRANQUILIZER_GUN = registerItem(
+        "tranquilizer_gun",
+        new TranquilizerGunItem(new Item.Properties().rarity(Rarity.RARE).durability(250))
+    );
+
+    // Tactical Smoke Grenade - Throwable 11m smoke screen for escape
+    public static final Item SMOKE_GRENADE = registerItem(
+        "smoke_grenade",
+        new SmokeGrenadeItem(new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(16))
+    );
+
+    // Magnetic Climbing Gloves - Scale walls and hang in mid-air
+    public static final Item CLIMBING_GLOVES = registerItem(
+        "climbing_gloves",
+        new ClimbingGlovesItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,
