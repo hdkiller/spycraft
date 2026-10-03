@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class ModBlocks {
-    // Tactical C4 Explosive Block
+    // Tactical C4 Explosive Canister
     public static final Block C4_BLOCK = registerBlock(
         "c4_block",
         new C4Block(BlockBehaviour.Properties.of()
@@ -21,9 +21,18 @@ public class ModBlocks {
             .noOcclusion())
     );
 
+    // Laser Security Pylon
+    public static final Block LASER_PYLON = registerBlock(
+        "laser_pylon",
+        new LaserPylonBlock(BlockBehaviour.Properties.of()
+            .strength(1.5f)
+            .sound(SoundType.METAL)
+            .noOcclusion()
+            .lightLevel(state -> 8))
+    );
+
     private static Block registerBlock(String name, Block block) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ErikCraftMod.MOD_ID, name);
-        // Register BlockItem so it can be held and placed from inventory
         Registry.register(
             BuiltInRegistries.ITEM,
             id,

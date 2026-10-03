@@ -67,6 +67,12 @@ public class ModItems {
         new RemoteDetonatorItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
     );
 
+    // Laser Forcefield Remote - Links pylons and toggles impassable laser wall
+    public static final Item LASER_REMOTE = registerItem(
+        "laser_remote",
+        new LaserRemoteItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,

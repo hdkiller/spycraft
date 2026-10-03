@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "erikcraft:block/laser_pylon"
+    }
+  }
+}
