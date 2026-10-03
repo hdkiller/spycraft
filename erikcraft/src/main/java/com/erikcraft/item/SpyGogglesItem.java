@@ -15,14 +15,14 @@ import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * Tactical Spy Goggles / Night Vision Glasses
  * - Wear on head for instant Night Vision!
  * - Illuminates tracked Block Beacons with a glowing light pillar through walls!
  * - Highlights tracked Mobs with a glowing outline!
- * - Highlights armed C4 explosive charges!
+ * - Highlights armed C4 canisters with level-specific particle sparks!
  * - Displays a live tactical HUD on the Action Bar!
  */
 public class SpyGogglesItem extends ArmorItem {
@@ -33,7 +33,6 @@ public class SpyGogglesItem extends ArmorItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!level.isClientSide && entity instanceof Player player) {
-            // Check if player is wearing the goggles in the helmet slot
             boolean isWearing = player.getItemBySlot(EquipmentSlot.HEAD).getItem() == this;
             if (!isWearing) return;
 
@@ -45,7 +44,7 @@ public class SpyGogglesItem extends ArmorItem {
 
             MobTrackerItem.TrackedBlock trackedBlock = MobTrackerItem.getTrackedBlock(player.getUUID());
             LivingEntity trackedMob = MobTrackerItem.getTrackedMob(player.getUUID(), level);
-            List<BlockPos> armedC4 = RemoteDetonatorItem.getArmedCharges(player.getUUID());
+            Map<BlockPos, Integer> armedC4 = RemoteDetonatorItem.getArmedChargesMap(player.getUUID());
 
             StringBuilder hud = new StringBuilder("§b🕶️ SPY HUD ");
             boolean hasSignals = false;
@@ -56,7 +55,6 @@ public class SpyGogglesItem extends ArmorItem {
                 double dist = Math.sqrt(player.blockPosition().distSqr(bpos));
                 hasSignals = true;
 
-                // Send beacon light beam particles up into the sky
                 if (level instanceof ServerLevel serverLevel && dist < 128) {
                     for (int dy = 0; dy <= 16; dy += 2) {
                         serverLevel.sendParticles(ParticleTypes.END_ROD,
@@ -87,16 +85,22 @@ public class SpyGogglesItem extends ArmorItem {
                    .append(dist).append("m ").append(heading).append(" ");
             }
 
-            // 4. Highlight Armed C4 Explosives
+            // 4. Highlight Armed C4 Canisters with level indicator
             if (!armedC4.isEmpty()) {
                 hasSignals = true;
-                hud.append("§8| §c💣 Armed C4: §f").append(armedC4.size()).append(" ");
+                int maxLvl = armedC4.values().stream().max(Integer::compareTo).orElse(1);
+                String lvlTag = maxLvl == 3 ? "§4[MEGA 3x]§r" : (maxLvl == 2 ? "§6[DUPLA 2x]§r" : "§a[1x]§r");
+                hud.append("§8| §c💣 C4: §f").append(armedC4.size()).append(" ").append(lvlTag).append(" ");
 
                 if (level instanceof ServerLevel serverLevel) {
-                    for (BlockPos c4pos : armedC4) {
+                    for (Map.Entry<BlockPos, Integer> entry : armedC4.entrySet()) {
+                        BlockPos c4pos = entry.getKey();
+                        int lvl = entry.getValue();
+
                         if (player.blockPosition().distSqr(c4pos) < 100 * 100) {
-                            serverLevel.sendParticles(ParticleTypes.FLAME,
-                                c4pos.getX() + 0.5, c4pos.getY() + 0.7, c4pos.getZ() + 0.5,
+                            var particle = lvl == 3 ? ParticleTypes.SOUL_FIRE_FLAME : (lvl == 2 ? ParticleTypes.FLAME : ParticleTypes.ELECTRIC_SPARK);
+                            serverLevel.sendParticles(particle,
+                                c4pos.getX() + 0.5, c4pos.getY() + 0.8, c4pos.getZ() + 0.5,
                                 3, 0.1, 0.1, 0.1, 0.02);
                         }
                     }
@@ -107,7 +111,6 @@ public class SpyGogglesItem extends ArmorItem {
                 hud.append("§8| §7No active beacons, C4, or targets");
             }
 
-            // Display on Action Bar (above hotbar, true HUD style!)
             player.displayClientMessage(Component.literal(hud.toString()), true);
         }
     }
