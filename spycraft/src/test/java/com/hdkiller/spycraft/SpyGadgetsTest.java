@@ -25,6 +25,25 @@ class SpyGadgetsTest {
         for (String tex : textures) {
             InputStream is = getClass().getResourceAsStream(tex);
             assertNotNull(is, "Texture must exist: " + tex);
+            try {
+                java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(is);
+                assertNotNull(img, "Texture must be decodable image: " + tex);
+                for (int y = 0; y < img.getHeight(); y++) {
+                    for (int x = 0; x < img.getWidth(); x++) {
+                        int argb = img.getRGB(x, y);
+                        int a = (argb >> 24) & 0xFF;
+                        int r = (argb >> 16) & 0xFF;
+                        int g = (argb >> 8) & 0xFF;
+                        int b = argb & 0xFF;
+                        if (a > 0) {
+                            assertFalse(r < 20 && g == 255 && b < 50,
+                                "Corrupted fluorescent green pixel found at (" + x + "," + y + ") in " + tex);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                fail("Failed to read texture: " + tex + " - " + e.getMessage());
+            }
         }
     }
 
