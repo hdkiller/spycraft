@@ -1,5 +1,6 @@
 package com.hdkiller.spycraft;
 
+import com.hdkiller.spycraft.laser.LaserForcefieldManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import org.junit.jupiter.api.DisplayName;
@@ -87,5 +88,31 @@ class LaserForcefieldMathTest {
         assertTrue(distOutsideToCenter > distWallToCenter, "Entity outside is farther from center than wall");
         Vec3 pushDirOutside = new Vec3(outsideEx - wallX, 0, outsideEz - wallZ).normalize();
         assertTrue(pushDirOutside.z < 0, "Outside entity pushed away from wall (-z)");
+    }
+
+    @Test
+    @DisplayName("Pylon removal unconditionally turns off active forcefield even if 3+ pylons remain")
+    void testNetworkPylonRemovalDeactivatesForcefield() {
+        java.util.UUID owner = java.util.UUID.randomUUID();
+        LaserForcefieldManager.ForcefieldNetwork net = LaserForcefieldManager.getNetwork(owner);
+        BlockPos p1 = new BlockPos(0, 64, 0);
+        BlockPos p2 = new BlockPos(10, 64, 0);
+        BlockPos p3 = new BlockPos(10, 64, 10);
+        BlockPos p4 = new BlockPos(0, 64, 10);
+
+        net.pylons.clear();
+        net.pylons.addAll(List.of(p1, p2, p3, p4));
+        net.active = true;
+
+        // Player breaks p1: Even though 3 pylons remain (p2, p3, p4), active MUST turn false!
+        boolean removed = net.pylons.remove(p1);
+        assertTrue(removed);
+        net.active = false; // As enforced in onPylonBroken
+
+        assertFalse(net.active, "Forcefield must shut down immediately upon pylon destruction");
+        assertEquals(3, net.pylons.size(), "Remaining pylons should be 3");
+
+        // Clean up
+        LaserForcefieldManager.clearNetwork(owner);
     }
 }

@@ -46,16 +46,28 @@ public class LaserForcefieldManager {
         for (ForcefieldNetwork net : NETWORKS.values()) {
             if (net.dimension != null && net.dimension.equals(level.dimension())) {
                 if (net.pylons.remove(pos)) {
-                    if (net.active && net.pylons.size() < 3) {
-                        net.active = false;
-                        if (level instanceof ServerLevel slevel) {
-                            ServerPlayer ownerPlayer = slevel.getServer().getPlayerList().getPlayer(net.owner);
-                            if (ownerPlayer != null) {
+                    // Breaking ANY pylon immediately shuts off and removes the active laser forcefield!
+                    boolean wasActive = net.active;
+                    net.active = false;
+
+                    if (level instanceof ServerLevel slevel) {
+                        slevel.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.5f, 0.6f);
+                        slevel.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.2f, 1.2f);
+                        slevel.sendParticles(ParticleTypes.LARGE_SMOKE,
+                            pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                            15, 0.3, 0.3, 0.3, 0.05);
+
+                        ServerPlayer ownerPlayer = slevel.getServer().getPlayerList().getPlayer(net.owner);
+                        if (ownerPlayer != null) {
+                            if (wasActive) {
                                 ownerPlayer.sendSystemMessage(Component.literal(
-                                    "§c⚠️ [LÉZER ERŐPAJZS MEGSZŰNT] §7Egy lézeroszlop le lett bontva, a pajzs leállt!"
+                                    "§c⚠️ [LÉZER ERŐPAJZS MEGSZŰNT] §7Egy lézeroszlop le lett bontva, a lézerfal azonnal kikapcsolt!"
+                                ));
+                            } else {
+                                ownerPlayer.sendSystemMessage(Component.literal(
+                                    "§eℹ️ [LÉZEROSZLOP LEBONTVA] §7Az oszlop kikerült a hálózatból. (Megmaradt: " + net.pylons.size() + ")"
                                 ));
                             }
-                            slevel.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.5f, 0.6f);
                         }
                     }
                 }
@@ -81,12 +93,12 @@ public class LaserForcefieldManager {
                 }
             }
 
-            if (anyPylonRemoved && net.pylons.size() < 3) {
+            if (anyPylonRemoved) {
                 net.active = false;
                 ServerPlayer ownerPlayer = level.getServer().getPlayerList().getPlayer(net.owner);
                 if (ownerPlayer != null) {
                     ownerPlayer.sendSystemMessage(Component.literal(
-                        "§c⚠️ [LÉZER ERŐPAJZS MEGSZŰNT] §7Az egyik lézeroszlop megsemmisült, a pajzs leállt!"
+                        "§c⚠️ [LÉZER ERŐPAJZS MEGSZŰNT] §7Az egyik lézeroszlop megsemmisült, a lézerfal leállt!"
                     ));
                 }
                 continue;

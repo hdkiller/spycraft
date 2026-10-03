@@ -29,6 +29,14 @@ public class LaserPylonBlock extends Block {
     }
 
     @Override
+    public BlockState playerWillDestroy(net.minecraft.world.level.Level level, BlockPos pos, BlockState state, net.minecraft.world.entity.player.Player player) {
+        if (!level.isClientSide) {
+            com.hdkiller.spycraft.laser.LaserForcefieldManager.onPylonBroken(level, pos);
+        }
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
     protected void onRemove(BlockState state, net.minecraft.world.level.Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             if (!level.isClientSide) {

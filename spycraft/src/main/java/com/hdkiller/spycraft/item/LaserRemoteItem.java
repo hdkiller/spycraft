@@ -17,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
+import java.util.Iterator;
+
 /**
  * Laser Forcefield Remote Controller
  * 1. Right-click 3 or more Laser Pylon blocks to link them into a closed perimeter.
@@ -88,7 +90,29 @@ public class LaserRemoteItem extends Item {
                         ));
                     }
                 } else {
-                    player.sendSystemMessage(Component.literal("§e⚠️ Ez az oszlop már a hálózat része!"));
+                    // Right clicking an already connected pylon unlinks it!
+                    network.pylons.remove(pos);
+                    boolean wasActive = network.active;
+                    network.active = false; // Always shut down the forcefield when geometry is altered
+
+                    if (level instanceof ServerLevel serverLevel) {
+                        serverLevel.sendParticles(ParticleTypes.SMOKE,
+                            pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5,
+                            15, 0.2, 0.2, 0.2, 0.05);
+                        serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
+                            SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1.0f, 0.8f);
+                        if (wasActive) {
+                            serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
+                                SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.2f, 0.8f);
+                        }
+                    }
+
+                    int remaining = network.pylons.size();
+                    player.sendSystemMessage(Component.literal(
+                        "§e✂️ [LÉZEROSZLOP LEVÁLASZTVA!] §7[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "] " +
+                        (wasActive ? "§c(Az erőpajzs kikapcsolt!) " : "") +
+                        "§7Megmaradt: " + remaining + " oszlop."
+                    ));
                 }
 
                 player.getCooldowns().addCooldown(this, 10);
@@ -124,13 +148,27 @@ public class LaserRemoteItem extends Item {
                 return InteractionResultHolder.sidedSuccess(stack, false);
             }
 
+            // Prune broken/missing pylons from network before toggling
+            boolean prunedAny = false;
+            Iterator<BlockPos> it = network.pylons.iterator();
+            while (it.hasNext()) {
+                BlockPos p = it.next();
+                if (level.isLoaded(p) && !level.getBlockState(p).is(ModBlocks.LASER_PYLON)) {
+                    it.remove();
+                    prunedAny = true;
+                }
+            }
+            if (prunedAny) {
+                network.active = false;
+            }
+
             int count = network.pylons.size();
 
             if (count < 3) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.5f);
                 player.sendSystemMessage(Component.literal(
-                    "§c📡 [LÉZER CSAPDA] §7Legalább 3 oszlopot kell összekötnöd egy terület körbehatárolásához! (Jelenleg: " + count + ")"
+                    "§c📡 [LÉZER CSAPDA] §7Legalább 3 épp lézeroszlop kell az erőpajzshoz! (Jelenleg: " + count + ")"
                 ));
                 return InteractionResultHolder.sidedSuccess(stack, false);
             }
