@@ -110,6 +110,11 @@ All items and blocks are available in creative mode under the **"SpyCraft: Spy &
 - **Acoustic Lure:** Emits realistic Creeper priming audio every 3 seconds with 2.5x volume range.
 - **Mob Gathering:** Draws all hostile and neutral entities within 32 blocks directly toward the decoy.
 
+### 16. Tactical Recon Binoculars
+- **Optical Zoom:** Hold right-click to engage high-magnification long-range optical zoom (up to 96 blocks).
+- **Dwell Lock-on Tagging:** Hovering the optical crosshairs over an enemy for 1.2 seconds locks on with rising audio pitch feedback.
+- **Wall-Penetrating Intel:** Once locked, the target gains the Glowing effect (visible through walls for 5 minutes) and automatically synchronizes with the operative's Spy Radar and GPS visor.
+
 ---
 
 ## Development & Testing

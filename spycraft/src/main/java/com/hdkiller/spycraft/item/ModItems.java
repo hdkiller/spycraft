@@ -127,6 +127,12 @@ public class ModItems {
         new ParachuteBackpackItem(new Item.Properties().rarity(Rarity.EPIC).durability(450))
     );
 
+    // Tactical Recon Binoculars - Optical zoom with dwell lock-on enemy tagging
+    public static final Item BINOCULARS = registerItem(
+        "binoculars",
+        new BinocularsItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,

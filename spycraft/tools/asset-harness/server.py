@@ -301,6 +301,14 @@ METADATA = {
         "variants": {
             "current": {"name": "SpecOps Ripstop Rig", "desc": "Reinforced military harness pack with red ripcord release and high-visibility warning tag.", "theme": "specops"}
         }
+    },
+    "binoculars": {
+        "title": "Tactical Recon Binoculars (Távcső)",
+        "category": "surveillance",
+        "description": "High-magnification optical binoculars with dwell lock-on target tagging and radar synchronization.",
+        "variants": {
+            "current": {"name": "SpecOps Digital Binoculars", "desc": "Dual-barrel rubberized military binoculars with cyan anti-reflective coated optics.", "theme": "specops"}
+        }
     }
 }
 

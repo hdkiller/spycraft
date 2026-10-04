@@ -21,6 +21,7 @@
   "item.spycraft.smoke_grenade": "Taktikai Füstgránát",
   "item.spycraft.climbing_gloves": "Mágneses Mászókesztyű",
   "item.spycraft.parachute_backpack": "Taktikai Ejtőernyős Hátizsák",
+  "item.spycraft.binoculars": "Taktikai Felderítő Távcső",
   "effect.spycraft.drone_piloting": "Drón Irányítás",
   "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Kém & Kaland Felszerelés",
 
@@ -35,6 +36,9 @@
   "tooltip.spycraft.parachute_backpack.worn": "§e↳ Hátra véve (Mellvért slot): §fMagától kinyílik zuhanáskor (vagy Guggolás gombra)!",
   "tooltip.spycraft.parachute_backpack.hand": "§b↳ Kézben tartva: §fJobb-klikk zuhanás közben a kézi nyitáshoz!",
   "tooltip.spycraft.parachute_backpack.glide": "§8↳ Siklás a nézés irányában, 0 esési sebzés, automatikus összecsukódás földet éréskor.",
+  "tooltip.spycraft.binoculars.desc": "§7Nagy nagyítású felderítő távcső célpontbefogó rendszerrel!",
+  "tooltip.spycraft.binoculars.zoom": "§e↳ Jobb klikk nyomva tartása: §fOptikai ráközelítés a célpontra",
+  "tooltip.spycraft.binoculars.tag": "§b↳ Célpontbefogás: §fTartsd rajta a célkeresztet 1.2 mp-ig a megjelöléshez",
   "tooltip.spycraft.thermal_goggles.desc": "§7Viseld a fejeden a falakon keresztüli §6Hőlátáshoz§7!",
   "tooltip.spycraft.thermal_goggles.effect": "§8↳ Minden élőlény ragyogó kontúrt kap a falak mögött (32m).",
   "tooltip.spycraft.tranquilizer_gun.desc": "§7Csendes, sűrített levegős §aAltató Nyílpuska§7.",
@@ -51,5 +55,8 @@
   "message.spycraft.mission_beacon.already_active": "§c⚠️ [KÜLDETÉS MÁR AKTÍV!] §7A kémbázis felhőkarcoló már le lett helyezve ebben a világban, nem indítható újra!",
   "message.spycraft.mission_beacon.activating": "§b🛰️ [KÜLDETÉS JELADÓ AKTIVÁLVA!] §eKémbázis építése folyamatban...",
   "message.spycraft.mission_beacon.error": "§c❌ [HIBA] A kémbázis adatfájl nem tölthető be!",
-  "message.spycraft.grappling_hook.too_far": "§c[Csáklyalövő] §7A célpont túl messze van! (Max 32 blokk)"
+  "message.spycraft.grappling_hook.too_far": "§c[Csáklyalövő] §7A célpont túl messze van! (Max 32 blokk)",
+  "hud.spycraft.binoculars.scanning": "§6🔍 CÉLPONT BEFOGÁSA: §f%s §e[%s] §7(%dm)",
+  "hud.spycraft.binoculars.locked": "§a✔ CÉLPONT BEFOGVA: §f%s §7(%dm)",
+  "message.spycraft.binoculars.tag_success": "§a🎯 [Távcső] §fCélpont megjelölve: §e%s §7(Látszik a falakon át és követi a radar)"
 }

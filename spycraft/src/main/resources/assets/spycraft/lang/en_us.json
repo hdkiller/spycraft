@@ -21,6 +21,7 @@
   "item.spycraft.smoke_grenade": "Tactical Smoke Grenade",
   "item.spycraft.climbing_gloves": "Magnetic Climbing Gloves",
   "item.spycraft.parachute_backpack": "Tactical Parachute Backpack",
+  "item.spycraft.binoculars": "Tactical Recon Binoculars",
   "effect.spycraft.drone_piloting": "Drone Piloting",
   "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Spy & Adventure Gear",
 
@@ -35,6 +36,9 @@
   "tooltip.spycraft.parachute_backpack.worn": "§e↳ Worn on Chest: §fAuto-deploys on fall (or press Sneak / Crouch)!",
   "tooltip.spycraft.parachute_backpack.hand": "§b↳ Held in Hand: §fRight-click while falling to emergency deploy!",
   "tooltip.spycraft.parachute_backpack.glide": "§8↳ Steerable gliding, 0 fall damage, auto-folds upon touchdown.",
+  "tooltip.spycraft.binoculars.desc": "§7High-magnification recon binoculars with target lock-on!",
+  "tooltip.spycraft.binoculars.zoom": "§e↳ Hold Right-Click: §fOptical zoom onto distant targets",
+  "tooltip.spycraft.binoculars.tag": "§b↳ Dwell Lock: §fKeep crosshairs on enemy for 1.2s to tag & sync with radar",
   "tooltip.spycraft.thermal_goggles.desc": "§7Wear on head for through-wall §6Thermal Vision§7!",
   "tooltip.spycraft.thermal_goggles.effect": "§8↳ Highlights living targets through solid walls (32m range).",
   "tooltip.spycraft.tranquilizer_gun.desc": "§7Silent pneumatic §aTranquilizer Dart Gun§7.",
@@ -51,5 +55,8 @@
   "message.spycraft.mission_beacon.already_active": "§c⚠️ [MISSION ALREADY ACTIVE!] §7The villain skyscraper has already been deployed in this world!",
   "message.spycraft.mission_beacon.activating": "§b🛰️ [MISSION BEACON ACTIVATED!] §eConstructing secret villain skyscraper base...",
   "message.spycraft.mission_beacon.error": "§c❌ [ERROR] Unable to load mission base structure data!",
-  "message.spycraft.grappling_hook.too_far": "§c[Grappling Hook] §7Target too far! (Max 32 blocks)"
+  "message.spycraft.grappling_hook.too_far": "§c[Grappling Hook] §7Target too far! (Max 32 blocks)",
+  "hud.spycraft.binoculars.scanning": "§6🔍 SCANNING: §f%s §e[%s] §7(%dm)",
+  "hud.spycraft.binoculars.locked": "§a✔ TARGET LOCKED: §f%s §7(%dm)",
+  "message.spycraft.binoculars.tag_success": "§a🎯 [Binoculars] §fTagged target: §e%s §7(Glows through walls & synced to radar)"
 }

@@ -41,6 +41,7 @@ ASSET_MAP = {
     "smoke_grenade": ("item/smoke_grenade.png", "item"),
     "climbing_gloves": ("item/climbing_gloves.png", "item"),
     "parachute_backpack": ("item/parachute_backpack.png", "item"),
+    "binoculars": ("item/binoculars.png", "item"),
 }
 
 THEME_PRESETS = {
