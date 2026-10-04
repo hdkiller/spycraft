@@ -7,11 +7,13 @@ import com.hdkiller.spycraft.SpyCraftMod;
 import com.hdkiller.spycraft.block.LaserPylonBlock;
 import com.hdkiller.spycraft.block.ModBlocks;
 import com.hdkiller.spycraft.item.ModItems;
+import com.hdkiller.spycraft.laser.LaserForcefieldManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -25,13 +27,25 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * Procedurally deploys the 96-story Skyscraper Spy Base.
+ * - Level Y=14 in structure is the ground plaza. startY = origin.getY() - 14 buries
+ *   the subterranean garage (Y=0..13) underground and flushes the plaza with terrain.
+ * - Excavates garage volume and clears trees/hills above plaza to eliminate merged biome terrain.
+ * - Automatically teleports the player safely to the grand entrance plaza.
+ */
 public class SpyBaseMissionBuilder {
+    public static final int GROUND_PLAZA_Y_OFFSET = 14;
+
     private static class StructureData {
         int width;
         int height;
@@ -45,7 +59,8 @@ public class SpyBaseMissionBuilder {
     private static synchronized StructureData loadStructure() {
         if (CACHED_STRUCTURE != null) return CACHED_STRUCTURE;
 
-        try (InputStream raw = SpyBaseMissionBuilder.class.getResourceAsStream("/data/spycraft/structures/spybase.json.gz")) {
+        try {
+            InputStream raw = SpyBaseMissionBuilder.class.getResourceAsStream("/data/spycraft/structures/spybase.json.gz");
             if (raw == null) {
                 SpyCraftMod.LOGGER.error("Could not find /data/spycraft/structures/spybase.json.gz!");
                 return null;
@@ -89,12 +104,51 @@ public class SpyBaseMissionBuilder {
         StructureData data = loadStructure();
         if (data == null) return false;
 
-        // Center building around clicked position
+        // 1. Calculate start coordinates with underground offset for subterranean garage
         int startX = origin.getX() - (data.width / 2);
-        int startY = origin.getY() + 1;
+        int startY = origin.getY() - GROUND_PLAZA_Y_OFFSET;
         int startZ = origin.getZ() - (data.length / 2);
 
-        // Resolve palette to BlockStates
+        BlockPos.MutableBlockPos mpos = new BlockPos.MutableBlockPos();
+        BlockState air = Blocks.AIR.defaultBlockState();
+
+        // 2. Clear terrain: Excavate underground garage cavity (Y=0..13)
+        // Garage bounds in model: X in [27..75], Z in [15..69]
+        for (int y = startY; y < startY + GROUND_PLAZA_Y_OFFSET; y++) {
+            for (int x = startX + 26; x <= startX + 76; x++) {
+                for (int z = startZ + 15; z <= startZ + 69; z++) {
+                    mpos.set(x, y, z);
+                    if (!level.getBlockState(mpos).isAir()) {
+                        level.setBlock(mpos, air, Block.UPDATE_CLIENTS);
+                    }
+                }
+            }
+        }
+
+        // 3. Clear terrain: Vaporize all trees, leaves, water, and hills above ground plaza (Y>=15)
+        // Uses Heightmap for sub-5ms ultra-fast scanning of non-empty columns
+        int topY = Math.min(level.getMaxBuildHeight(), startY + data.height + 2);
+        int clearFromY = startY + GROUND_PLAZA_Y_OFFSET + 1; // Y=15 in model
+
+        for (int x = startX; x < startX + data.width; x++) {
+            for (int z = startZ; z < startZ + data.length; z++) {
+                int highestY = Math.max(
+                    level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z),
+                    level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z)
+                );
+                if (highestY >= clearFromY) {
+                    int clearTo = Math.min(highestY, topY);
+                    for (int y = clearFromY; y <= clearTo; y++) {
+                        mpos.set(x, y, z);
+                        if (!level.getBlockState(mpos).isAir()) {
+                            level.setBlock(mpos, air, Block.UPDATE_CLIENTS);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 4. Resolve palette to BlockStates
         BlockState[] resolvedPalette = new BlockState[data.palette.length];
         for (int i = 0; i < data.palette.length; i++) {
             ResourceLocation id = ResourceLocation.tryParse("minecraft:" + data.palette[i]);
@@ -105,67 +159,88 @@ public class SpyBaseMissionBuilder {
             }
         }
 
-        // Place all 67k blocks
-        BlockPos.MutableBlockPos mpos = new BlockPos.MutableBlockPos();
+        // 5. Place all 67k blocks (underground garage + plaza + skyscraper)
         for (int[] b : data.blocks) {
             mpos.set(startX + b[0], startY + b[1], startZ + b[2]);
             level.setBlock(mpos, resolvedPalette[b[3]], Block.UPDATE_CLIENTS);
         }
 
-        // Deploy SpyCraft Security Features (traps, mobs, boss)
-        populateMission(level, startX, startY, startZ, data);
+        // 6. Deploy SpyCraft Security Features (traps, guards, elite agents, boss)
+        populateMission(level, startX, startY, startZ, data, player);
 
-        // Sounds & Announcements
+        // 7. Safely position player on the grand front plaza in front of the main entrance!
+        // Tower is at Z=0..68; Plaza is at Z=69..92. We place player at Z=84 facing North (180 deg) into entrance.
+        if (player instanceof ServerPlayer serverPlayer) {
+            double spawnX = startX + (data.width / 2.0);
+            double spawnY = startY + GROUND_PLAZA_Y_OFFSET + 1.0; // on top of Y=14 plaza slab
+            double spawnZ = startZ + 84.0;
+            serverPlayer.teleportTo(level, spawnX, spawnY, spawnZ, 180.0f, 0.0f);
+        }
+
+        // 8. Sounds & Announcements
         level.playSound(null, origin, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 2.0f, 1.0f);
         level.playSound(null, origin, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 2.0f, 1.2f);
 
         if (player != null) {
             player.sendSystemMessage(Component.literal("§6══════════════════════════════════════════════════"));
             player.sendSystemMessage(Component.literal("§b🛰️  [KÉMBÁZIS FELHŐKARCOLÓ SIKERESEN LEHELYEZVE!]"));
-            player.sendSystemMessage(Component.literal("§f   Méret: 96 szint | 67.477 blokk | Élesített védelem"));
+            player.sendSystemMessage(Component.literal("§f   Méret: 96 szint | Mélygarázs a föld alatt | 67.477 blokk"));
             player.sendSystemMessage(Component.literal("§e   🎯 KÜLDETÉS CÉLOK:"));
-            player.sendSystemMessage(Component.literal("§7    1. Szivárogj be a földszinti lobby-n át az őrök mellett!"));
-            player.sendSystemMessage(Component.literal("§7    2. Hatolj át a szerverterem aktív lézercsapdáin!"));
-            player.sendSystemMessage(Component.literal("§7    3. Juss fel a 80. emeleti Penthouse-ba és iktasd ki a Főgonoszt!"));
+            player.sendSystemMessage(Component.literal("§7    1. Szivárogj be a földszinti lobby-n vagy a mélygarázson át!"));
+            player.sendSystemMessage(Component.literal("§7    2. Hatolj át a szerverterem aktív lézercsapdáin (29. szint)!"));
+            player.sendSystemMessage(Component.literal("§7    3. Juss fel a Penthouse-ba és iktasd ki a Főgonoszt!"));
             player.sendSystemMessage(Component.literal("§6══════════════════════════════════════════════════"));
         }
 
         return true;
     }
 
-    private static void populateMission(ServerLevel level, int startX, int startY, int startZ, StructureData data) {
+    private static void populateMission(ServerLevel level, int startX, int startY, int startZ, StructureData data, Player player) {
         int centerX = startX + (data.width / 2);
         int centerZ = startZ + (data.length / 2);
 
-        // 1. Ground Floor Lobby Guards (Y+2)
-        spawnGuard(level, centerX - 5, startY + 2, centerZ, "Biztonsági Őr (Lobby)");
-        spawnGuard(level, centerX + 5, startY + 2, centerZ, "Biztonsági Őr (Lobby)");
-        spawnGuard(level, centerX, startY + 2, centerZ - 8, "Recepciós Őr");
-        spawnGuard(level, centerX, startY + 2, centerZ + 8, "Kapu Őr");
+        // 1. Underground Garage Guards (Y+1)
+        spawnGuard(level, centerX - 6, startY + 1, centerZ, "Mélygarázs Őr");
+        spawnGuard(level, centerX + 6, startY + 1, centerZ, "Mélygarázs Őr");
 
-        // 2. Mid-level Laser Defense System (Y+21)
-        BlockPos l1 = new BlockPos(centerX - 4, startY + 21, centerZ - 4);
-        BlockPos l2 = new BlockPos(centerX + 4, startY + 21, centerZ - 4);
-        BlockPos l3 = new BlockPos(centerX + 4, startY + 21, centerZ + 4);
-        BlockPos l4 = new BlockPos(centerX - 4, startY + 21, centerZ + 4);
+        // 2. Ground Floor Lobby Guards (Y+15)
+        spawnGuard(level, centerX - 5, startY + 15, centerZ, "Biztonsági Őr (Lobby)");
+        spawnGuard(level, centerX + 5, startY + 15, centerZ, "Biztonsági Őr (Lobby)");
+        spawnGuard(level, centerX, startY + 15, startZ + 75, "Recepciós Őr");
+        spawnGuard(level, centerX, startY + 15, startZ + 82, "Főbejárat Őr");
+
+        // 3. Mid-level Security & Laser Defense System (Floor at Y=28, Pylons at Y=29)
+        BlockPos l1 = new BlockPos(centerX - 4, startY + 29, centerZ - 4);
+        BlockPos l2 = new BlockPos(centerX + 4, startY + 29, centerZ - 4);
+        BlockPos l3 = new BlockPos(centerX + 4, startY + 29, centerZ + 4);
+        BlockPos l4 = new BlockPos(centerX - 4, startY + 29, centerZ + 4);
 
         level.setBlock(l1, ModBlocks.LASER_PYLON.defaultBlockState().setValue(LaserPylonBlock.ACTIVE, true), Block.UPDATE_ALL);
         level.setBlock(l2, ModBlocks.LASER_PYLON.defaultBlockState().setValue(LaserPylonBlock.ACTIVE, true), Block.UPDATE_ALL);
         level.setBlock(l3, ModBlocks.LASER_PYLON.defaultBlockState().setValue(LaserPylonBlock.ACTIVE, true), Block.UPDATE_ALL);
         level.setBlock(l4, ModBlocks.LASER_PYLON.defaultBlockState().setValue(LaserPylonBlock.ACTIVE, true), Block.UPDATE_ALL);
 
+        // Register active trap in LaserForcefieldManager so laser walls spark and repel!
+        UUID ownerUuid = (player != null) ? player.getUUID() : UUID.randomUUID();
+        var network = LaserForcefieldManager.getNetwork(ownerUuid);
+        LaserForcefieldManager.LaserTrap missionTrap = new LaserForcefieldManager.LaserTrap(ownerUuid, level.dimension());
+        missionTrap.pylons.addAll(List.of(l1, l2, l3, l4));
+        missionTrap.active = true;
+        network.traps.add(missionTrap);
+        LaserForcefieldManager.setTrapPylonsActive(level, missionTrap, true);
+
         // Sound trap decoy nearby
-        level.setBlock(new BlockPos(centerX, startY + 21, centerZ), ModBlocks.SOUND_TRAP.defaultBlockState(), Block.UPDATE_ALL);
+        level.setBlock(new BlockPos(centerX, startY + 29, centerZ), ModBlocks.SOUND_TRAP.defaultBlockState(), Block.UPDATE_ALL);
 
-        // Mid-floor Elite Tech Agents (Y+21)
-        spawnEliteAgent(level, centerX - 3, startY + 21, centerZ + 3, "Elite Hálózatőr");
-        spawnEliteAgent(level, centerX + 3, startY + 21, centerZ - 3, "Elite Hálózatőr");
+        // Mid-floor Elite Tech Agents (Y+29)
+        spawnEliteAgent(level, centerX - 3, startY + 29, centerZ + 3, "Elite Hálózatőr");
+        spawnEliteAgent(level, centerX + 3, startY + 29, centerZ - 3, "Elite Hálózatőr");
 
-        // 3. Top Floor Penthouse (Y+81) - Mastermind Boss
-        spawnMastermindBoss(level, centerX, startY + 81, centerZ);
+        // 4. Top Floor Penthouse (Y+82) - Mastermind Boss
+        spawnMastermindBoss(level, centerX, startY + 82, centerZ);
 
-        // 4. Secret Loot Vault Chest (Y+81)
-        BlockPos chestPos = new BlockPos(centerX + 3, startY + 81, centerZ + 3);
+        // 5. Secret Loot Vault Chest (Y+82)
+        BlockPos chestPos = new BlockPos(centerX + 3, startY + 82, centerZ + 3);
         level.setBlock(chestPos, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
         if (level.getBlockEntity(chestPos) instanceof ChestBlockEntity chest) {
             chest.setItem(0, new ItemStack(Items.DIAMOND, 12));
@@ -174,6 +249,8 @@ public class SpyBaseMissionBuilder {
             chest.setItem(3, new ItemStack(ModBlocks.C4_BLOCK, 4));
             chest.setItem(4, new ItemStack(ModItems.REMOTE_DETONATOR));
             chest.setItem(5, new ItemStack(ModItems.SNIPER_RIFLE));
+            chest.setItem(6, new ItemStack(ModItems.THERMAL_GOGGLES));
+            chest.setItem(7, new ItemStack(ModItems.CLIMBING_GLOVES));
         }
     }
 
