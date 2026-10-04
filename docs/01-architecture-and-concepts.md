@@ -57,10 +57,10 @@ When you run `./gradlew build` or `./gradlew runClient`:
 
 In Fabric, every mod has three key parts:
 
-### A. Mod Initializer (`ErikCraftMod.java`)
+### A. Mod Initializer (`SpyCraftMod.java`)
 Implements `ModInitializer`. When Minecraft boots up, Fabric calls `onInitialize()`:
 ```java
-public class ErikCraftMod implements ModInitializer {
+public class SpyCraftMod implements ModInitializer {
     @Override
     public void onInitialize() {
         // Register items, blocks, sounds, and events here!
@@ -71,11 +71,11 @@ public class ErikCraftMod implements ModInitializer {
 ### B. Registries (`BuiltInRegistries`)
 Minecraft stores everything in **Registries** (Items, Blocks, Entities, Biomes, Sounds). To add something new, you simply register it with your mod's namespace:
 ```java
-Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath("erikcraft", "my_item"), myItem);
+Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath("spycraft", "my_item"), myItem);
 ```
 
-### C. Assets & Resource Packs (`src/main/resources/assets/erikcraft/`)
+### C. Assets & Resource Packs (`src/main/resources/assets/spycraft/`)
 Minecraft separates code from visuals:
-- `lang/en_us.json`: Human-readable names displayed in the game UI.
+- `lang/en_us.json` & `lang/hu_hu.json`: Translations displayed in the game UI.
 - `models/item/*.json`: Tells Minecraft how to display the 3D or 2D item model.
 - `textures/item/*.png`: 16x16 pixel art textures.

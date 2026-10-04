@@ -9,7 +9,7 @@ Here is a practical recipe book for creating fun new features with Erik.
 Kids love custom food that gives ridiculous superpower potion effects (Speed, Jump Boost, Night Vision).
 
 ### 1. Define the Food Properties
-In `src/main/java/com/erikcraft/item/ModItems.java`:
+In `spycraft/src/main/java/com/hdkiller/spycraft/item/ModItems.java`:
 
 ```java
 import net.minecraft.world.effect.MobEffectInstance;
@@ -36,31 +36,31 @@ public class ModItems {
 }
 ```
 
-### 2. Add English Translation
-In `src/main/resources/assets/erikcraft/lang/en_us.json`:
+### 2. Add Translation
+In `spycraft/src/main/resources/assets/spycraft/lang/en_us.json`:
 ```json
-"item.erikcraft.eriks_pizza": "Erik's Super Pizza"
+"item.spycraft.eriks_pizza": "Erik's Super Pizza"
 ```
 
 ### 3. Add Item Model
-In `src/main/resources/assets/erikcraft/models/item/eriks_pizza.json`:
+In `spycraft/src/main/resources/assets/spycraft/models/item/eriks_pizza.json`:
 ```json
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "erikcraft:item/eriks_pizza"
+    "layer0": "spycraft:item/eriks_pizza"
   }
 }
 ```
 
 ### 4. Add the 16x16 Texture
-Put `eriks_pizza.png` in `src/main/resources/assets/erikcraft/textures/item/eriks_pizza.png`.
+Put `eriks_pizza.png` in `spycraft/src/main/resources/assets/spycraft/textures/item/eriks_pizza.png`.
 
 ---
 
 ## Recipe 2: Adding an Item that Does Something on Right Click
 
-Check out [EriksStarItem.java](file:///Users/hdkiller/Develop/mc/erikcraft/src/main/java/com/erikcraft/item/EriksStarItem.java) for the complete working pattern:
+Check out [ParachuteBackpackItem.java](file:///Users/hdkiller/Develop/mc/spycraft/src/main/java/com/hdkiller/spycraft/item/ParachuteBackpackItem.java) or [GrapplingHookGunItem.java](file:///Users/hdkiller/Develop/mc/spycraft/src/main/java/com/hdkiller/spycraft/item/GrapplingHookGunItem.java) for the complete working pattern:
 
 ```java
 public class FireballWandItem extends Item {
@@ -94,7 +94,7 @@ public class FireballWandItem extends Item {
 
 Recipes in Minecraft 1.21 are purely JSON data!
 
-Create a file at `src/main/resources/data/erikcraft/recipe/eriks_star.json`:
+Create a file at `spycraft/src/main/resources/data/spycraft/recipe/eriks_star.json`:
 
 ```json
 {
@@ -113,7 +113,7 @@ Create a file at `src/main/resources/data/erikcraft/recipe/eriks_star.json`:
     }
   },
   "result": {
-    "id": "erikcraft:eriks_star",
+    "id": "spycraft:eriks_star",
     "count": 1
   }
 }

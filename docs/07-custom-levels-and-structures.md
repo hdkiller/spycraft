@@ -138,10 +138,18 @@ To make the skyscraper feel like a real spy mission:
 
 ---
 
-## 6. Summary of Recommended Workflow
+## 7. The Implemented System: Mission Beacon & Procedural Base
 
-1. **Create the Building:** Generate or build the skyscraper in Minebench / Creative mode.
-2. **Save as `.nbt`:** Use Structure Blocks or WorldEdit to export `skyscraper.nbt`.
-3. **Add to Mod:** Drop the `.nbt` into `spycraft/src/main/resources/data/spycraft/structure/`.
-4. **Wire Spawners / Code:** Either place spawners directly in the build, or write a Java helper function to spawn enemies and traps per floor.
-5. **Play with Erik:** Start a LAN world or share the world save, equip spy gear, and infiltrate!
+In SpyCraft, the mission deployment system is implemented in [`SpyBaseMissionBuilder.java`](file:///Users/hdkiller/Develop/mc/spycraft/src/main/java/com/hdkiller/spycraft/world/SpyBaseMissionBuilder.java) and triggered via [`MissionBeaconItem.java`](file:///Users/hdkiller/Develop/mc/spycraft/src/main/java/com/hdkiller/spycraft/item/MissionBeaconItem.java):
+
+### Key Implementation Mechanics:
+1. **Single-Use Item & World Lock:**
+   - When right-clicked on the ground, the item shrinks by 1 (`context.getItemInHand().shrink(1)`).
+   - A persistent lock file (`spycraft_mission_active.lock`) is written to the world folder. If players attempt to deploy a second beacon in the same world, deployment is rejected to preserve performance.
+   - Server operators can reset this with `/spycraft reset_mission`.
+2. **Subterranean Level Offset:**
+   - Skyscraper structures that feature an underground parking garage or secret bunker are positioned with an automatic Y-offset so that the garage is buried beneath the surface ground level and the lobby sits flush on the terrain.
+3. **Biome & Vegetation Clearing:**
+   - Clears surrounding trees, leaves, and obstructions in a protective clearance bounding box around the structure footprint to prevent biome terrain from clipping into the skyscraper interior.
+4. **Player Safety Relocation:**
+   - Automatically teleports the activating player to a safe vantage point directly outside the entrance on the surface, preventing players from being trapped beneath the structure foundation during generation.

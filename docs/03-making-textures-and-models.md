@@ -24,7 +24,7 @@ Vanilla Minecraft items are **16x16 pixels**.
 - Save as transparent PNG (RGBA).
 - Dimensions must be power of two (typically **16x16**, but **32x32** or **64x64** HD textures work too!).
 - Place files in:
-  `src/main/resources/assets/erikcraft/textures/item/<item_id>.png`
+  `spycraft/src/main/resources/assets/spycraft/textures/item/<item_id>.png`
 
 ---
 
@@ -32,24 +32,24 @@ Vanilla Minecraft items are **16x16 pixels**.
 
 Minecraft maps the 2D PNG into a handheld 3D object using simple JSON files:
 
-### For Standard Items (like Erik's Star):
-`src/main/resources/assets/erikcraft/models/item/eriks_star.json`
+### For Standard Items (like Parachute Backpack or Star):
+`spycraft/src/main/resources/assets/spycraft/models/item/eriks_star.json`
 ```json
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "erikcraft:item/eriks_star"
+    "layer0": "spycraft:item/eriks_star"
   }
 }
 ```
 
 ### For Weapons / Tools (held like a sword):
-`src/main/resources/assets/erikcraft/models/item/eriks_sword.json`
+`spycraft/src/main/resources/assets/spycraft/models/item/eriks_sword.json`
 ```json
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "erikcraft:item/eriks_sword"
+    "layer0": "spycraft:item/eriks_sword"
   }
 }
 ```
