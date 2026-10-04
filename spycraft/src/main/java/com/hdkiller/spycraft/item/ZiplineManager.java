@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,19 +18,24 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Tactical Zipline System
- * Manages deployed taut wire ropes and high-speed cable sliding.
+ * Manages deployed taut steel wire ropes and high-speed cable sliding.
+ * Features a two-stage mechanism:
+ * 1. Deploy & anchor steel wire rope across chasm or rooftop
+ * 2. Mount trolley pulley and slide at high velocity with dismount/retract options
  */
 public class ZiplineManager {
 
     public static class ActiveZipline {
         public final UUID id;
+        public final UUID ownerId;
         public final Vec3 startPos;
         public final Vec3 endPos;
         public final double length;
         public int remainingTicks;
 
-        ActiveZipline(Vec3 startPos, Vec3 endPos, int durationTicks) {
+        ActiveZipline(UUID ownerId, Vec3 startPos, Vec3 endPos, int durationTicks) {
             this.id = UUID.randomUUID();
+            this.ownerId = ownerId;
             this.startPos = startPos;
             this.endPos = endPos;
             this.length = startPos.distanceTo(endPos);
@@ -57,41 +63,189 @@ public class ZiplineManager {
         }
     }
 
+    public static class ZiplineTarget {
+        public final ActiveZipline zipline;
+        public final double distance;
+        public final boolean lookingAlongCable;
+
+        public ZiplineTarget(ActiveZipline zipline, double distance, boolean lookingAlongCable) {
+            this.zipline = zipline;
+            this.distance = distance;
+            this.lookingAlongCable = lookingAlongCable;
+        }
+    }
+
     private static final List<ActiveZipline> ACTIVE_ZIPLINES = new CopyOnWriteArrayList<>();
     private static final Map<UUID, ZiplineRider> ACTIVE_RIDERS = new ConcurrentHashMap<>();
 
-    public static void createZiplineAndRide(ServerLevel level, ServerPlayer player, Vec3 startPos, Vec3 endPos) {
-        ActiveZipline zipline = new ActiveZipline(startPos, endPos, 1800); // 90 seconds cable lifetime
+    public static void deployZipline(ServerLevel level, ServerPlayer player, Vec3 startPos, Vec3 endPos) {
+        // Limit active ziplines per player to 2
+        List<ActiveZipline> owned = new ArrayList<>();
+        for (ActiveZipline z : ACTIVE_ZIPLINES) {
+            if (player.getUUID().equals(z.ownerId)) {
+                owned.add(z);
+            }
+        }
+        if (owned.size() >= 2) {
+            ActiveZipline oldest = owned.get(0);
+            ACTIVE_ZIPLINES.remove(oldest);
+            level.playSound(null, oldest.startPos.x, oldest.startPos.y, oldest.startPos.z,
+                SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.8f, 1.2f);
+        }
+
+        ActiveZipline zipline = new ActiveZipline(player.getUUID(), startPos, endPos, 3600); // 3 minutes
         ACTIVE_ZIPLINES.add(zipline);
 
-        startRiding(level, player, zipline.startPos, zipline.endPos);
-
-        // Cable anchor spawn sound & fx
+        // Sound effects
         level.playSound(null, startPos.x, startPos.y, startPos.z,
-            SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 1.0f, 1.2f);
-        level.playSound(null, endPos.x, endPos.y, endPos.z,
-            SoundEvents.TRIPWIRE_ATTACH, SoundSource.BLOCKS, 1.0f, 1.4f);
+            SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0f, 1.2f);
+        level.playSound(null, startPos.x, startPos.y, startPos.z,
+            SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 1.0f, 1.4f);
 
-        // Visual cable shoot tracer
+        level.playSound(null, endPos.x, endPos.y, endPos.z,
+            SoundEvents.TRIPWIRE_ATTACH, SoundSource.BLOCKS, 1.2f, 1.2f);
+        level.playSound(null, endPos.x, endPos.y, endPos.z,
+            SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.7f, 1.8f);
+
+        // Visual tracer particles
         int steps = Math.min((int) (zipline.length * 2), 60);
         for (int i = 0; i <= steps; i++) {
             double p = (double) i / steps;
             Vec3 pt = startPos.lerp(endPos, p);
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, pt.x, pt.y, pt.z, 1, 0, 0, 0, 0);
         }
+
+        player.displayClientMessage(
+            Component.translatable("message.spycraft.zipline.deployed"),
+            true
+        );
     }
 
-    public static void startRiding(ServerLevel level, ServerPlayer player, Vec3 startPos, Vec3 endPos) {
-        double speed = 1.35; // ~27 blocks per second, exhilarating tactical slide
-        ACTIVE_RIDERS.put(player.getUUID(), new ZiplineRider(player.getUUID(), startPos, endPos, speed));
+    public static boolean mountZipline(ServerLevel level, ServerPlayer player, ActiveZipline zipline) {
+        Vec3 playerPos = player.getEyePosition();
+        Vec3 ab = zipline.endPos.subtract(zipline.startPos);
+        double lenSqr = ab.lengthSqr();
+        if (lenSqr < 1e-4) return false;
+
+        Vec3 ap = playerPos.subtract(zipline.startPos);
+        double t = ap.dot(ab) / lenSqr;
+        t = Math.max(0.0, Math.min(1.0, t));
+
+        Vec3 look = player.getLookAngle();
+        boolean forward;
+        if (t < 0.25) {
+            forward = look.dot(ab) >= -0.3;
+        } else if (t > 0.75) {
+            forward = look.dot(ab) > 0.3;
+        } else {
+            forward = look.dot(ab) >= 0.0;
+        }
+
+        Vec3 rideStart = zipline.startPos.lerp(zipline.endPos, t);
+        Vec3 rideEnd = forward ? zipline.endPos : zipline.startPos;
+
+        double dist = rideStart.distanceTo(rideEnd);
+        if (dist < 1.5) {
+            player.displayClientMessage(Component.translatable("message.spycraft.zipline.already_at_end"), true);
+            level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.6f);
+            return false;
+        }
+
+        // Refresh lifetime on use
+        zipline.remainingTicks = Math.max(zipline.remainingTicks, 3600);
+
+        double speed = 1.35; // ~27 blocks per second
+        ACTIVE_RIDERS.put(player.getUUID(), new ZiplineRider(player.getUUID(), rideStart, rideEnd, speed));
         GrapplingHookGunItem.grantGrappleProtection(player.getUUID());
 
+        // Audio & Visual feedback
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0f, 1.6f);
+            SoundEvents.ARMOR_EQUIP_CHAIN, SoundSource.PLAYERS, 1.0f, 1.3f);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+            SoundEvents.MINECART_RIDING, SoundSource.PLAYERS, 0.7f, 1.6f);
+
+        level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+            rideStart.x, rideStart.y, rideStart.z, 10, 0.2, 0.2, 0.2, 0.05);
+
+        return true;
+    }
+
+    public static void retractZipline(ServerLevel level, ServerPlayer player, ActiveZipline zipline) {
+        ACTIVE_ZIPLINES.remove(zipline);
+
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+            SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 1.0f, 1.4f);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+            SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 0.8f, 1.2f);
+
+        level.sendParticles(ParticleTypes.CRIT,
+            zipline.startPos.x, zipline.startPos.y, zipline.startPos.z, 8, 0.2, 0.2, 0.2, 0.05);
+        level.sendParticles(ParticleTypes.CRIT,
+            zipline.endPos.x, zipline.endPos.y, zipline.endPos.z, 8, 0.2, 0.2, 0.2, 0.05);
+
+        player.displayClientMessage(
+            Component.translatable("message.spycraft.zipline.retracted"),
+            true
+        );
+    }
+
+    public static ZiplineTarget findBestZipline(ServerPlayer player, double maxDist) {
+        Vec3 playerPos = player.getEyePosition();
+        Vec3 look = player.getLookAngle();
+
+        ActiveZipline best = null;
+        double bestDist = maxDist;
+        boolean bestLooking = false;
+
+        for (ActiveZipline z : ACTIVE_ZIPLINES) {
+            Vec3 ab = z.endPos.subtract(z.startPos);
+            double lenSqr = ab.lengthSqr();
+            if (lenSqr < 1e-4) continue;
+
+            Vec3 ap = playerPos.subtract(z.startPos);
+            double t = ap.dot(ab) / lenSqr;
+            t = Math.max(0.0, Math.min(1.0, t));
+            Vec3 closest = z.startPos.add(ab.scale(t));
+            double dist = playerPos.distanceTo(closest);
+
+            if (dist <= maxDist) {
+                boolean lookingAlong;
+                Vec3 norm = ab.normalize();
+                if (t < 0.25) {
+                    lookingAlong = look.dot(norm) >= -0.2;
+                } else if (t > 0.75) {
+                    lookingAlong = look.dot(norm) <= 0.2;
+                } else {
+                    lookingAlong = Math.abs(look.dot(norm)) >= 0.2;
+                }
+
+                if (best == null || (lookingAlong && !bestLooking) || (lookingAlong == bestLooking && dist < bestDist)) {
+                    best = z;
+                    bestDist = dist;
+                    bestLooking = lookingAlong;
+                }
+            }
+        }
+
+        if (best != null) {
+            return new ZiplineTarget(best, bestDist, bestLooking);
+        }
+        return null;
+    }
+
+    public static void createZiplineAndRide(ServerLevel level, ServerPlayer player, Vec3 startPos, Vec3 endPos) {
+        ActiveZipline zipline = new ActiveZipline(player.getUUID(), startPos, endPos, 3600);
+        ACTIVE_ZIPLINES.add(zipline);
+        mountZipline(level, player, zipline);
     }
 
     public static boolean isPlayerRiding(UUID playerId) {
         return ACTIVE_RIDERS.containsKey(playerId);
+    }
+
+    public static List<ActiveZipline> getActiveZiplines() {
+        return ACTIVE_ZIPLINES;
     }
 
     public static void tick(ServerLevel level) {
@@ -201,15 +355,18 @@ public class ZiplineManager {
                     continue;
                 }
 
-                // Periodic cable line particle rendering every 6 ticks
-                if (zipline.remainingTicks % 6 == 0) {
-                    int steps = Math.min((int) (zipline.length * 1.5), 50);
+                // Render taut cable particles every 2 ticks
+                if (zipline.remainingTicks % 2 == 0) {
+                    int steps = Math.min((int) (zipline.length * 1.6), 64);
                     for (int s = 0; s <= steps; s += 2) {
                         double p = (double) s / steps;
-                        double sag = Math.sin(p * Math.PI) * Math.min(zipline.length * 0.015, 1.0);
+                        double sag = Math.sin(p * Math.PI) * Math.min(zipline.length * 0.015, 0.85);
                         Vec3 pt = zipline.startPos.lerp(zipline.endPos, p).subtract(0, sag, 0);
                         level.sendParticles(ParticleTypes.CRIT, pt.x, pt.y, pt.z, 1, 0, 0, 0, 0);
                     }
+                    // Anchors markers
+                    level.sendParticles(ParticleTypes.ELECTRIC_SPARK, zipline.startPos.x, zipline.startPos.y, zipline.startPos.z, 1, 0.02, 0.02, 0.02, 0);
+                    level.sendParticles(ParticleTypes.ELECTRIC_SPARK, zipline.endPos.x, zipline.endPos.y, zipline.endPos.z, 1, 0.02, 0.02, 0.02, 0);
                 }
             }
         }

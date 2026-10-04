@@ -90,6 +90,9 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.breaching_spray"), "Breaching spray translation missing");
         assertTrue(langContent.contains("tooltip.spycraft.breaching_spray.desc"), "Breaching spray tooltip missing");
         assertTrue(langContent.contains("tooltip.spycraft.zipline_gun.desc"), "Zipline gun tooltip missing");
+        assertTrue(langContent.contains("message.spycraft.zipline.deployed"), "Zipline deployed message missing");
+        assertTrue(langContent.contains("message.spycraft.zipline.retracted"), "Zipline retracted message missing");
+        assertTrue(langContent.contains("hud.spycraft.zipline.prompt_mount"), "Zipline prompt mount missing");
         assertTrue(langContent.contains("tooltip.spycraft.grappling_hook_gun.desc"), "Grappling hook tooltip missing");
         assertTrue(langContent.contains("hud.spycraft.grappling_hook.harpooned"), "Grappling hook harpoon HUD string missing");
     }
@@ -112,6 +115,9 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.breaching_spray"), "Breaching spray Hungarian translation missing");
         assertTrue(langContent.contains("tooltip.spycraft.breaching_spray.desc"), "Breaching spray Hungarian tooltip missing");
         assertTrue(langContent.contains("tooltip.spycraft.zipline_gun.desc"), "Zipline gun Hungarian tooltip missing");
+        assertTrue(langContent.contains("message.spycraft.zipline.deployed"), "Zipline deployed Hungarian message missing");
+        assertTrue(langContent.contains("message.spycraft.zipline.retracted"), "Zipline retracted Hungarian message missing");
+        assertTrue(langContent.contains("hud.spycraft.zipline.prompt_mount"), "Zipline prompt mount Hungarian missing");
         assertTrue(langContent.contains("tooltip.spycraft.grappling_hook_gun.desc"), "Grappling hook Hungarian tooltip missing");
         assertTrue(langContent.contains("hud.spycraft.grappling_hook.harpooned"), "Grappling hook Hungarian harpoon HUD string missing");
     }
