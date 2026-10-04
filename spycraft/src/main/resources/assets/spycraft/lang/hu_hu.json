@@ -68,7 +68,7 @@
   "message.spycraft.binoculars.tag_success": "§a🎯 [Távcső] §fCélpont megjelölve: §e%s §7(Látszik a falakon át és követi a radar)",
   "tooltip.spycraft.zipline_gun.desc": "§7Hordozható acélkábeles drótkötélpálya rendszer (Zipline)!",
   "tooltip.spycraft.zipline_gun.range": "§e↳ Jobb klikk: §fKifeszíti a feszes acélsodronyt (akár 64 méterre)",
-  "tooltip.spycraft.zipline_gun.controls": "§b↳ Jobb klikk a kábelnél: §fFelszállás és száguldás a pályán (14 m/s)",
+  "tooltip.spycraft.zipline_gun.controls": "§b↳ Jobb klikk a kábelnél: §fFelszállás és kényelmes száguldás (~7.5 m/s)",
   "tooltip.spycraft.zipline_gun.retract": "§c↳ Guggolás + Jobb klikk: §fDrótkötél visszahúzása (vagy menet közben leugrás)",
   "message.spycraft.zipline.too_far": "§c[Drótkötélpálya] §7A célpont túl messze van! (Max 64 blokk)",
   "message.spycraft.zipline.too_close": "§c[Drótkötélpálya] §7A célpont túl közel van! (Min 4 blokk)",
