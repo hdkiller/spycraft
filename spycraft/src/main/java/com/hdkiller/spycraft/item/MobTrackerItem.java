@@ -251,4 +251,8 @@ public class MobTrackerItem extends Item {
         if (angle >= 247.5 && angle < 292.5) return "East ➡";
         return "South-East ↘";
     }
+    public static void clearRuntime() {
+        TRACKED_MOBS.clear();
+        TRACKED_BLOCKS.clear();
+    }
 }

@@ -2,6 +2,7 @@ package com.hdkiller.spycraft;
 
 import com.hdkiller.spycraft.laser.LaserForcefieldManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -140,7 +141,7 @@ class LaserForcefieldMathTest {
         LaserForcefieldManager.ForcefieldNetwork net = LaserForcefieldManager.getNetwork(owner);
 
         // Trap 1: Base A at (0, 64, 0), (5, 64, 0), (5, 64, 5)
-        LaserForcefieldManager.LaserTrap trap1 = new LaserForcefieldManager.LaserTrap(owner, null);
+        LaserForcefieldManager.LaserTrap trap1 = new LaserForcefieldManager.LaserTrap(owner, Level.OVERWORLD);
         trap1.pylons.addAll(List.of(
             new BlockPos(0, 64, 0),
             new BlockPos(5, 64, 0),
@@ -151,7 +152,7 @@ class LaserForcefieldMathTest {
 
         // Trap 2: Base B at (100, 64, 100), (105, 64, 100)
         // Distance to Trap 1 is ~140 blocks (well above MAX_LINK_DISTANCE = 32 blocks)
-        LaserForcefieldManager.LaserTrap trap2 = new LaserForcefieldManager.LaserTrap(owner, null);
+        LaserForcefieldManager.LaserTrap trap2 = new LaserForcefieldManager.LaserTrap(owner, Level.OVERWORLD);
         trap2.pylons.addAll(List.of(
             new BlockPos(100, 64, 100),
             new BlockPos(105, 64, 100)
@@ -164,11 +165,11 @@ class LaserForcefieldMathTest {
         assertTrue(trap2.active, "Trap 2 should be active");
 
         // Nearest trap lookup from Base A (1, 64, 1) should be trap1
-        LaserForcefieldManager.LaserTrap nearestA = net.findNearestTrap(new BlockPos(1, 64, 1), 64.0);
+        LaserForcefieldManager.LaserTrap nearestA = net.findNearestTrap(Level.OVERWORLD, new BlockPos(1, 64, 1), 64.0);
         assertSame(trap1, nearestA, "Nearest to (1,64,1) must be Trap 1");
 
         // Nearest trap lookup from Base B (102, 64, 102) should be trap2
-        LaserForcefieldManager.LaserTrap nearestB = net.findNearestTrap(new BlockPos(102, 64, 102), 64.0);
+        LaserForcefieldManager.LaserTrap nearestB = net.findNearestTrap(Level.OVERWORLD, new BlockPos(102, 64, 102), 64.0);
         assertSame(trap2, nearestB, "Nearest to (102,64,102) must be Trap 2");
 
         // Deactivating or breaking pylon in Trap 2 leaves Trap 1 fully intact and active!

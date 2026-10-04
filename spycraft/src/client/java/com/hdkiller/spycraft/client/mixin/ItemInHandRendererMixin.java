@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemInHandRenderer.class)
 public class ItemInHandRendererMixin {
     @Inject(method = "renderHandsWithItems", at = @At("HEAD"), cancellable = true)
-    private void erikcraft$hideHandsInDrone(float partialTicks, PoseStack poseStack, MultiBufferSource.BufferSource buffer, LocalPlayer player, int packedLight, CallbackInfo ci) {
+    private void spycraft$hideHandsInDrone(float partialTicks, PoseStack poseStack, MultiBufferSource.BufferSource buffer, LocalPlayer player, int packedLight, CallbackInfo ci) {
         if (player.hasEffect(ModEffects.DRONE_PILOTING)) {
             ci.cancel(); // First person drone camera view is completely unobstructed
         }

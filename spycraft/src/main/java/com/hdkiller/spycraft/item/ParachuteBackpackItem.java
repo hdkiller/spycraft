@@ -3,6 +3,8 @@ package com.hdkiller.spycraft.item;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -10,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -49,6 +50,7 @@ public class ParachuteBackpackItem extends ArmorItem {
     }
 
     public static void deployParachute(Player player, Level level) {
+        if (level.isClientSide) return;
         if (ACTIVE_PARACHUTES.add(player.getUUID())) {
             player.fallDistance = 0.0f;
             player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20, 0, false, false, false));
@@ -88,12 +90,19 @@ public class ParachuteBackpackItem extends ArmorItem {
         ACTIVE_PARACHUTES.remove(uuid);
     }
 
-    @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        if (!(entity instanceof Player player)) return;
+    public static void tick(MinecraftServer server) {
+        ACTIVE_PARACHUTES.removeIf(uuid -> server.getPlayerList().getPlayer(uuid) == null);
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            tickPlayer(player);
+        }
+    }
 
-        boolean isWorn = player.getItemBySlot(EquipmentSlot.CHEST).getItem() == this;
-        boolean isHeld = player.getMainHandItem() == stack || player.getOffhandItem() == stack;
+    private static void tickPlayer(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
+
+        boolean isWorn = player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.PARACHUTE_BACKPACK);
+        boolean isHeld = player.getMainHandItem().is(ModItems.PARACHUTE_BACKPACK)
+                || player.getOffhandItem().is(ModItems.PARACHUTE_BACKPACK);
         UUID uuid = player.getUUID();
         boolean parachuting = ACTIVE_PARACHUTES.contains(uuid);
 
@@ -134,7 +143,7 @@ public class ParachuteBackpackItem extends ArmorItem {
             player.hurtMarked = true;
 
             // Visual Parachute Canopy particles above player
-            if (!level.isClientSide && level instanceof ServerLevel serverLevel && level.getGameTime() % 4 == 0) {
+            if (level.getGameTime() % 4 == 0) {
                 double px = player.getX();
                 double py = player.getY() + 2.8;
                 double pz = player.getZ();
@@ -143,15 +152,15 @@ public class ParachuteBackpackItem extends ArmorItem {
                 for (double angle = -Math.PI / 2; angle <= Math.PI / 2; angle += Math.PI / 5) {
                     double ox = Math.cos(angle) * 1.3;
                     double oz = Math.sin(angle) * 1.3;
-                    serverLevel.sendParticles(ParticleTypes.CLOUD, px + ox, py + (0.8 - Math.abs(angle) * 0.3), pz + oz,
+                    level.sendParticles(ParticleTypes.CLOUD, px + ox, py + (0.8 - Math.abs(angle) * 0.3), pz + oz,
                         1, 0, 0, 0, 0.01);
                 }
                 // Suspension lines
-                serverLevel.sendParticles(ParticleTypes.CRIT, px, py - 0.4, pz, 2, 0.2, 0.3, 0.2, 0.02);
+                level.sendParticles(ParticleTypes.CRIT, px, py - 0.4, pz, 2, 0.2, 0.3, 0.2, 0.02);
             }
         } else {
             // Fall Detection for Auto-Deploy (only when worn on chest)
-            if (isWorn && !player.onGround() && !player.isInWater() && !player.isFallFlying()) {
+            if (isWorn && player.isAlive() && !player.onGround() && !player.isInWater() && !player.isFallFlying()) {
                 Vec3 vel = player.getDeltaMovement();
                 // 1. Auto-deploy on significant fall (>1.8 blocks fallen or downward velocity < -0.4)
                 if (player.fallDistance > 1.8f || vel.y < -0.4) {
@@ -203,5 +212,8 @@ public class ParachuteBackpackItem extends ArmorItem {
         tooltip.add(Component.translatable("tooltip.spycraft.parachute_backpack.worn"));
         tooltip.add(Component.translatable("tooltip.spycraft.parachute_backpack.hand"));
         tooltip.add(Component.translatable("tooltip.spycraft.parachute_backpack.glide"));
+    }
+    public static void clearRuntime() {
+        ACTIVE_PARACHUTES.clear();
     }
 }

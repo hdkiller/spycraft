@@ -30,13 +30,18 @@ public class LaserForcefieldManager {
     public static final double MAX_LINK_DISTANCE_SQ = MAX_LINK_DISTANCE * MAX_LINK_DISTANCE;
 
     public static class LaserTrap {
-        public final UUID id = UUID.randomUUID();
+        public final UUID id;
         public final UUID owner;
         public ResourceKey<Level> dimension;
         public final List<BlockPos> pylons = new ArrayList<>();
         public boolean active = false;
 
         public LaserTrap(UUID owner, ResourceKey<Level> dimension) {
+            this(UUID.randomUUID(), owner, dimension);
+        }
+
+        public LaserTrap(UUID id, UUID owner, ResourceKey<Level> dimension) {
+            this.id = id;
             this.owner = owner;
             this.dimension = dimension;
         }
@@ -85,12 +90,13 @@ public class LaserForcefieldManager {
             return traps;
         }
 
-        public LaserTrap findNearestTrap(BlockPos pos, double maxDist) {
+        public LaserTrap findNearestTrap(ResourceKey<Level> dimension, BlockPos pos, double maxDist) {
             double maxDistSq = maxDist * maxDist;
             LaserTrap best = null;
             double bestDistSq = Double.MAX_VALUE;
 
             for (LaserTrap trap : getAllTraps()) {
+                if (!dimension.equals(trap.dimension)) continue;
                 double d = trap.getMinDistanceSqTo(pos);
                 if (d <= maxDistSq && d < bestDistSq) {
                     bestDistSq = d;
@@ -101,15 +107,35 @@ public class LaserForcefieldManager {
         }
     }
 
-    private static final Map<UUID, ForcefieldNetwork> NETWORKS = new ConcurrentHashMap<>();
+    private static Map<UUID, ForcefieldNetwork> NETWORKS = new ConcurrentHashMap<>();
+
+    public static void load(net.minecraft.server.MinecraftServer server) {
+        NETWORKS = server.overworld().getDataStorage()
+                .computeIfAbsent(LaserNetworkSavedData.FACTORY, "spycraft_laser_networks").networks;
+    }
+
+    public static void clearRuntime() {
+        NETWORKS = new ConcurrentHashMap<>();
+    }
+
+    public static void markDirty(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.getServer().overworld().getDataStorage()
+                    .computeIfAbsent(LaserNetworkSavedData.FACTORY, "spycraft_laser_networks").setDirty();
+        }
+    }
 
     public static ForcefieldNetwork getNetwork(UUID owner) {
         return NETWORKS.computeIfAbsent(owner, ForcefieldNetwork::new);
     }
 
     public static void setTrapPylonsActive(Level level, LaserTrap trap, boolean active) {
+        if (trap.active != active) markDirty(level);
         trap.active = active;
-        if (level != null && !level.isClientSide) {
+        if (level instanceof ServerLevel serverLevel) {
+            Level trapLevel = serverLevel.getServer().getLevel(trap.dimension);
+            if (trapLevel == null) return;
+            level = trapLevel;
             for (BlockPos p : trap.pylons) {
                 if (level.isLoaded(p)) {
                     var state = level.getBlockState(p);
@@ -133,10 +159,12 @@ public class LaserForcefieldManager {
     public static void clearTrap(Level level, ForcefieldNetwork network, LaserTrap trap) {
         setTrapPylonsActive(level, trap, false);
         network.traps.remove(trap);
+        markDirty(level);
     }
 
     public static void clearNetwork(UUID owner, Level level) {
         ForcefieldNetwork net = NETWORKS.remove(owner);
+        markDirty(level);
         if (net != null) {
             for (LaserTrap trap : net.getAllTraps()) {
                 setTrapPylonsActive(level, trap, false);
@@ -152,9 +180,10 @@ public class LaserForcefieldManager {
     }
 
     public static void onPylonBroken(Level level, BlockPos pos) {
+        markDirty(level);
         for (ForcefieldNetwork net : NETWORKS.values()) {
             // Check legacy list
-            if (net.pylons.remove(pos)) {
+            if (level.dimension().equals(net.dimension) && net.pylons.remove(pos)) {
                 net.active = false;
             }
 
@@ -194,11 +223,16 @@ public class LaserForcefieldManager {
         }
     }
 
+    public static double interpolatedHeight(double startY, double endY, double progress) {
+        return startY + (endY - startY) * progress;
+    }
+
     public static void tick(ServerLevel level) {
         for (ForcefieldNetwork net : NETWORKS.values()) {
             for (LaserTrap trap : net.getAllTraps()) {
-                if (!trap.active || trap.pylons.size() < 2) continue;
                 if (trap.dimension != null && !trap.dimension.equals(level.dimension())) continue;
+                if (level.getGameTime() % 20 == 0) setTrapPylonsActive(level, trap, trap.active);
+                if (!trap.active || trap.pylons.size() < 2) continue;
 
                 // Check if any pylon was destroyed or missing in loaded chunks
                 boolean anyPylonRemoved = false;
@@ -315,9 +349,6 @@ public class LaserForcefieldManager {
 
                         if (segLenSq > MAX_LINK_DISTANCE_SQ) continue;
 
-                        double segY = Math.min(p1.getY(), p2.getY());
-                        if (ey < segY - 1.0 || ey > segY + 4.8) continue;
-
                         double ax = p1.getX() + 0.5;
                         double az = p1.getZ() + 0.5;
                         double bx = p2.getX() + 0.5;
@@ -327,6 +358,8 @@ public class LaserForcefieldManager {
                         double segDz = bz - az;
 
                         double t = segLenSq == 0 ? 0 : Math.max(0, Math.min(1, ((ex - ax) * segDx + (ez - az) * segDz) / segLenSq));
+                        double segY = interpolatedHeight(p1.getY(), p2.getY(), t);
+                        if (ey < segY - 1.0 || ey > segY + 4.8) continue;
                         double closeX = ax + t * segDx;
                         double closeZ = az + t * segDz;
 

@@ -96,4 +96,7 @@ public class SmokeCloudManager {
             }
         }
     }
+    public static void clearRuntime() {
+        ACTIVE_CLOUDS.clear();
+    }
 }

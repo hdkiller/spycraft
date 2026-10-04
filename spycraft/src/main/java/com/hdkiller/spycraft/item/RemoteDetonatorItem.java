@@ -225,4 +225,7 @@ public class RemoteDetonatorItem extends Item {
 
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
+    public static void clearRuntime() {
+        ARMED_CHARGES.clear();
+    }
 }

@@ -90,4 +90,7 @@ public class SoundTrapManager {
             }
         }
     }
+    public static void clearRuntime() {
+        ACTIVE_TRAPS.clear();
+    }
 }

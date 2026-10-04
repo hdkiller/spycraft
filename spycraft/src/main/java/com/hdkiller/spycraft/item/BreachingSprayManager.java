@@ -30,6 +30,7 @@ public class BreachingSprayManager {
     private static final Map<BlockLocation, Long> BLOCK_TIMESTAMPS = new ConcurrentHashMap<>();
 
     public static boolean addSprayedBlock(Level level, BlockPos pos, Player player) {
+        if (level.isClientSide) return false;
         BlockState state = level.getBlockState(pos);
         if (state.isAir() || state.getDestroySpeed(level, pos) < 0) {
             return false; // Bedrock or indestructible
@@ -176,5 +177,9 @@ public class BreachingSprayManager {
                 }
             }
         }
+    }
+    public static void clearRuntime() {
+        SPRAYED_BLOCKS.clear();
+        BLOCK_TIMESTAMPS.clear();
     }
 }

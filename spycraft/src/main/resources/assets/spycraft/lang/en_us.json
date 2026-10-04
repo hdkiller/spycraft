@@ -1,4 +1,5 @@
 {
+  "message.spycraft.mission_beacon.invalid_height": "The spy base does not fit within this world’s height limits. Choose lower or higher ground.",
   "item.spycraft.eriks_star": "Erik's Star",
   "item.spycraft.eriks_sword": "Erik's Lightning Sword",
   "item.spycraft.sniper_rifle": "Tactical Sniper Rifle",
@@ -25,7 +26,7 @@
   "item.spycraft.zipline_gun": "Tactical Zipline Gun",
   "item.spycraft.breaching_spray": "Tactical Breaching Spray",
   "effect.spycraft.drone_piloting": "Drone Piloting",
-  "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Spy & Adventure Gear",
+  "itemGroup.spycraft.spycraft_tab": "SpyCraft: Spy & Adventure Gear",
 
   "tooltip.spycraft.hologram_projector.line1": "§7Right-click on the ground to project a §bHologram Decoy§7!",
   "tooltip.spycraft.hologram_projector.line2": "§8↳ Distracts and lures nearby guards and hostile mobs (25s).",

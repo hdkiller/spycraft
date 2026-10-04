@@ -44,11 +44,13 @@ public class GrapplingHookGunItem extends Item {
     public static final double MAX_DISTANCE = 32.0;
 
     private static class GrappleSession {
+        final net.minecraft.resources.ResourceKey<Level> dimension;
         Vec3 anchorPos;
         UUID targetEntityId;
         int ticksReeling;
 
-        GrappleSession(Vec3 anchorPos, UUID targetEntityId) {
+        GrappleSession(net.minecraft.resources.ResourceKey<Level> dimension, Vec3 anchorPos, UUID targetEntityId) {
+            this.dimension = dimension;
             this.anchorPos = anchorPos;
             this.targetEntityId = targetEntityId;
             this.ticksReeling = 0;
@@ -135,8 +137,10 @@ public class GrapplingHookGunItem extends Item {
             if (isTitan) {
                 // Titan Grapple: Reel player towards the massive boss
                 Vec3 targetPos = target.getEyePosition();
-                ACTIVE_GRAPPLES.put(player.getUUID(), new GrappleSession(targetPos, target.getUUID()));
-                grantGrappleProtection(player.getUUID());
+                if (!level.isClientSide) {
+                    ACTIVE_GRAPPLES.put(player.getUUID(), new GrappleSession(level.dimension(), targetPos, target.getUUID()));
+                    grantGrappleProtection(player.getUUID());
+                }
                 player.startUsingItem(hand);
 
                 if (!level.isClientSide) {
@@ -150,9 +154,11 @@ public class GrapplingHookGunItem extends Item {
                 double pullDist = eyePos.distanceTo(target.position());
                 double pullSpeed = Math.min(0.65, 0.30 + pullDist * 0.02);
 
-                target.setDeltaMovement(toPlayer.x * pullSpeed, 0.30, toPlayer.z * pullSpeed);
-                target.hurtMarked = true;
-                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 35, 4, false, false));
+                if (!level.isClientSide) {
+                    target.setDeltaMovement(toPlayer.x * pullSpeed, 0.30, toPlayer.z * pullSpeed);
+                    target.hurtMarked = true;
+                    target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 35, 4, false, false));
+                }
 
                 if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
                     int steps = Math.min((int) (pullDist * 2), 40);
@@ -183,8 +189,10 @@ public class GrapplingHookGunItem extends Item {
         // 3. Block Grapple: Continuous Winch Reeling
         if (blockHit.getType() == HitResult.Type.BLOCK) {
             Vec3 hitPos = blockHit.getLocation();
-            ACTIVE_GRAPPLES.put(player.getUUID(), new GrappleSession(hitPos, null));
-            grantGrappleProtection(player.getUUID());
+            if (!level.isClientSide) {
+                ACTIVE_GRAPPLES.put(player.getUUID(), new GrappleSession(level.dimension(), hitPos, null));
+                grantGrappleProtection(player.getUUID());
+            }
             player.startUsingItem(hand);
 
             if (!level.isClientSide) {
@@ -208,10 +216,11 @@ public class GrapplingHookGunItem extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        if (!(livingEntity instanceof Player player)) return;
+        if (level.isClientSide || !(livingEntity instanceof Player player)) return;
 
         GrappleSession session = ACTIVE_GRAPPLES.get(player.getUUID());
-        if (session == null) {
+        if (session == null || !session.dimension.equals(level.dimension())) {
+            ACTIVE_GRAPPLES.remove(player.getUUID());
             player.stopUsingItem();
             return;
         }
@@ -297,7 +306,7 @@ public class GrapplingHookGunItem extends Item {
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
-        if (entity instanceof Player player) {
+        if (!level.isClientSide && entity instanceof Player player) {
             ACTIVE_GRAPPLES.remove(player.getUUID());
 
             // Slingshot momentum boost upon early release
@@ -322,5 +331,9 @@ public class GrapplingHookGunItem extends Item {
         tooltip.add(Component.translatable("tooltip.spycraft.grappling_hook_gun.reel"));
         tooltip.add(Component.translatable("tooltip.spycraft.grappling_hook_gun.harpoon"));
         tooltip.add(Component.translatable("tooltip.spycraft.grappling_hook_gun.nofall"));
+    }
+    public static void clearRuntime() {
+        ACTIVE_GRAPPLES.clear();
+        GRAPPLE_PROTECTION.clear();
     }
 }

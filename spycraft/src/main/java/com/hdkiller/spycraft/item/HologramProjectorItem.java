@@ -3,6 +3,7 @@ package com.hdkiller.spycraft.item;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -37,17 +38,29 @@ public class HologramProjectorItem extends Item {
         BlockPos pos = context.getClickedPos().above();
 
         if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
-            ArmorStand decoy = new ArmorStand(serverLevel, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+            ArmorStand decoy = new ArmorStand(serverLevel, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5) {
+                @Override
+                public boolean shouldBeSaved() {
+                    return false; // Projections must never outlive their runtime expiration.
+                }
+            };
             decoy.setCustomName(Component.literal("§b✨ " + player.getName().getString() + " (Hologram)"));
             decoy.setCustomNameVisible(true);
             decoy.setGlowingTag(true);
             decoy.setNoGravity(true);
             decoy.setInvulnerable(true);
 
-            // Copy player equipment as visual projection (invulnerable prevents damage & loot drop)
+            // Copy player equipment as visual projection.
             decoy.setItemSlot(EquipmentSlot.HEAD, player.getItemBySlot(EquipmentSlot.HEAD).copy());
             decoy.setItemSlot(EquipmentSlot.CHEST, player.getItemBySlot(EquipmentSlot.CHEST).copy());
             decoy.setItemSlot(EquipmentSlot.MAINHAND, player.getItemBySlot(EquipmentSlot.MAINHAND).copy());
+
+            // Invulnerability does not prevent equipment swaps. Lock every slot,
+            // including removal/insertion, through the persisted armor-stand NBT.
+            CompoundTag equipmentData = new CompoundTag();
+            decoy.addAdditionalSaveData(equipmentData);
+            equipmentData.putInt("DisabledSlots", -1);
+            decoy.readAdditionalSaveData(equipmentData);
 
             serverLevel.addFreshEntity(decoy);
 

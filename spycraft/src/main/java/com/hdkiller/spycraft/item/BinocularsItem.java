@@ -93,6 +93,7 @@ public class BinocularsItem extends Item {
 
         if (target == null) {
             ACTIVE_SCANS.remove(playerUuid);
+            sendScan(player, -1, 0, false);
             return;
         }
 
@@ -161,12 +162,14 @@ public class BinocularsItem extends Item {
                 true
             );
         }
+        sendScan(player, target.getId(), session.dwellTicks, session.locked);
     }
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
         if (!level.isClientSide && entity instanceof Player player) {
             ACTIVE_SCANS.remove(player.getUUID());
+            sendScan(player, -1, 0, false);
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.SPYGLASS_STOP_USING, SoundSource.PLAYERS, 1.0f, 1.0f);
         }
@@ -218,5 +221,20 @@ public class BinocularsItem extends Item {
         tooltip.add(Component.translatable("tooltip.spycraft.binoculars.desc"));
         tooltip.add(Component.translatable("tooltip.spycraft.binoculars.zoom"));
         tooltip.add(Component.translatable("tooltip.spycraft.binoculars.tag"));
+    }
+    public static void clearRuntime() {
+        ACTIVE_SCANS.clear();
+    }
+    private static void sendScan(Player player, int targetId, int ticks, boolean locked) {
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer
+                && net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.canSend(serverPlayer,
+                        com.hdkiller.spycraft.network.BinocularScanPayload.TYPE)) {
+            net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(serverPlayer,
+                    new com.hdkiller.spycraft.network.BinocularScanPayload(targetId, ticks, locked));
+        }
+    }
+
+    public static void onPlayerDisconnect(UUID uuid) {
+        ACTIVE_SCANS.remove(uuid);
     }
 }

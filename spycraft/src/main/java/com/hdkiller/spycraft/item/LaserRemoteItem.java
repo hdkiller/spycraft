@@ -49,7 +49,7 @@ public class LaserRemoteItem extends Item {
         if (player.isShiftKeyDown()) {
             if (!level.isClientSide) {
                 var network = LaserForcefieldManager.getNetwork(player.getUUID());
-                LaserForcefieldManager.LaserTrap nearTrap = network.findNearestTrap(pos, 64.0);
+                LaserForcefieldManager.LaserTrap nearTrap = network.findNearestTrap(level.dimension(), pos, 64.0);
                 if (nearTrap != null) {
                     int trapNum = network.traps.indexOf(nearTrap) + 1;
                     LaserForcefieldManager.clearTrap(level, network, nearTrap);
@@ -72,7 +72,7 @@ public class LaserRemoteItem extends Item {
                 // 1. Check if pos is already in an existing trap -> Unlink it
                 LaserForcefieldManager.LaserTrap existingTrap = null;
                 for (LaserForcefieldManager.LaserTrap t : network.traps) {
-                    if (t.pylons.contains(pos)) {
+                    if (level.dimension().equals(t.dimension) && t.pylons.contains(pos)) {
                         existingTrap = t;
                         break;
                     }
@@ -160,6 +160,7 @@ public class LaserRemoteItem extends Item {
                     }
                 }
 
+                LaserForcefieldManager.markDirty(level);
                 player.getCooldowns().addCooldown(this, 10);
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
@@ -180,7 +181,7 @@ public class LaserRemoteItem extends Item {
 
             // Sneak + click in air clears nearest trap or all
             if (player.isShiftKeyDown()) {
-                LaserForcefieldManager.LaserTrap nearTrap = network.findNearestTrap(player.blockPosition(), 64.0);
+                LaserForcefieldManager.LaserTrap nearTrap = network.findNearestTrap(level.dimension(), player.blockPosition(), 64.0);
                 if (nearTrap != null) {
                     int trapNum = network.traps.indexOf(nearTrap) + 1;
                     LaserForcefieldManager.clearTrap(level, network, nearTrap);
@@ -195,10 +196,8 @@ public class LaserRemoteItem extends Item {
             }
 
             // Find nearest trap within 64 blocks
-            LaserForcefieldManager.LaserTrap targetTrap = network.findNearestTrap(player.blockPosition(), 64.0);
-            if (targetTrap == null && network.traps.size() == 1) {
-                targetTrap = network.traps.get(0);
-            }
+            LaserForcefieldManager.LaserTrap targetTrap = network.findNearestTrap(level.dimension(), player.blockPosition(), 64.0);
+
 
             if (targetTrap == null) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),

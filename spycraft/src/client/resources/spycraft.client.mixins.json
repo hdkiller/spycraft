@@ -3,7 +3,7 @@
   "package": "com.hdkiller.spycraft.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ExampleClientMixin",
+    "MinecraftMixin",
     "PlayerRendererMixin",
     "GuiMixin",
     "ItemInHandRendererMixin",

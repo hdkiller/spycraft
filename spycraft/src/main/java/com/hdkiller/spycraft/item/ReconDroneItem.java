@@ -38,6 +38,20 @@ public class ReconDroneItem extends Item {
         super(properties);
     }
 
+    public static java.util.UUID getOrCreateDroneId(ItemStack stack) {
+        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if (!tag.hasUUID("spycraft_drone_id")) {
+            tag.putUUID("spycraft_drone_id", java.util.UUID.randomUUID());
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        }
+        return tag.getUUID("spycraft_drone_id");
+    }
+
+    public static boolean hasDroneId(ItemStack stack, java.util.UUID id) {
+        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        return id != null && tag.hasUUID("spycraft_drone_id") && id.equals(tag.getUUID("spycraft_drone_id"));
+    }
+
     public static int getBattery(ItemStack stack) {
         CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         CompoundTag tag = customData.copyTag();
@@ -169,7 +183,7 @@ public class ReconDroneItem extends Item {
             }
 
             int darts = getDarts(stack);
-            ReconDroneManager.startSession(serverPlayer, battery, darts);
+            ReconDroneManager.startSession(serverPlayer, stack, battery, darts);
             player.getCooldowns().addCooldown(this, 20);
         }
 

@@ -47,6 +47,8 @@ public class ReconDroneManager {
 
     public static class DroneSession {
         public final UUID playerUuid;
+        public final UUID droneItemId;
+        public int nextActionTick;
         public final Vec3 launchPos;
         public final float launchYaw;
         public final float launchPitch;
@@ -57,8 +59,9 @@ public class ReconDroneManager {
         public final Set<UUID> scannedMobs = new HashSet<>();
         public UUID laserTaggedMob;
 
-        public DroneSession(UUID playerUuid, Vec3 launchPos, float launchYaw, float launchPitch, ResourceKey<Level> dimension, int durationTicks, int darts) {
+        public DroneSession(UUID playerUuid, UUID droneItemId, Vec3 launchPos, float launchYaw, float launchPitch, ResourceKey<Level> dimension, int durationTicks, int darts) {
             this.playerUuid = playerUuid;
+            this.droneItemId = droneItemId;
             this.launchPos = launchPos;
             this.launchYaw = launchYaw;
             this.launchPitch = launchPitch;
@@ -80,14 +83,17 @@ public class ReconDroneManager {
     /**
      * Start Drone Piloting Session with specific initial battery and darts
      */
-    public static void startSession(ServerPlayer player, int durationTicks, int darts) {
+    public static void startSession(ServerPlayer player, ItemStack drone, int durationTicks, int darts) {
         UUID uuid = player.getUUID();
         Vec3 launchPos = player.position();
         float yaw = player.getYRot();
         float pitch = player.getXRot();
 
-        DroneSession session = new DroneSession(uuid, launchPos, yaw, pitch, player.level().dimension(), durationTicks, darts);
+        DroneSession session = new DroneSession(uuid, ReconDroneItem.getOrCreateDroneId(drone), launchPos, yaw, pitch, player.level().dimension(), durationTicks, darts);
         SESSIONS.put(uuid, session);
+        // Reserve resources now so dropping the drone cannot preserve its charge.
+        ReconDroneItem.setBattery(drone, 0);
+        ReconDroneItem.setDarts(drone, 0);
 
         // Apply drone effect, invisibility, and full damage resistance
         player.addEffect(new MobEffectInstance(ModEffects.DRONE_PILOTING, durationTicks, 0, false, false, true));
@@ -123,11 +129,15 @@ public class ReconDroneManager {
      * Dispatch Drone Action depending on selected hotbar slot (1-4)
      */
     public static void handleDroneAction(ServerPlayer player) {
-        DroneSession session = SESSIONS.get(player.getUUID());
-        if (session == null) return;
+        handleDroneAction(player, player.getInventory().selected % 4);
+    }
 
-        int slot = player.getInventory().selected;
-        int mode = slot % 4;
+    public static void handleDroneAction(ServerPlayer player, int mode) {
+        DroneSession session = SESSIONS.get(player.getUUID());
+        if (session == null || !player.isAlive() || mode < 0 || mode > 3
+                || !session.dimension.equals(player.level().dimension())
+                || player.tickCount < session.nextActionTick) return;
+        session.nextActionTick = player.tickCount + 4;
 
         switch (mode) {
             case 0 -> triggerLaserTag(player);
@@ -296,8 +306,8 @@ public class ReconDroneManager {
         Vec3 hitPos = blockHit.getType() != HitResult.Type.MISS ? blockHit.getLocation() : reach;
 
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
-            level, player, eyePos, reach,
-            new AABB(eyePos, reach).inflate(1.2),
+            level, player, eyePos, hitPos,
+            new AABB(eyePos, hitPos).inflate(1.2),
             e -> e instanceof LivingEntity && e != player && e.isAlive()
         );
 
@@ -380,8 +390,8 @@ public class ReconDroneManager {
         Vec3 hitPos = blockHit.getType() != HitResult.Type.MISS ? blockHit.getLocation() : reach;
 
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
-            level, player, eyePos, reach,
-            new AABB(eyePos, reach).inflate(1.2),
+            level, player, eyePos, hitPos,
+            new AABB(eyePos, hitPos).inflate(1.2),
             e -> e instanceof LivingEntity && e != player && e.isAlive()
         );
 
@@ -484,8 +494,9 @@ public class ReconDroneManager {
         SESSIONS.remove(player.getUUID());
 
         // Update battery and darts on the drone item in player's inventory
-        for (ItemStack item : player.getInventory().items) {
-            if (item.is(ModItems.RECON_DRONE)) {
+        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
+            ItemStack item = player.getInventory().getItem(slot);
+            if (item.is(ModItems.RECON_DRONE) && ReconDroneItem.hasDroneId(item, session.droneItemId)) {
                 ReconDroneItem.setBattery(item, session.ticksRemaining);
                 ReconDroneItem.setDarts(item, session.dartsRemaining);
                 break;
@@ -537,5 +548,9 @@ public class ReconDroneManager {
         if (session != null) {
             recallPlayer(player, session, "§b🛸 [DRÓN] §eA pilóta bontotta a kapcsolatot. Drón visszatért a bázisra.");
         }
+    }
+    public static void clearRuntime() {
+        SESSIONS.clear();
+        SLEEPING_MOBS.clear();
     }
 }

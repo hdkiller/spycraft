@@ -135,13 +135,15 @@ public class SpyBaseMissionBuilder {
         StructureData data = loadStructure();
         if (data == null) return false;
 
-        // Mark mission as deployed in this world
-        markMissionDeployed(level);
-
         // 1. Calculate start coordinates with underground offset for subterranean garage
         int startX = origin.getX() - (data.width / 2);
         int startY = origin.getY() - GROUND_PLAZA_Y_OFFSET;
         int startZ = origin.getZ() - (data.length / 2);
+
+        if (!fitsBuildHeight(startY, data.height, level.getMinBuildHeight(), level.getMaxBuildHeight())) {
+            if (player != null) player.sendSystemMessage(Component.translatable("message.spycraft.mission_beacon.invalid_height"));
+            return false;
+        }
 
         BlockPos.MutableBlockPos mpos = new BlockPos.MutableBlockPos();
         BlockState air = Blocks.AIR.defaultBlockState();
@@ -211,6 +213,8 @@ public class SpyBaseMissionBuilder {
             serverPlayer.teleportTo(level, spawnX, spawnY, spawnZ, 180.0f, 0.0f);
         }
 
+        markMissionDeployed(level);
+
         // 8. Sounds & Announcements
         level.playSound(null, origin, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 2.0f, 1.0f);
         level.playSound(null, origin, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 2.0f, 1.2f);
@@ -227,6 +231,10 @@ public class SpyBaseMissionBuilder {
         }
 
         return true;
+    }
+
+    public static boolean fitsBuildHeight(int startY, int height, int minY, int maxY) {
+        return startY >= minY && height > 0 && (long) startY + height <= maxY;
     }
 
     private static void populateMission(ServerLevel level, int startX, int startY, int startZ, StructureData data, Player player) {
@@ -262,6 +270,7 @@ public class SpyBaseMissionBuilder {
         missionTrap.active = true;
         network.traps.add(missionTrap);
         LaserForcefieldManager.setTrapPylonsActive(level, missionTrap, true);
+        LaserForcefieldManager.markDirty(level);
 
         // Sound trap decoy nearby
         level.setBlock(new BlockPos(centerX, startY + 29, centerZ), ModBlocks.SOUND_TRAP.defaultBlockState(), Block.UPDATE_ALL);
@@ -295,6 +304,7 @@ public class SpyBaseMissionBuilder {
             guard.setCustomName(Component.literal("§c" + name));
             guard.setCustomNameVisible(true);
             guard.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+            guard.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
             guard.setPersistenceRequired();
             level.addFreshEntity(guard);
         }
@@ -307,6 +317,7 @@ public class SpyBaseMissionBuilder {
             agent.setCustomName(Component.literal("§4" + name));
             agent.setCustomNameVisible(true);
             agent.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));
+            agent.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
             agent.setPersistenceRequired();
             level.addFreshEntity(agent);
         }
@@ -321,6 +332,7 @@ public class SpyBaseMissionBuilder {
             boss.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.NETHERITE_HELMET));
             boss.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.NETHERITE_CHESTPLATE));
             boss.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.NETHERITE_AXE));
+            boss.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(60.0);
             boss.setHealth(60.0f); // High boss health
             boss.setPersistenceRequired();
             level.addFreshEntity(boss);

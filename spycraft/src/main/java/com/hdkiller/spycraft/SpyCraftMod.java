@@ -23,7 +23,7 @@ public class SpyCraftMod implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("==========================================");
-        LOGGER.info("  ErikCraft Mod initialized! Welcome Erik!  ");
+        LOGGER.info("  SpyCraft Mod initialized! Welcome Erik!  ");
         LOGGER.info("==========================================");
 
         // Register custom effects (Drone Piloting)
@@ -38,6 +38,23 @@ public class SpyCraftMod implements ModInitializer {
         // Register custom creative tab
         ModItemGroups.registerItemGroups();
 
+        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.playC2S().register(
+                com.hdkiller.spycraft.network.DroneActionPayload.TYPE,
+                com.hdkiller.spycraft.network.DroneActionPayload.CODEC);
+        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.playS2C().register(
+                com.hdkiller.spycraft.network.BinocularScanPayload.TYPE,
+                com.hdkiller.spycraft.network.BinocularScanPayload.CODEC);
+        net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
+                com.hdkiller.spycraft.network.DroneActionPayload.TYPE,
+                (payload, context) -> ReconDroneManager.handleDroneAction(context.player(), payload.mode()));
+
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STARTING.register(server -> clearRuntime());
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STARTED.register(LaserForcefieldManager::load);
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            for (var player : server.getPlayerList().getPlayers()) ReconDroneManager.onPlayerDisconnect(player);
+        });
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPED.register(server -> clearRuntime());
+
         // Register server tick events
         ServerTickEvents.END_WORLD_TICK.register(LaserForcefieldManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(ReconDroneManager::tick);
@@ -46,6 +63,7 @@ public class SpyCraftMod implements ModInitializer {
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.SmokeCloudManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.ZiplineManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.BreachingSprayManager::tick);
+        ServerTickEvents.END_SERVER_TICK.register(com.hdkiller.spycraft.item.ParachuteBackpackItem::tick);
 
         // Register disconnect event for safe cleanup
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -55,6 +73,7 @@ public class SpyCraftMod implements ModInitializer {
                 com.hdkiller.spycraft.item.GrapplingHookGunItem.onPlayerDisconnect(player.getUUID());
                 com.hdkiller.spycraft.item.ZiplineManager.onPlayerDisconnect(player.getUUID());
                 com.hdkiller.spycraft.item.ParachuteBackpackItem.onPlayerDisconnect(player.getUUID());
+                com.hdkiller.spycraft.item.BinocularsItem.onPlayerDisconnect(player.getUUID());
             }
         });
 
@@ -120,5 +139,19 @@ public class SpyCraftMod implements ModInitializer {
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+    private static void clearRuntime() {
+        LaserForcefieldManager.clearRuntime();
+        ReconDroneManager.clearRuntime();
+        SoundTrapManager.clearRuntime();
+        com.hdkiller.spycraft.item.BreachingSprayManager.clearRuntime();
+        com.hdkiller.spycraft.item.SmokeCloudManager.clearRuntime();
+        com.hdkiller.spycraft.item.GrapplingHookGunItem.clearRuntime();
+        com.hdkiller.spycraft.item.ZiplineManager.clearRuntime();
+        com.hdkiller.spycraft.item.HologramDecoyManager.clearRuntime();
+        com.hdkiller.spycraft.item.BinocularsItem.clearRuntime();
+        com.hdkiller.spycraft.item.MobTrackerItem.clearRuntime();
+        com.hdkiller.spycraft.item.RemoteDetonatorItem.clearRuntime();
+        com.hdkiller.spycraft.item.ParachuteBackpackItem.clearRuntime();
     }
 }

@@ -24,7 +24,7 @@ public abstract class PlayerMixin {
     @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
     private void spycraft$cancelGrappleFallDamage(float fallDistance, float multiplier, net.minecraft.world.damagesource.DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
-        if (com.hdkiller.spycraft.item.GrapplingHookGunItem.hasRecentGrappleProtection(player.getUUID())) {
+        if (!player.level().isClientSide && com.hdkiller.spycraft.item.GrapplingHookGunItem.hasRecentGrappleProtection(player.getUUID())) {
             com.hdkiller.spycraft.item.GrapplingHookGunItem.clearGrappleProtection(player.getUUID());
             cir.setReturnValue(false);
         }

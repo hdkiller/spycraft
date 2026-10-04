@@ -31,7 +31,7 @@ public abstract class GuiMixin {
 
     // Hide vanilla hotbar while piloting drone
     @Inject(method = "renderItemHotbar", at = @At("HEAD"), cancellable = true)
-    private void erikcraft$hideHotbarInDrone(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void spycraft$hideHotbarInDrone(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (this.minecraft.player != null && this.minecraft.player.hasEffect(ModEffects.DRONE_PILOTING)) {
             ci.cancel();
         }
@@ -39,7 +39,7 @@ public abstract class GuiMixin {
 
     // Sniper Reticle
     @Inject(method = "renderSpyglassOverlay", at = @At("RETURN"))
-    private void erikcraft$renderSniperReticle(GuiGraphics guiGraphics, float scopeScale, CallbackInfo ci) {
+    private void spycraft$renderSniperReticle(GuiGraphics guiGraphics, float scopeScale, CallbackInfo ci) {
         LocalPlayer player = this.minecraft.player;
         if (player == null || !player.isUsingItem() || !player.getUseItem().is(ModItems.SNIPER_RIFLE)) {
             return;
@@ -104,8 +104,8 @@ public abstract class GuiMixin {
         double distMeters = hit.getType() != HitResult.Type.MISS ? eyePos.distanceTo(hit.getLocation()) : maxDist;
 
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
-            player.level(), player, eyePos, reach,
-            new AABB(eyePos, reach).inflate(1.0),
+            player.level(), player, eyePos, hit.getType() != HitResult.Type.MISS ? hit.getLocation() : reach,
+            new AABB(eyePos, hit.getType() != HitResult.Type.MISS ? hit.getLocation() : reach).inflate(1.0),
             e -> e instanceof LivingEntity && e.isAlive()
         );
 
@@ -135,7 +135,7 @@ public abstract class GuiMixin {
 
     // Tactical Binoculars HUD & Reticle
     @Inject(method = "renderSpyglassOverlay", at = @At("RETURN"))
-    private void erikcraft$renderBinocularsReticle(GuiGraphics guiGraphics, float scopeScale, CallbackInfo ci) {
+    private void spycraft$renderBinocularsReticle(GuiGraphics guiGraphics, float scopeScale, CallbackInfo ci) {
         LocalPlayer player = this.minecraft.player;
         if (player == null || !player.isUsingItem() || !player.getUseItem().is(ModItems.BINOCULARS)) {
             return;
@@ -194,17 +194,18 @@ public abstract class GuiMixin {
         double distMeters = hit.getType() != HitResult.Type.MISS ? eyePos.distanceTo(hit.getLocation()) : maxDist;
 
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
-            player.level(), player, eyePos, reach,
-            new AABB(eyePos, reach).inflate(1.2),
+            player.level(), player, eyePos, hit.getType() != HitResult.Type.MISS ? hit.getLocation() : reach,
+            new AABB(eyePos, hit.getType() != HitResult.Type.MISS ? hit.getLocation() : reach).inflate(1.2),
             e -> e instanceof LivingEntity && e != player && e.isAlive()
         );
 
-        int ticksUsing = player.getTicksUsingItem();
+        int ticksUsing = entityHit != null
+                ? com.hdkiller.spycraft.client.BinocularScanState.dwellTicks(entityHit.getEntity().getId()) : 0;
         int dwellGoal = 24; // 1.2s for lock-on
 
         if (entityHit != null && entityHit.getEntity() instanceof LivingEntity target) {
             double targetDist = eyePos.distanceTo(entityHit.getLocation());
-            boolean isLocked = ticksUsing >= dwellGoal;
+            boolean isLocked = com.hdkiller.spycraft.client.BinocularScanState.isLocked(target.getId());
             String targetName = target.getName().getString();
 
             String statusText = isLocked
@@ -236,7 +237,7 @@ public abstract class GuiMixin {
 
     // Drone Tactical HUD
     @Inject(method = "render", at = @At("RETURN"))
-    private void erikcraft$renderDroneHUD(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void spycraft$renderDroneHUD(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         LocalPlayer player = this.minecraft.player;
         if (player == null || !player.hasEffect(ModEffects.DRONE_PILOTING)) {
             return;
@@ -411,7 +412,7 @@ public abstract class GuiMixin {
 
     // Grappling Hook Tactical Reticle & Range Indicator
     @Inject(method = "renderCrosshair", at = @At("RETURN"))
-    private void erikcraft$renderGrappleCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void spycraft$renderGrappleCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         LocalPlayer player = this.minecraft.player;
         if (player == null) return;
 

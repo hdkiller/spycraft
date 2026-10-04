@@ -47,6 +47,7 @@ public class ZiplineManager {
 
     public static class ZiplineRider {
         public final UUID playerId;
+        public final net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension;
         public final Vec3 startPos;
         public final Vec3 endPos;
         public final double totalDist;
@@ -54,8 +55,9 @@ public class ZiplineManager {
         public double currentDist;
         public int ticksSliding;
 
-        ZiplineRider(UUID playerId, Vec3 startPos, Vec3 endPos, double speed) {
+        ZiplineRider(UUID playerId, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension, Vec3 startPos, Vec3 endPos, double speed) {
             this.playerId = playerId;
+            this.dimension = dimension;
             this.startPos = startPos;
             this.endPos = endPos;
             this.totalDist = startPos.distanceTo(endPos);
@@ -124,6 +126,7 @@ public class ZiplineManager {
     }
 
     public static boolean mountZipline(ServerLevel level, ServerPlayer player, ActiveZipline zipline) {
+        if (!zipline.dimension.equals(level.dimension())) return false;
         Vec3 playerPos = player.getEyePosition();
         Vec3 ab = zipline.endPos.subtract(zipline.startPos);
         double lenSqr = ab.lengthSqr();
@@ -158,7 +161,7 @@ public class ZiplineManager {
         zipline.remainingTicks = Math.max(zipline.remainingTicks, 3600);
 
         double speed = 0.38; // ~7.6 blocks per second (~27 km/h), comfortable and scenic glide
-        ACTIVE_RIDERS.put(player.getUUID(), new ZiplineRider(player.getUUID(), rideStart, rideEnd, speed));
+        ACTIVE_RIDERS.put(player.getUUID(), new ZiplineRider(player.getUUID(), level.dimension(), rideStart, rideEnd, speed));
         GrapplingHookGunItem.grantGrappleProtection(player.getUUID());
 
         // Audio & Visual feedback
@@ -272,6 +275,11 @@ public class ZiplineManager {
 
                 // Strictly tick rider only in their current dimension
                 if (!player.level().dimension().equals(level.dimension())) {
+                    continue;
+                }
+
+                if (!rider.dimension.equals(player.level().dimension())) {
+                    riderIt.remove();
                     continue;
                 }
 
@@ -389,5 +397,9 @@ public class ZiplineManager {
                 }
             }
         }
+    }
+    public static void clearRuntime() {
+        ACTIVE_ZIPLINES.clear();
+        ACTIVE_RIDERS.clear();
     }
 }

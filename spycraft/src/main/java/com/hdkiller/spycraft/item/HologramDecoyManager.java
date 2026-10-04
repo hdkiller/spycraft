@@ -13,11 +13,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HologramDecoyManager {
     private static class DecoyEntry {
-        final ArmorStand stand;
+        final java.util.UUID uuid;
+        final net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension;
         int remainingTicks;
 
         DecoyEntry(ArmorStand stand, int ticks) {
-            this.stand = stand;
+            this.uuid = stand.getUUID();
+            this.dimension = stand.level().dimension();
             this.remainingTicks = ticks;
         }
     }
@@ -34,7 +36,12 @@ public class HologramDecoyManager {
         Iterator<DecoyEntry> it = ACTIVE_DECOYS.iterator();
         while (it.hasNext()) {
             DecoyEntry entry = it.next();
-            ArmorStand stand = entry.stand;
+            if (!entry.dimension.equals(level.dimension())) continue;
+            var entity = level.getEntity(entry.uuid);
+            if (!(entity instanceof ArmorStand stand)) {
+                ACTIVE_DECOYS.remove(entry);
+                continue;
+            }
 
             if (stand.isRemoved() || !stand.isAlive()) {
                 ACTIVE_DECOYS.remove(entry);
@@ -72,5 +79,8 @@ public class HologramDecoyManager {
                 ACTIVE_DECOYS.remove(entry);
             }
         }
+    }
+    public static void clearRuntime() {
+        ACTIVE_DECOYS.clear();
     }
 }

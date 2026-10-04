@@ -49,14 +49,16 @@ class ReconDroneTelemetryTest {
     @DisplayName("DroneSession constructor initialization and defaults")
     void testDroneSessionState() {
         UUID playerUuid = UUID.randomUUID();
+        UUID droneId = UUID.randomUUID();
         Vec3 launchPos = new Vec3(10.5, 70.0, -25.5);
         ResourceKey<Level> dim = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath("minecraft", "overworld"));
 
         ReconDroneManager.DroneSession session = new ReconDroneManager.DroneSession(
-            playerUuid, launchPos, 45.0f, -10.0f, dim, 1200, 5
+            playerUuid, droneId, launchPos, 45.0f, -10.0f, dim, 1200, 5
         );
 
         assertEquals(playerUuid, session.playerUuid);
+        assertEquals(droneId, session.droneItemId);
         assertEquals(launchPos, session.launchPos);
         assertEquals(45.0f, session.launchYaw);
         assertEquals(-10.0f, session.launchPitch);

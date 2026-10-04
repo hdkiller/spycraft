@@ -39,7 +39,7 @@ public class BreachingSprayItem extends Item {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
 
-        boolean added = BreachingSprayManager.addSprayedBlock(level, pos, player);
+        boolean added = level.isClientSide || BreachingSprayManager.addSprayedBlock(level, pos, player);
         if (added) {
             if (!level.isClientSide) {
                 int count = BreachingSprayManager.getSprayedBlockCount(player.getUUID());
@@ -88,7 +88,7 @@ public class BreachingSprayItem extends Item {
 
         if (hit.getType() == HitResult.Type.BLOCK) {
             BlockPos pos = hit.getBlockPos();
-            boolean added = BreachingSprayManager.addSprayedBlock(level, pos, player);
+            boolean added = level.isClientSide || BreachingSprayManager.addSprayedBlock(level, pos, player);
             if (added) {
                 if (!level.isClientSide) {
                     int count = BreachingSprayManager.getSprayedBlockCount(player.getUUID());

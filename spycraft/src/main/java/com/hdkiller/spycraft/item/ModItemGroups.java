@@ -13,17 +13,17 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 public class ModItemGroups {
-    public static final ResourceKey<CreativeModeTab> ERIK_GROUP = ResourceKey.create(
+    public static final ResourceKey<CreativeModeTab> SPYCRAFT_GROUP = ResourceKey.create(
         Registries.CREATIVE_MODE_TAB,
         ResourceLocation.fromNamespaceAndPath(SpyCraftMod.MOD_ID, "spycraft_tab")
     );
 
-    public static final CreativeModeTab ERIK_TAB = Registry.register(
+    public static final CreativeModeTab SPYCRAFT_TAB = Registry.register(
         BuiltInRegistries.CREATIVE_MODE_TAB,
-        ERIK_GROUP,
+        SPYCRAFT_GROUP,
         FabricItemGroup.builder()
             .icon(() -> new ItemStack(ModItems.SNIPER_RIFLE))
-            .title(Component.translatable("itemGroup.erikcraft.spycraft_tab"))
+            .title(Component.translatable("itemGroup.spycraft.spycraft_tab"))
             .displayItems((displayContext, entries) -> {
                 entries.accept(ModItems.MISSION_BEACON);
                 entries.accept(ModItems.THERMAL_GOGGLES);

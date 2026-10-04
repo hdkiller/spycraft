@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerMixin {
     @Inject(method = "getFieldOfViewModifier", at = @At("HEAD"), cancellable = true)
-    private void erikcraft$getFieldOfViewModifier(CallbackInfoReturnable<Float> cir) {
+    private void spycraft$getFieldOfViewModifier(CallbackInfoReturnable<Float> cir) {
         AbstractClientPlayer player = (AbstractClientPlayer) (Object) this;
         if (player.isUsingItem() && player.getUseItem().is(ModItems.BINOCULARS)) {
             if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {

@@ -1,4 +1,5 @@
 {
+  "message.spycraft.mission_beacon.invalid_height": "A kémbázis nem fér el a világ magassági határain belül. Válassz alacsonyabb vagy magasabb terepet!",
   "item.spycraft.eriks_star": "Erik Csillaga",
   "item.spycraft.eriks_sword": "Erik Villámkardja",
   "item.spycraft.sniper_rifle": "Taktikai Mesterlövész Puska",
@@ -25,7 +26,7 @@
   "item.spycraft.zipline_gun": "Taktikai Drótkötélpálya Kilövő",
   "item.spycraft.breaching_spray": "Taktikai Falbontó C4 Spray",
   "effect.spycraft.drone_piloting": "Drón Irányítás",
-  "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Kém & Kaland Felszerelés",
+  "itemGroup.spycraft.spycraft_tab": "SpyCraft: Kém & Kaland Felszerelés",
 
   "tooltip.spycraft.hologram_projector.line1": "§7Jobb-klikk a földre egy §bHologram Klón §7kivetítéséhez!",
   "tooltip.spycraft.hologram_projector.line2": "§8↳ Magára vonzza és lefoglalja az őröket és szörnyeket (25 mp).",
