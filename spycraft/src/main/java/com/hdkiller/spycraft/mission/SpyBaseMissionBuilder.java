@@ -28,10 +28,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
@@ -100,9 +103,40 @@ public class SpyBaseMissionBuilder {
         }
     }
 
+    public static boolean isMissionDeployed(ServerLevel level) {
+        try {
+            Path worldDir = level.getServer().getWorldPath(LevelResource.ROOT);
+            return Files.exists(worldDir.resolve("spycraft_mission_active.lock"));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void markMissionDeployed(ServerLevel level) {
+        try {
+            Path worldDir = level.getServer().getWorldPath(LevelResource.ROOT);
+            Files.writeString(worldDir.resolve("spycraft_mission_active.lock"), "active");
+        } catch (Exception e) {
+            SpyCraftMod.LOGGER.error("Failed to mark mission deployed", e);
+        }
+    }
+
+    public static boolean resetMission(ServerLevel level) {
+        try {
+            Path worldDir = level.getServer().getWorldPath(LevelResource.ROOT);
+            return Files.deleteIfExists(worldDir.resolve("spycraft_mission_active.lock"));
+        } catch (Exception e) {
+            SpyCraftMod.LOGGER.error("Failed to reset mission lock", e);
+            return false;
+        }
+    }
+
     public static boolean deployMission(ServerLevel level, BlockPos origin, Player player) {
         StructureData data = loadStructure();
         if (data == null) return false;
+
+        // Mark mission as deployed in this world
+        markMissionDeployed(level);
 
         // 1. Calculate start coordinates with underground offset for subterranean garage
         int startX = origin.getX() - (data.width / 2);

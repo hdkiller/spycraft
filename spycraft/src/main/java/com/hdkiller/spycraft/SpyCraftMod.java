@@ -64,6 +64,20 @@ public class SpyCraftMod implements ModInitializer {
                         return success ? 1 : 0;
                     })
                 )
+                .then(net.minecraft.commands.Commands.literal("reset_mission")
+                    .requires(source -> source.hasPermission(2))
+                    .executes(context -> {
+                        var source = context.getSource();
+                        var level = source.getLevel();
+                        boolean reset = com.hdkiller.spycraft.mission.SpyBaseMissionBuilder.resetMission(level);
+                        if (reset) {
+                            source.sendSuccess(() -> net.minecraft.network.chat.Component.literal("§a✅ Kémküldetés bázis zárolása feloldva! A jeladó újra használható."), true);
+                        } else {
+                            source.sendFailure(net.minecraft.network.chat.Component.literal("§eNem volt aktív küldetés zárolás."));
+                        }
+                        return 1;
+                    })
+                )
             );
         });
 
