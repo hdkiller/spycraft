@@ -7,6 +7,7 @@
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen.svg)](https://fabricmc.net/)
 [![Fabric Loader](https://img.shields.io/badge/Fabric-0.16%2B-blue.svg)](https://fabricmc.net/)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://adoptium.net/)
+[![Modrinth](https://img.shields.io/badge/Modrinth-spycraft--mod-00AF5C.svg)](https://modrinth.com/mod/spycraft-mod)
 [![GitHub Release](https://img.shields.io/github/v/release/hdkiller/spycraft?color=success&label=Release)](https://github.com/hdkiller/spycraft/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
