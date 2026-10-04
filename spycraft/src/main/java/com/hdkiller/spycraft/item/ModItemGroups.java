@@ -31,6 +31,7 @@ public class ModItemGroups {
                 entries.accept(ModItems.TRANQUILIZER_GUN);
                 entries.accept(ModItems.SMOKE_GRENADE);
                 entries.accept(ModItems.CLIMBING_GLOVES);
+                entries.accept(ModItems.PARACHUTE_BACKPACK);
                 entries.accept(ModItems.RECON_DRONE);
                 entries.accept(ModItems.SNIPER_RIFLE);
                 entries.accept(ModItems.LASER_REMOTE);

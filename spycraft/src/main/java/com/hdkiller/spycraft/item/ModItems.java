@@ -121,6 +121,12 @@ public class ModItems {
         new ClimbingGlovesItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1))
     );
 
+    // Tactical Parachute Backpack - Auto-deploy on fall when worn, manual deploy from hand
+    public static final Item PARACHUTE_BACKPACK = registerItem(
+        "parachute_backpack",
+        new ParachuteBackpackItem(new Item.Properties().rarity(Rarity.EPIC).durability(450))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,

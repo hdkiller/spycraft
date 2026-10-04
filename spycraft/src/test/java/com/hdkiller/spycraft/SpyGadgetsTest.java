@@ -19,7 +19,8 @@ class SpyGadgetsTest {
             "/assets/spycraft/textures/item/hologram_projector.png",
             "/assets/spycraft/textures/item/tranquilizer_gun.png",
             "/assets/spycraft/textures/item/smoke_grenade.png",
-            "/assets/spycraft/textures/item/climbing_gloves.png"
+            "/assets/spycraft/textures/item/climbing_gloves.png",
+            "/assets/spycraft/textures/item/parachute_backpack.png"
         };
 
         for (String tex : textures) {
@@ -55,7 +56,8 @@ class SpyGadgetsTest {
             "/assets/spycraft/models/item/hologram_projector.json",
             "/assets/spycraft/models/item/tranquilizer_gun.json",
             "/assets/spycraft/models/item/smoke_grenade.json",
-            "/assets/spycraft/models/item/climbing_gloves.json"
+            "/assets/spycraft/models/item/climbing_gloves.json",
+            "/assets/spycraft/models/item/parachute_backpack.json"
         };
 
         for (String model : models) {
@@ -76,5 +78,6 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.tranquilizer_gun"), "Tranquilizer gun translation missing");
         assertTrue(langContent.contains("item.spycraft.smoke_grenade"), "Smoke grenade translation missing");
         assertTrue(langContent.contains("item.spycraft.climbing_gloves"), "Climbing gloves translation missing");
+        assertTrue(langContent.contains("item.spycraft.parachute_backpack"), "Parachute backpack translation missing");
     }
 }

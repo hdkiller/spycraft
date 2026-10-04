@@ -293,6 +293,14 @@ METADATA = {
         "variants": {
             "current": {"name": "Cyber Mag-Grip Gloves", "desc": "Reinforced fingerless gloves with pulsing cyan magnetic node tips.", "theme": "cyberpunk"}
         }
+    },
+    "parachute_backpack": {
+        "title": "Tactical Parachute Backpack (Ejtőernyő)",
+        "category": "surveillance",
+        "description": "Wearable tactical parachute rig: auto-deploys upon falling or can be emergency activated directly from hand.",
+        "variants": {
+            "current": {"name": "SpecOps Ripstop Rig", "desc": "Reinforced military harness pack with red ripcord release and high-visibility warning tag.", "theme": "specops"}
+        }
     }
 }
 
