@@ -45,6 +45,7 @@ public class SpyCraftMod implements ModInitializer {
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.HologramDecoyManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.SmokeCloudManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.ZiplineManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.BreachingSprayManager::tick);
 
         // Register disconnect event for safe cleanup
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -104,6 +105,7 @@ public class SpyCraftMod implements ModInitializer {
             entries.accept(ModItems.LASER_REMOTE);
             entries.accept(ModBlocks.LASER_PYLON);
             entries.accept(ModItems.REMOTE_DETONATOR);
+            entries.accept(ModItems.BREACHING_SPRAY);
             entries.accept(ModBlocks.C4_BLOCK);
             entries.accept(ModItems.ERIKS_SWORD);
             entries.accept(ModItems.ERIKS_STAR);

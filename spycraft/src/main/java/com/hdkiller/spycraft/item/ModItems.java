@@ -139,6 +139,12 @@ public class ModItems {
         new ZiplineGunItem(new Item.Properties().rarity(Rarity.RARE).durability(300))
     );
 
+    // Tactical Breaching Spray - Liquid C4 aerosol foam for directional wall breaching
+    public static final Item BREACHING_SPRAY = registerItem(
+        "breaching_spray",
+        new BreachingSprayItem(new Item.Properties().rarity(Rarity.RARE).durability(64))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,

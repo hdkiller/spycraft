@@ -47,6 +47,7 @@ public class ModItemGroups {
                 entries.accept(ModItems.SPY_TRACKER);
                 entries.accept(ModBlocks.C4_BLOCK);
                 entries.accept(ModItems.REMOTE_DETONATOR);
+                entries.accept(ModItems.BREACHING_SPRAY);
                 entries.accept(ModItems.ERIKS_SWORD);
                 entries.accept(ModItems.ERIKS_STAR);
             })

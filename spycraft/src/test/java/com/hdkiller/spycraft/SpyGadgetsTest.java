@@ -22,7 +22,8 @@ class SpyGadgetsTest {
             "/assets/spycraft/textures/item/climbing_gloves.png",
             "/assets/spycraft/textures/item/parachute_backpack.png",
             "/assets/spycraft/textures/item/binoculars.png",
-            "/assets/spycraft/textures/item/zipline_gun.png"
+            "/assets/spycraft/textures/item/zipline_gun.png",
+            "/assets/spycraft/textures/item/breaching_spray.png"
         };
 
         for (String tex : textures) {
@@ -61,7 +62,8 @@ class SpyGadgetsTest {
             "/assets/spycraft/models/item/climbing_gloves.json",
             "/assets/spycraft/models/item/parachute_backpack.json",
             "/assets/spycraft/models/item/binoculars.json",
-            "/assets/spycraft/models/item/zipline_gun.json"
+            "/assets/spycraft/models/item/zipline_gun.json",
+            "/assets/spycraft/models/item/breaching_spray.json"
         };
 
         for (String model : models) {
@@ -85,6 +87,8 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.parachute_backpack"), "Parachute backpack translation missing");
         assertTrue(langContent.contains("item.spycraft.binoculars"), "Binoculars translation missing");
         assertTrue(langContent.contains("item.spycraft.zipline_gun"), "Zipline gun translation missing");
+        assertTrue(langContent.contains("item.spycraft.breaching_spray"), "Breaching spray translation missing");
+        assertTrue(langContent.contains("tooltip.spycraft.breaching_spray.desc"), "Breaching spray tooltip missing");
         assertTrue(langContent.contains("tooltip.spycraft.zipline_gun.desc"), "Zipline gun tooltip missing");
         assertTrue(langContent.contains("tooltip.spycraft.grappling_hook_gun.desc"), "Grappling hook tooltip missing");
         assertTrue(langContent.contains("hud.spycraft.grappling_hook.harpooned"), "Grappling hook harpoon HUD string missing");
@@ -105,6 +109,8 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.parachute_backpack"), "Parachute backpack Hungarian translation missing");
         assertTrue(langContent.contains("item.spycraft.binoculars"), "Binoculars Hungarian translation missing");
         assertTrue(langContent.contains("item.spycraft.zipline_gun"), "Zipline gun Hungarian translation missing");
+        assertTrue(langContent.contains("item.spycraft.breaching_spray"), "Breaching spray Hungarian translation missing");
+        assertTrue(langContent.contains("tooltip.spycraft.breaching_spray.desc"), "Breaching spray Hungarian tooltip missing");
         assertTrue(langContent.contains("tooltip.spycraft.zipline_gun.desc"), "Zipline gun Hungarian tooltip missing");
         assertTrue(langContent.contains("tooltip.spycraft.grappling_hook_gun.desc"), "Grappling hook Hungarian tooltip missing");
         assertTrue(langContent.contains("hud.spycraft.grappling_hook.harpooned"), "Grappling hook Hungarian harpoon HUD string missing");

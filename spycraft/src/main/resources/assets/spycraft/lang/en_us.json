@@ -23,6 +23,7 @@
   "item.spycraft.parachute_backpack": "Tactical Parachute Backpack",
   "item.spycraft.binoculars": "Tactical Recon Binoculars",
   "item.spycraft.zipline_gun": "Tactical Zipline Gun",
+  "item.spycraft.breaching_spray": "Tactical Breaching Spray",
   "effect.spycraft.drone_piloting": "Drone Piloting",
   "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Spy & Adventure Gear",
 
@@ -71,5 +72,12 @@
   "message.spycraft.zipline.too_far": "§c[Zipline Gun] §7Target is too far! (Max 64 blocks)",
   "message.spycraft.zipline.too_close": "§c[Zipline Gun] §7Target is too close! (Min 4 blocks)",
   "hud.spycraft.zipline.riding": "§b🪢 ZIPLINE SLIDING... §e%s%% §7(Sneak: Detach)",
-  "hud.spycraft.zipline.dismount": "§a🪢 [ARRIVED] §7Safely dismounted at destination!"
+  "hud.spycraft.zipline.dismount": "§a🪢 [ARRIVED] §7Safely dismounted at destination!",
+  "tooltip.spycraft.breaching_spray.desc": "§7Liquid C4 breaching foam for tactical wall breaches!",
+  "tooltip.spycraft.breaching_spray.usage": "§e↳ Right-Click wall: §fCoats and arms target wall blocks (max 24)",
+  "tooltip.spycraft.breaching_spray.detonate": "§c↳ Detonation: §fClick Remote Detonator to breach through the wall!",
+  "tooltip.spycraft.breaching_spray.clear": "§8↳ Sneak + Right-Click in air: Disarm all sprayed wall blocks",
+  "hud.spycraft.breaching_spray.sprayed": "§6💥 WALL COATED: §f%d blocks primed §8| §7Use Remote Detonator!",
+  "message.spycraft.breaching_spray.cleared": "§a🛡️ [Breaching Spray] §f%d sprayed blocks disarmed and cleared.",
+  "message.spycraft.breaching_spray.none": "§e[Breaching Spray] §7No active sprayed blocks."
 }

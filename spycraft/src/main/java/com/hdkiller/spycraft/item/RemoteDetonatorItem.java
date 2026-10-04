@@ -140,12 +140,16 @@ public class RemoteDetonatorItem extends Item {
 
         if (!level.isClientSide) {
             Map<ChargeLocation, Integer> charges = ARMED_CHARGES.get(player.getUUID());
+            int sprayedCount = BreachingSprayManager.getSprayedBlockCount(player.getUUID());
 
-            if (charges == null || charges.isEmpty()) {
+            boolean hasC4 = charges != null && !charges.isEmpty();
+            boolean hasSpray = sprayedCount > 0;
+
+            if (!hasC4 && !hasSpray) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.5f);
                 player.sendSystemMessage(Component.literal(
-                    "§c📡 [DETONÁTOR] §7Nincs élesített C4 töltet! Kattints egy lehelyezett C4 csőre az élesítéshez."
+                    "§c📡 [DETONÁTOR] §7Nincs élesített C4 töltet vagy befújt fal! Használj C4-et vagy Falbontó Spray-t."
                 ));
                 return InteractionResultHolder.sidedSuccess(stack, false);
             }
@@ -154,52 +158,61 @@ public class RemoteDetonatorItem extends Item {
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 1.2f, 1.0f);
 
-            int detonatedCount = 0;
+            int detonatedC4Count = 0;
             int maxLevel = 1;
-            List<ChargeLocation> toRemove = new ArrayList<>();
 
-            for (Map.Entry<ChargeLocation, Integer> entry : charges.entrySet()) {
-                ChargeLocation loc = entry.getKey();
-                int yieldLevel = entry.getValue();
-                if (yieldLevel > maxLevel) maxLevel = yieldLevel;
+            if (hasC4) {
+                List<ChargeLocation> toRemove = new ArrayList<>();
+                for (Map.Entry<ChargeLocation, Integer> entry : charges.entrySet()) {
+                    ChargeLocation loc = entry.getKey();
+                    int yieldLevel = entry.getValue();
+                    if (yieldLevel > maxLevel) maxLevel = yieldLevel;
 
-                ServerLevel chargeLevel = level.getServer() != null ? level.getServer().getLevel(loc.dimension()) : null;
-                if (chargeLevel == null) {
-                    toRemove.add(loc);
-                    continue;
-                }
-
-                if (chargeLevel.isLoaded(loc.pos())) {
-                    if (chargeLevel.getBlockState(loc.pos()).is(ModBlocks.C4_BLOCK)) {
-                        float power = yieldLevel == 1 ? 4.5f : (yieldLevel == 2 ? 9.0f : 18.0f);
-                        C4Block.explodeWithPower(chargeLevel, loc.pos(), power);
-                        detonatedCount++;
+                    ServerLevel chargeLevel = level.getServer() != null ? level.getServer().getLevel(loc.dimension()) : null;
+                    if (chargeLevel == null) {
+                        toRemove.add(loc);
+                        continue;
                     }
-                    toRemove.add(loc);
+
+                    if (chargeLevel.isLoaded(loc.pos())) {
+                        if (chargeLevel.getBlockState(loc.pos()).is(ModBlocks.C4_BLOCK)) {
+                            float power = yieldLevel == 1 ? 4.5f : (yieldLevel == 2 ? 9.0f : 18.0f);
+                            C4Block.explodeWithPower(chargeLevel, loc.pos(), power);
+                            detonatedC4Count++;
+                        }
+                        toRemove.add(loc);
+                    }
+                }
+                for (ChargeLocation loc : toRemove) {
+                    charges.remove(loc);
                 }
             }
 
-            for (ChargeLocation loc : toRemove) {
-                charges.remove(loc);
+            // Detonate sprayed wall breaches!
+            int breachedBlockCount = 0;
+            if (hasSpray && level instanceof ServerLevel serverLevel) {
+                breachedBlockCount = BreachingSprayManager.detonate(serverLevel, player.getUUID());
             }
 
-            if (detonatedCount > 0) {
-                if (maxLevel == 3) {
-                    player.sendSystemMessage(Component.literal(
-                        "§c💥 [ROBBANTÁS SIKERES!] §4🔥 MEGA ROBBANÁS! (" + detonatedCount + " C4 töltet)"
-                    ));
-                } else if (maxLevel == 2) {
-                    player.sendSystemMessage(Component.literal(
-                        "§e💥 [ROBBANTÁS SIKERES!] §6DUPLA erejű robbantás! (" + detonatedCount + " C4 töltet)"
-                    ));
+            if (detonatedC4Count > 0 || breachedBlockCount > 0) {
+                StringBuilder msg = new StringBuilder("§a💥 [ROBBANTÁS SIKERES!] ");
+                if (breachedBlockCount > 0 && detonatedC4Count > 0) {
+                    msg.append("§f").append(detonatedC4Count).append(" C4 töltet és §6").append(breachedBlockCount).append(" falblokk §felrobbantva!");
+                } else if (breachedBlockCount > 0) {
+                    msg.append("§6FAL ÁTTÖRVE: §f").append(breachedBlockCount).append(" befújt falblokk kirobbantva!");
                 } else {
-                    player.sendSystemMessage(Component.literal(
-                        "§a💥 [ROBBANTÁS SIKERES!] §f" + detonatedCount + " C4 töltet felrobbantva!"
-                    ));
+                    if (maxLevel == 3) {
+                        msg.append("§4🔥 MEGA ROBBANÁS! (").append(detonatedC4Count).append(" C4 töltet)");
+                    } else if (maxLevel == 2) {
+                        msg.append("§6DUPLA erejű robbantás! (").append(detonatedC4Count).append(" C4 töltet)");
+                    } else {
+                        msg.append("§f").append(detonatedC4Count).append(" C4 töltet felrobbantva!");
+                    }
                 }
+                player.sendSystemMessage(Component.literal(msg.toString()));
             } else {
                 player.sendSystemMessage(Component.literal(
-                    "§e📡 [DETONÁTOR] §7Az élesített C4 töltetek már megsemmisültek vagy hiányoznak."
+                    "§e📡 [DETONÁTOR] §7Az élesített töltetek már megsemmisültek vagy hiányoznak."
                 ));
             }
 

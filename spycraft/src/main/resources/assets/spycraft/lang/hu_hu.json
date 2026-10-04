@@ -23,6 +23,7 @@
   "item.spycraft.parachute_backpack": "Taktikai Ejtőernyős Hátizsák",
   "item.spycraft.binoculars": "Taktikai Felderítő Távcső",
   "item.spycraft.zipline_gun": "Taktikai Drótkötélpálya Kilövő",
+  "item.spycraft.breaching_spray": "Taktikai Falbontó C4 Spray",
   "effect.spycraft.drone_piloting": "Drón Irányítás",
   "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Kém & Kaland Felszerelés",
 
@@ -71,5 +72,12 @@
   "message.spycraft.zipline.too_far": "§c[Drótkötélpálya] §7A célpont túl messze van! (Max 64 blokk)",
   "message.spycraft.zipline.too_close": "§c[Drótkötélpálya] §7A célpont túl közel van! (Min 4 blokk)",
   "hud.spycraft.zipline.riding": "§b🪢 ÁTCSÚSZÁS... §e%s%% §7(Guggolás: Leugrás)",
-  "hud.spycraft.zipline.dismount": "§a🪢 [ÁTÉRKEZTÉL] §7Biztonságos leérkezés a túloldalon!"
+  "hud.spycraft.zipline.dismount": "§a🪢 [ÁTÉRKEZTÉL] §7Biztonságos leérkezés a túloldalon!",
+  "tooltip.spycraft.breaching_spray.desc": "§7Folyékony C4 robbanóhab falak áttöréséhez!",
+  "tooltip.spycraft.breaching_spray.usage": "§e↳ Jobb klikk falra: §fBefújja és élesíti a falblokkokat (max 24 db)",
+  "tooltip.spycraft.breaching_spray.detonate": "§c↳ Robbantás: §fKattints a Távirányítós Detonátorral a fal áttöréséhez!",
+  "tooltip.spycraft.breaching_spray.clear": "§8↳ Shift + Jobb klikk levegőbe: Összes befújt blokk hatástalanítása",
+  "hud.spycraft.breaching_spray.sprayed": "§6💥 FAL BEFÚJVA: §f%d blokk élesítve §8| §7Robbants a Távirányítóval!",
+  "message.spycraft.breaching_spray.cleared": "§a🛡️ [Falbontó Spray] §f%d befújt blokk hatástalanítva és törölve.",
+  "message.spycraft.breaching_spray.none": "§e[Falbontó Spray] §7Nincsenek aktív befújt blokkok."
 }
