@@ -82,6 +82,8 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.climbing_gloves"), "Climbing gloves translation missing");
         assertTrue(langContent.contains("item.spycraft.parachute_backpack"), "Parachute backpack translation missing");
         assertTrue(langContent.contains("item.spycraft.binoculars"), "Binoculars translation missing");
+        assertTrue(langContent.contains("tooltip.spycraft.grappling_hook_gun.desc"), "Grappling hook tooltip missing");
+        assertTrue(langContent.contains("hud.spycraft.grappling_hook.harpooned"), "Grappling hook harpoon HUD string missing");
     }
 
     @Test
@@ -98,5 +100,7 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.climbing_gloves"), "Climbing gloves Hungarian translation missing");
         assertTrue(langContent.contains("item.spycraft.parachute_backpack"), "Parachute backpack Hungarian translation missing");
         assertTrue(langContent.contains("item.spycraft.binoculars"), "Binoculars Hungarian translation missing");
+        assertTrue(langContent.contains("tooltip.spycraft.grappling_hook_gun.desc"), "Grappling hook Hungarian tooltip missing");
+        assertTrue(langContent.contains("hud.spycraft.grappling_hook.harpooned"), "Grappling hook Hungarian harpoon HUD string missing");
     }
 }

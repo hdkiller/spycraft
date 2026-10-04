@@ -56,6 +56,11 @@
   "message.spycraft.mission_beacon.activating": "§b🛰️ [KÜLDETÉS JELADÓ AKTIVÁLVA!] §eKémbázis építése folyamatban...",
   "message.spycraft.mission_beacon.error": "§c❌ [HIBA] A kémbázis adatfájl nem tölthető be!",
   "message.spycraft.grappling_hook.too_far": "§c[Csáklyalövő] §7A célpont túl messze van! (Max 32 blokk)",
+  "hud.spycraft.grappling_hook.harpooned": "§6⚓ [Csáklya] §fCélpont magadhoz rántva: §e%s",
+  "tooltip.spycraft.grappling_hook_gun.desc": "§7Taktikai beszivárgó csáklyalövő folyamatos csörlőzéssel!",
+  "tooltip.spycraft.grappling_hook_gun.reel": "§e↳ Jobb klikk nyomva tartása: §fFolyamatos behúzás & peremugrás a tetőre",
+  "tooltip.spycraft.grappling_hook_gun.harpoon": "§b↳ Mobokra lőve: §fHarpoonként magadhoz rántja őket & elkábítja",
+  "tooltip.spycraft.grappling_hook_gun.nofall": "§a↳ Taktikai esésvédelem: §f0 esési sebzés földet érésig (lebegés nélkül)",
   "hud.spycraft.binoculars.scanning": "§6🔍 CÉLPONT BEFOGÁSA: §f%s §e[%s] §7(%dm)",
   "hud.spycraft.binoculars.locked": "§a✔ CÉLPONT BEFOGVA: §f%s §7(%dm)",
   "message.spycraft.binoculars.tag_success": "§a🎯 [Távcső] §fCélpont megjelölve: §e%s §7(Látszik a falakon át és követi a radar)"

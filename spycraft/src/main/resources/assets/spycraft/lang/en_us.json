@@ -56,6 +56,11 @@
   "message.spycraft.mission_beacon.activating": "§b🛰️ [MISSION BEACON ACTIVATED!] §eConstructing secret villain skyscraper base...",
   "message.spycraft.mission_beacon.error": "§c❌ [ERROR] Unable to load mission base structure data!",
   "message.spycraft.grappling_hook.too_far": "§c[Grappling Hook] §7Target too far! (Max 32 blocks)",
+  "hud.spycraft.grappling_hook.harpooned": "§6⚓ [Grappling Hook] §fHarpooned and pulled: §e%s",
+  "tooltip.spycraft.grappling_hook_gun.desc": "§7Tactical infiltration grappling hook gun with continuous reeling!",
+  "tooltip.spycraft.grappling_hook_gun.reel": "§e↳ Hold Right-Click: §fContinuous reeling & ledge vault onto roofs",
+  "tooltip.spycraft.grappling_hook_gun.harpoon": "§b↳ Aim at Mobs: §fHarpoons and reels enemies toward you with stun",
+  "tooltip.spycraft.grappling_hook_gun.nofall": "§a↳ Fall Protection: §f0 fall damage on landing (no floaty slow falling)",
   "hud.spycraft.binoculars.scanning": "§6🔍 SCANNING: §f%s §e[%s] §7(%dm)",
   "hud.spycraft.binoculars.locked": "§a✔ TARGET LOCKED: §f%s §7(%dm)",
   "message.spycraft.binoculars.tag_success": "§a🎯 [Binoculars] §fTagged target: §e%s §7(Glows through walls & synced to radar)"

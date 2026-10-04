@@ -408,4 +408,81 @@ public abstract class GuiMixin {
             guiGraphics.drawString(font, sub, sx + (slotWidth - subW) / 2, startY + 14, 0x888888, true);
         }
     }
+
+    // Grappling Hook Tactical Reticle & Range Indicator
+    @Inject(method = "renderCrosshair", at = @At("RETURN"))
+    private void erikcraft$renderGrappleCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        LocalPlayer player = this.minecraft.player;
+        if (player == null) return;
+
+        boolean holdingGrapple = player.getMainHandItem().is(ModItems.GRAPPLING_HOOK_GUN)
+            || player.getOffhandItem().is(ModItems.GRAPPLING_HOOK_GUN);
+        if (!holdingGrapple) return;
+
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
+        int cx = width / 2;
+        int cy = height / 2;
+        Font font = this.minecraft.font;
+
+        // Perform raycast
+        Vec3 eyePos = player.getEyePosition(1.0f);
+        Vec3 look = player.getViewVector(1.0f);
+        double maxDist = 32.0;
+        Vec3 reach = eyePos.add(look.scale(maxDist));
+
+        HitResult blockHit = player.level().clip(new ClipContext(
+            eyePos, reach,
+            ClipContext.Block.COLLIDER,
+            ClipContext.Fluid.NONE,
+            player
+        ));
+
+        double blockDist = blockHit.getType() != HitResult.Type.MISS
+            ? eyePos.distanceTo(blockHit.getLocation())
+            : maxDist;
+
+        EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
+            player.level(), player, eyePos, reach,
+            new AABB(eyePos, reach).inflate(1.2),
+            e -> e instanceof LivingEntity && e != player && e.isAlive()
+        );
+
+        if (entityHit != null && eyePos.distanceTo(entityHit.getLocation()) <= blockDist) {
+            // Target mob in range: show harpoon icon & red/amber brackets
+            double dist = eyePos.distanceTo(entityHit.getLocation());
+            int color = 0xFFFF4444; // Red
+            int bSize = 6;
+            guiGraphics.fill(cx - 10, cy - 10, cx - 10 + bSize, cy - 9, color);
+            guiGraphics.fill(cx - 10, cy - 10, cx - 9, cy - 10 + bSize, color);
+            guiGraphics.fill(cx + 10 - bSize, cy - 10, cx + 10, cy - 9, color);
+            guiGraphics.fill(cx + 9, cy - 10, cx + 10, cy - 10 + bSize, color);
+            guiGraphics.fill(cx - 10, cy + 9, cx - 10 + bSize, cy + 10, color);
+            guiGraphics.fill(cx - 10, cy + 10 - bSize, cx - 9, cy + 10, color);
+            guiGraphics.fill(cx + 10 - bSize, cy + 9, cx + 10, cy + 10, color);
+            guiGraphics.fill(cx + 9, cy + 10 - bSize, cx + 10, cy + 10, color);
+
+            String distText = "§c🎯 " + (int) dist + "m";
+            guiGraphics.drawString(font, distText, cx - font.width(distText) / 2, cy + 13, 0xFFFFFF, true);
+        } else if (blockHit.getType() == HitResult.Type.BLOCK) {
+            // Valid block in range: show anchor icon & cyan brackets
+            int color = 0xFF00FFEE; // Cyan
+            int bSize = 6;
+            guiGraphics.fill(cx - 10, cy - 10, cx - 10 + bSize, cy - 9, color);
+            guiGraphics.fill(cx - 10, cy - 10, cx - 9, cy - 10 + bSize, color);
+            guiGraphics.fill(cx + 10 - bSize, cy - 10, cx + 10, cy - 9, color);
+            guiGraphics.fill(cx + 9, cy - 10, cx + 10, cy - 10 + bSize, color);
+            guiGraphics.fill(cx - 10, cy + 9, cx - 10 + bSize, cy + 10, color);
+            guiGraphics.fill(cx - 10, cy + 10 - bSize, cx - 9, cy + 10, color);
+            guiGraphics.fill(cx + 10 - bSize, cy + 9, cx + 10, cy + 10, color);
+            guiGraphics.fill(cx + 9, cy + 10 - bSize, cx + 10, cy + 10, color);
+
+            String distText = "§b⚓ " + (int) blockDist + "m";
+            guiGraphics.drawString(font, distText, cx - font.width(distText) / 2, cy + 13, 0xFFFFFF, true);
+        } else {
+            // Out of range (pointing into open sky or too far)
+            String outText = "§8[--m]";
+            guiGraphics.drawString(font, outText, cx - font.width(outText) / 2, cy + 13, 0x888888, true);
+        }
+    }
 }

@@ -20,4 +20,13 @@ public abstract class PlayerMixin {
             cir.setReturnValue(true);
         }
     }
+
+    @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
+    private void erikcraft$cancelGrappleFallDamage(float fallDistance, float multiplier, net.minecraft.world.damagesource.DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        Player player = (Player) (Object) this;
+        if (com.hdkiller.spycraft.item.GrapplingHookGunItem.hasRecentGrappleProtection(player.getUUID())) {
+            com.hdkiller.spycraft.item.GrapplingHookGunItem.clearGrappleProtection(player.getUUID());
+            cir.setReturnValue(false);
+        }
+    }
 }
