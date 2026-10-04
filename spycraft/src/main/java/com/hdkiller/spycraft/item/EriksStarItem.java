@@ -40,7 +40,7 @@ public class EriksStarItem extends Item {
                 SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0f, 1.2f);
 
             // Announce in chat
-            player.sendSystemMessage(Component.literal("§6[ErikCraft] §e⚡ Erik's Star summoned a lightning strike!"));
+            player.sendSystemMessage(Component.literal("§6[SpyCraft] §e⚡ Erik's Star summoned a lightning strike!"));
 
             // 1.5 second cooldown (30 ticks)
             player.getCooldowns().addCooldown(this, 30);

@@ -84,20 +84,29 @@ public class ParachuteBackpackItem extends ArmorItem {
         }
     }
 
+    public static void onPlayerDisconnect(UUID uuid) {
+        ACTIVE_PARACHUTES.remove(uuid);
+    }
+
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!(entity instanceof Player player)) return;
 
         boolean isWorn = player.getItemBySlot(EquipmentSlot.CHEST).getItem() == this;
         boolean isHeld = player.getMainHandItem() == stack || player.getOffhandItem() == stack;
+        UUID uuid = player.getUUID();
+        boolean parachuting = ACTIVE_PARACHUTES.contains(uuid);
+
+        // If unequipped or dropped mid-flight, immediately close parachute
+        if (parachuting && !isWorn && !isHeld) {
+            closeParachute(player, level);
+            return;
+        }
 
         // Only manage parachute if player is wearing or holding this backpack
         if (!isWorn && !isHeld) {
             return;
         }
-
-        UUID uuid = player.getUUID();
-        boolean parachuting = ACTIVE_PARACHUTES.contains(uuid);
 
         if (parachuting) {
             // Touchdown check: ground, water, climbing, or dead

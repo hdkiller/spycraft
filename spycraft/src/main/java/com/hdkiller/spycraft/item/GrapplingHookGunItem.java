@@ -79,6 +79,11 @@ public class GrapplingHookGunItem extends Item {
         GRAPPLE_PROTECTION.remove(uuid);
     }
 
+    public static void onPlayerDisconnect(UUID uuid) {
+        ACTIVE_GRAPPLES.remove(uuid);
+        GRAPPLE_PROTECTION.remove(uuid);
+    }
+
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;

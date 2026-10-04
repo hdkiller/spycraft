@@ -164,6 +164,7 @@ public class BreachingSprayManager {
                 for (Set<BlockLocation> playerSet : SPRAYED_BLOCKS.values()) {
                     playerSet.remove(loc);
                 }
+                SPRAYED_BLOCKS.entrySet().removeIf(e -> e.getValue().isEmpty());
                 continue;
             }
 

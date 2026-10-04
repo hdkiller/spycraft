@@ -65,6 +65,7 @@ public class RemoteDetonatorItem extends Item {
         for (Map<ChargeLocation, Integer> map : ARMED_CHARGES.values()) {
             map.remove(loc);
         }
+        ARMED_CHARGES.entrySet().removeIf(e -> e.getValue().isEmpty());
     }
 
     /**
@@ -185,6 +186,9 @@ public class RemoteDetonatorItem extends Item {
                 }
                 for (ChargeLocation loc : toRemove) {
                     charges.remove(loc);
+                }
+                if (charges.isEmpty()) {
+                    ARMED_CHARGES.remove(player.getUUID());
                 }
             }
 

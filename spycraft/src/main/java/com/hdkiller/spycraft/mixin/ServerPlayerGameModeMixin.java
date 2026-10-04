@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerPlayerGameMode.class)
 public class ServerPlayerGameModeMixin {
     @Inject(method = "useItem", at = @At("HEAD"), cancellable = true)
-    private void erikcraft$onDroneUseItem(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    private void spycraft$onDroneUseItem(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (ReconDroneManager.isPiloting(player.getUUID())) {
             ReconDroneManager.handleDroneAction(player);
             cir.setReturnValue(InteractionResult.SUCCESS);
@@ -24,7 +24,7 @@ public class ServerPlayerGameModeMixin {
     }
 
     @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
-    private void erikcraft$onDroneUseItemOn(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    private void spycraft$onDroneUseItemOn(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         if (ReconDroneManager.isPiloting(player.getUUID())) {
             ReconDroneManager.handleDroneAction(player);
             cir.setReturnValue(InteractionResult.SUCCESS);

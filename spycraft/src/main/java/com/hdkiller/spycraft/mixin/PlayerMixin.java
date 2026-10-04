@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Player.class)
 public abstract class PlayerMixin {
     @Inject(method = "isScoping", at = @At("HEAD"), cancellable = true)
-    private void erikcraft$isScoping(CallbackInfoReturnable<Boolean> cir) {
+    private void spycraft$isScoping(CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         if (player.hasEffect(com.hdkiller.spycraft.effect.ModEffects.DRONE_PILOTING)) {
             cir.setReturnValue(false);
@@ -22,7 +22,7 @@ public abstract class PlayerMixin {
     }
 
     @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
-    private void erikcraft$cancelGrappleFallDamage(float fallDistance, float multiplier, net.minecraft.world.damagesource.DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+    private void spycraft$cancelGrappleFallDamage(float fallDistance, float multiplier, net.minecraft.world.damagesource.DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         if (com.hdkiller.spycraft.item.GrapplingHookGunItem.hasRecentGrappleProtection(player.getUUID())) {
             com.hdkiller.spycraft.item.GrapplingHookGunItem.clearGrappleProtection(player.getUUID());

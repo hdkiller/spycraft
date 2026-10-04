@@ -28,14 +28,16 @@ public class ZiplineManager {
     public static class ActiveZipline {
         public final UUID id;
         public final UUID ownerId;
+        public final net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension;
         public final Vec3 startPos;
         public final Vec3 endPos;
         public final double length;
         public int remainingTicks;
 
-        ActiveZipline(UUID ownerId, Vec3 startPos, Vec3 endPos, int durationTicks) {
+        ActiveZipline(UUID ownerId, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension, Vec3 startPos, Vec3 endPos, int durationTicks) {
             this.id = UUID.randomUUID();
             this.ownerId = ownerId;
+            this.dimension = dimension;
             this.startPos = startPos;
             this.endPos = endPos;
             this.length = startPos.distanceTo(endPos);
@@ -93,7 +95,7 @@ public class ZiplineManager {
                 SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.8f, 1.2f);
         }
 
-        ActiveZipline zipline = new ActiveZipline(player.getUUID(), startPos, endPos, 3600); // 3 minutes
+        ActiveZipline zipline = new ActiveZipline(player.getUUID(), level.dimension(), startPos, endPos, 3600); // 3 minutes
         ACTIVE_ZIPLINES.add(zipline);
 
         // Sound effects
@@ -199,6 +201,8 @@ public class ZiplineManager {
         boolean bestLooking = false;
 
         for (ActiveZipline z : ACTIVE_ZIPLINES) {
+            if (!z.dimension.equals(player.level().dimension())) continue;
+
             Vec3 ab = z.endPos.subtract(z.startPos);
             double lenSqr = ab.lengthSqr();
             if (lenSqr < 1e-4) continue;
@@ -235,13 +239,17 @@ public class ZiplineManager {
     }
 
     public static void createZiplineAndRide(ServerLevel level, ServerPlayer player, Vec3 startPos, Vec3 endPos) {
-        ActiveZipline zipline = new ActiveZipline(player.getUUID(), startPos, endPos, 3600);
+        ActiveZipline zipline = new ActiveZipline(player.getUUID(), level.dimension(), startPos, endPos, 3600);
         ACTIVE_ZIPLINES.add(zipline);
         mountZipline(level, player, zipline);
     }
 
     public static boolean isPlayerRiding(UUID playerId) {
         return ACTIVE_RIDERS.containsKey(playerId);
+    }
+
+    public static void onPlayerDisconnect(UUID playerId) {
+        ACTIVE_RIDERS.remove(playerId);
     }
 
     public static List<ActiveZipline> getActiveZiplines() {
@@ -259,6 +267,11 @@ public class ZiplineManager {
                 ServerPlayer player = level.getServer().getPlayerList().getPlayer(rider.playerId);
                 if (player == null || !player.isAlive()) {
                     riderIt.remove();
+                    continue;
+                }
+
+                // Strictly tick rider only in their current dimension
+                if (!player.level().dimension().equals(level.dimension())) {
                     continue;
                 }
 
@@ -348,6 +361,12 @@ public class ZiplineManager {
             Iterator<ActiveZipline> it = ACTIVE_ZIPLINES.iterator();
             while (it.hasNext()) {
                 ActiveZipline zipline = it.next();
+
+                // Only tick zipline in its own dimension
+                if (!zipline.dimension.equals(level.dimension())) {
+                    continue;
+                }
+
                 zipline.remainingTicks--;
 
                 if (zipline.remainingTicks <= 0) {

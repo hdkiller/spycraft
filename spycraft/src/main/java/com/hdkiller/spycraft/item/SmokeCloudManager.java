@@ -18,11 +18,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SmokeCloudManager {
     public static class SmokeCloud {
+        final net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension;
         final Vec3 pos;
         final double radius;
         int remainingTicks;
 
-        SmokeCloud(Vec3 pos, double radius, int ticks) {
+        SmokeCloud(net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension, Vec3 pos, double radius, int ticks) {
+            this.dimension = dimension;
             this.pos = pos;
             this.radius = radius;
             this.remainingTicks = ticks;
@@ -32,7 +34,7 @@ public class SmokeCloudManager {
     private static final List<SmokeCloud> ACTIVE_CLOUDS = new CopyOnWriteArrayList<>();
 
     public static void spawnCloud(ServerLevel level, Vec3 pos, double radius, int durationTicks) {
-        ACTIVE_CLOUDS.add(new SmokeCloud(pos, radius, durationTicks));
+        ACTIVE_CLOUDS.add(new SmokeCloud(level.dimension(), pos, radius, durationTicks));
 
         level.playSound(null, pos.x, pos.y, pos.z,
                 SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.PLAYERS, 1.2f, 0.6f);
@@ -51,6 +53,11 @@ public class SmokeCloudManager {
         Iterator<SmokeCloud> it = ACTIVE_CLOUDS.iterator();
         while (it.hasNext()) {
             SmokeCloud cloud = it.next();
+
+            if (!cloud.dimension.equals(level.dimension())) {
+                continue;
+            }
+
             cloud.remainingTicks--;
 
             // Generate smoke billows every 3 ticks

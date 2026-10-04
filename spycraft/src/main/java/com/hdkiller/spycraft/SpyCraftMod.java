@@ -49,7 +49,13 @@ public class SpyCraftMod implements ModInitializer {
 
         // Register disconnect event for safe cleanup
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            ReconDroneManager.onPlayerDisconnect(handler.getPlayer());
+            var player = handler.getPlayer();
+            if (player != null) {
+                ReconDroneManager.onPlayerDisconnect(player);
+                com.hdkiller.spycraft.item.GrapplingHookGunItem.onPlayerDisconnect(player.getUUID());
+                com.hdkiller.spycraft.item.ZiplineManager.onPlayerDisconnect(player.getUUID());
+                com.hdkiller.spycraft.item.ParachuteBackpackItem.onPlayerDisconnect(player.getUUID());
+            }
         });
 
         // Register /spycraft spawn_base command

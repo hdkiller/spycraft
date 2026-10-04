@@ -42,9 +42,9 @@ public class HologramProjectorItem extends Item {
             decoy.setCustomNameVisible(true);
             decoy.setGlowingTag(true);
             decoy.setNoGravity(true);
-            decoy.setInvulnerable(false);
+            decoy.setInvulnerable(true);
 
-            // Copy player equipment
+            // Copy player equipment as visual projection (invulnerable prevents damage & loot drop)
             decoy.setItemSlot(EquipmentSlot.HEAD, player.getItemBySlot(EquipmentSlot.HEAD).copy());
             decoy.setItemSlot(EquipmentSlot.CHEST, player.getItemBySlot(EquipmentSlot.CHEST).copy());
             decoy.setItemSlot(EquipmentSlot.MAINHAND, player.getItemBySlot(EquipmentSlot.MAINHAND).copy());
