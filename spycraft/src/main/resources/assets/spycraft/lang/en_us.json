@@ -22,6 +22,7 @@
   "item.spycraft.climbing_gloves": "Magnetic Climbing Gloves",
   "item.spycraft.parachute_backpack": "Tactical Parachute Backpack",
   "item.spycraft.binoculars": "Tactical Recon Binoculars",
+  "item.spycraft.zipline_gun": "Tactical Zipline Gun",
   "effect.spycraft.drone_piloting": "Drone Piloting",
   "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Spy & Adventure Gear",
 
@@ -63,5 +64,12 @@
   "tooltip.spycraft.grappling_hook_gun.nofall": "§a↳ Fall Protection: §f0 fall damage on landing (no floaty slow falling)",
   "hud.spycraft.binoculars.scanning": "§6🔍 SCANNING: §f%s §e[%s] §7(%dm)",
   "hud.spycraft.binoculars.locked": "§a✔ TARGET LOCKED: §f%s §7(%dm)",
-  "message.spycraft.binoculars.tag_success": "§a🎯 [Binoculars] §fTagged target: §e%s §7(Glows through walls & synced to radar)"
+  "message.spycraft.binoculars.tag_success": "§a🎯 [Binoculars] §fTagged target: §e%s §7(Glows through walls & synced to radar)",
+  "tooltip.spycraft.zipline_gun.desc": "§7Deployable high-speed wire rope zipline system!",
+  "tooltip.spycraft.zipline_gun.range": "§e↳ Right-Click: §fShoots a taut steel cable anchor (up to 64m)",
+  "tooltip.spycraft.zipline_gun.controls": "§b↳ Trolley Slide: §fSlides across at 27 m/s (Sneak: Detach mid-flight)",
+  "message.spycraft.zipline.too_far": "§c[Zipline Gun] §7Target is too far! (Max 64 blocks)",
+  "message.spycraft.zipline.too_close": "§c[Zipline Gun] §7Target is too close! (Min 4 blocks)",
+  "hud.spycraft.zipline.riding": "§b🪢 ZIPLINE SLIDING... §e%s%% §7(Sneak: Detach)",
+  "hud.spycraft.zipline.dismount": "§a🪢 [ARRIVED] §7Safely dismounted at destination!"
 }

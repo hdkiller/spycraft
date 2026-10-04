@@ -417,7 +417,9 @@ public abstract class GuiMixin {
 
         boolean holdingGrapple = player.getMainHandItem().is(ModItems.GRAPPLING_HOOK_GUN)
             || player.getOffhandItem().is(ModItems.GRAPPLING_HOOK_GUN);
-        if (!holdingGrapple) return;
+        boolean holdingZipline = player.getMainHandItem().is(ModItems.ZIPLINE_GUN)
+            || player.getOffhandItem().is(ModItems.ZIPLINE_GUN);
+        if (!holdingGrapple && !holdingZipline) return;
 
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
@@ -425,10 +427,11 @@ public abstract class GuiMixin {
         int cy = height / 2;
         Font font = this.minecraft.font;
 
+        double maxDist = holdingZipline ? 64.0 : 32.0;
+
         // Perform raycast
         Vec3 eyePos = player.getEyePosition(1.0f);
         Vec3 look = player.getViewVector(1.0f);
-        double maxDist = 32.0;
         Vec3 reach = eyePos.add(look.scale(maxDist));
 
         HitResult blockHit = player.level().clip(new ClipContext(
@@ -441,6 +444,28 @@ public abstract class GuiMixin {
         double blockDist = blockHit.getType() != HitResult.Type.MISS
             ? eyePos.distanceTo(blockHit.getLocation())
             : maxDist;
+
+        if (holdingZipline) {
+            if (blockHit.getType() == HitResult.Type.BLOCK && blockDist >= 4.0) {
+                int color = 0xFFFFBB00; // Tactical Gold
+                int bSize = 6;
+                guiGraphics.fill(cx - 10, cy - 10, cx - 10 + bSize, cy - 9, color);
+                guiGraphics.fill(cx - 10, cy - 10, cx - 9, cy - 10 + bSize, color);
+                guiGraphics.fill(cx + 10 - bSize, cy - 10, cx + 10, cy - 9, color);
+                guiGraphics.fill(cx + 9, cy - 10, cx + 10, cy - 10 + bSize, color);
+                guiGraphics.fill(cx - 10, cy + 9, cx - 10 + bSize, cy + 10, color);
+                guiGraphics.fill(cx - 10, cy + 10 - bSize, cx - 9, cy + 10, color);
+                guiGraphics.fill(cx + 10 - bSize, cy + 9, cx + 10, cy + 10, color);
+                guiGraphics.fill(cx + 9, cy + 10 - bSize, cx + 10, cy + 10, color);
+
+                String distText = "§6🪢 " + (int) blockDist + "m";
+                guiGraphics.drawString(font, distText, cx - font.width(distText) / 2, cy + 13, 0xFFFFFF, true);
+            } else {
+                String outText = "§8[--m]";
+                guiGraphics.drawString(font, outText, cx - font.width(outText) / 2, cy + 13, 0x888888, true);
+            }
+            return;
+        }
 
         EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
             player.level(), player, eyePos, reach,

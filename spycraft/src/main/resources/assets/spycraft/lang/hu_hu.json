@@ -22,6 +22,7 @@
   "item.spycraft.climbing_gloves": "Mágneses Mászókesztyű",
   "item.spycraft.parachute_backpack": "Taktikai Ejtőernyős Hátizsák",
   "item.spycraft.binoculars": "Taktikai Felderítő Távcső",
+  "item.spycraft.zipline_gun": "Taktikai Drótkötélpálya Kilövő",
   "effect.spycraft.drone_piloting": "Drón Irányítás",
   "itemGroup.spycraft.erikcraft_tab": "SpyCraft: Kém & Kaland Felszerelés",
 
@@ -63,5 +64,12 @@
   "tooltip.spycraft.grappling_hook_gun.nofall": "§a↳ Taktikai esésvédelem: §f0 esési sebzés földet érésig (lebegés nélkül)",
   "hud.spycraft.binoculars.scanning": "§6🔍 CÉLPONT BEFOGÁSA: §f%s §e[%s] §7(%dm)",
   "hud.spycraft.binoculars.locked": "§a✔ CÉLPONT BEFOGVA: §f%s §7(%dm)",
-  "message.spycraft.binoculars.tag_success": "§a🎯 [Távcső] §fCélpont megjelölve: §e%s §7(Látszik a falakon át és követi a radar)"
+  "message.spycraft.binoculars.tag_success": "§a🎯 [Távcső] §fCélpont megjelölve: §e%s §7(Látszik a falakon át és követi a radar)",
+  "tooltip.spycraft.zipline_gun.desc": "§7Hordozható acélkábeles drótkötélpálya rendszer (Zipline)!",
+  "tooltip.spycraft.zipline_gun.range": "§e↳ Jobb klikk: §fKifeszíti a feszes acélsodronyt (akár 64 méterre)",
+  "tooltip.spycraft.zipline_gun.controls": "§b↳ Görgős átcsúszás: §fAzonnali 27 m/s száguldás (Guggolás: leugrás)",
+  "message.spycraft.zipline.too_far": "§c[Drótkötélpálya] §7A célpont túl messze van! (Max 64 blokk)",
+  "message.spycraft.zipline.too_close": "§c[Drótkötélpálya] §7A célpont túl közel van! (Min 4 blokk)",
+  "hud.spycraft.zipline.riding": "§b🪢 ÁTCSÚSZÁS... §e%s%% §7(Guggolás: Leugrás)",
+  "hud.spycraft.zipline.dismount": "§a🪢 [ÁTÉRKEZTÉL] §7Biztonságos leérkezés a túloldalon!"
 }

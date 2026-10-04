@@ -44,6 +44,7 @@ public class SpyCraftMod implements ModInitializer {
         ServerTickEvents.END_WORLD_TICK.register(SoundTrapManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.HologramDecoyManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.SmokeCloudManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.ZiplineManager::tick);
 
         // Register disconnect event for safe cleanup
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -91,6 +92,7 @@ public class SpyCraftMod implements ModInitializer {
             entries.accept(ModItems.CLIMBING_GLOVES);
             entries.accept(ModItems.PARACHUTE_BACKPACK);
             entries.accept(ModItems.BINOCULARS);
+            entries.accept(ModItems.ZIPLINE_GUN);
             entries.accept(ModBlocks.SOUND_TRAP);
             entries.accept(ModItems.RECON_DRONE);
             entries.accept(ModItems.SNIPER_RIFLE);

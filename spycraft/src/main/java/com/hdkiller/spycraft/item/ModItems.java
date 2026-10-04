@@ -133,6 +133,12 @@ public class ModItems {
         new BinocularsItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1))
     );
 
+    // Tactical Zipline Gun - Wire rope cable launcher and high-speed trolley pulley
+    public static final Item ZIPLINE_GUN = registerItem(
+        "zipline_gun",
+        new ZiplineGunItem(new Item.Properties().rarity(Rarity.RARE).durability(300))
+    );
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(
             BuiltInRegistries.ITEM,
