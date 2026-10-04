@@ -155,7 +155,7 @@ public class ZiplineManager {
         // Refresh lifetime on use
         zipline.remainingTicks = Math.max(zipline.remainingTicks, 3600);
 
-        double speed = 1.35; // ~27 blocks per second
+        double speed = 0.70; // ~14 blocks per second, smooth and controllable cinematic slide
         ACTIVE_RIDERS.put(player.getUUID(), new ZiplineRider(player.getUUID(), rideStart, rideEnd, speed));
         GrapplingHookGunItem.grantGrappleProtection(player.getUUID());
 

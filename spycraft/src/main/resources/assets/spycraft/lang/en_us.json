@@ -68,7 +68,7 @@
   "message.spycraft.binoculars.tag_success": "§a🎯 [Binoculars] §fTagged target: §e%s §7(Glows through walls & synced to radar)",
   "tooltip.spycraft.zipline_gun.desc": "§7Deployable high-speed wire rope zipline system!",
   "tooltip.spycraft.zipline_gun.range": "§e↳ Right-Click: §fShoots & anchors steel cable (up to 64m)",
-  "tooltip.spycraft.zipline_gun.controls": "§b↳ Right-Click near cable: §fMounts trolley & slides across at 27 m/s",
+  "tooltip.spycraft.zipline_gun.controls": "§b↳ Right-Click near cable: §fMounts trolley & slides across at 14 m/s",
   "tooltip.spycraft.zipline_gun.retract": "§c↳ Sneak + Right-Click: §fRetracts cable (or Sneak to detach mid-flight)",
   "message.spycraft.zipline.too_far": "§c[Zipline Gun] §7Target is too far! (Max 64 blocks)",
   "message.spycraft.zipline.too_close": "§c[Zipline Gun] §7Target is too close! (Min 4 blocks)",
