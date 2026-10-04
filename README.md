@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="docs/spycraft_logo_512.png" width="220" alt="SpyCraft Logo" />
+  <img src="docs/spycraft_logo_512.png" width="180" alt="SpyCraft Logo" />
 </p>
 
-# 🎮 SpyCraft — Tactical Secret Agent Mod for Minecraft
+# SpyCraft: Tactical Secret Agent Gear for Minecraft
 
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen.svg)](https://fabricmc.net/)
 [![Fabric Loader](https://img.shields.io/badge/Fabric-0.16%2B-blue.svg)](https://fabricmc.net/)
@@ -11,138 +11,146 @@
 [![GitHub Release](https://img.shields.io/github/v/release/hdkiller/spycraft?color=success&label=Release)](https://github.com/hdkiller/spycraft/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**SpyCraft** is a high-tech tactical Minecraft mod bringing secret agent gadgets, reconnaissance drones, laser forcefields, night vision, procedural villain skyscraper infiltration bases, and tactical gear to Minecraft 1.21.1! Built with ❤️ by **László & Erik**. Supports both **English (default)** and **Hungarian (Magyar)** native localization.
+**SpyCraft** is a tactical secret agent mod for Minecraft 1.21.1 (Fabric). It introduces controllable reconnaissance drones, multi-pylon laser forcefield perimeters, night and thermal vision, emergency parachute backpacks, tranquilizer darts, and procedural villain skyscraper infiltration missions.
+
+Built by **László & Erik**. Supports native **English (default)** and **Hungarian (Magyar)** in-game localization.
 
 ---
 
-## ⚡ Quickstart: Launch the Game in 1 Command
+## Requirements & Installation
 
-Open your terminal in `~/Develop/mc/spycraft` and run:
+### Requirements
+- **Minecraft:** `1.21.1`
+- **Mod Loader:** `Fabric Loader >= 0.16.0`
+- **Java:** `21`
+- **Required Dependency:** [Fabric API](https://modrinth.com/mod/fabric-api)
+
+### Installation
+1. Install [Fabric Loader](https://fabricmc.net/use/installer/) for Minecraft 1.21.1.
+2. Download [Fabric API](https://modrinth.com/mod/fabric-api) and place it into your `.minecraft/mods` directory.
+3. Download the latest `spycraft-1.0.0.jar` from [Modrinth](https://modrinth.com/mod/spycraft-mod) or [GitHub Releases](https://github.com/hdkiller/spycraft/releases) and place it into your `.minecraft/mods` directory.
+4. Launch Minecraft using your preferred launcher (Prism Launcher, Modrinth App, or official Minecraft launcher).
+
+---
+
+## Tactical Arsenal Overview
+
+All items and blocks are available in creative mode under the **"SpyCraft: Spy & Adventure Gear"** tab.
+
+### 1. Tactical Sniper Rifle
+- **Optical Scope Zoom:** Hold right-click to zoom in on distant targets with high magnification.
+- **Ballistics:** Release right-click to fire a hypersonic shot with visual smoke and spark trails up to 128 blocks away.
+- **Damage:** Delivers high precision damage (28 HP), capable of neutralizing most hostiles in a single hit.
+- **Hip Fire:** Sneak + right-click to fire instantly without scoping.
+- **Thermal Pairing:** When paired with Tactical Spy Goggles, targets highlight through solid walls for clear target acquisition.
+
+### 2. Laser Forcefield Security Grid
+- **Laser Security Pylons:** Deploy three or more pylons around an area to define a secure perimeter.
+- **Laser Remote:** Click pylons in sequence, then click into the air to engage the system.
+  - **Active State:** Generates an impenetrable 4-block high laser energy barrier between connected pylons.
+  - **Shock Repulsion:** Intruders attempting to breach the perimeter receive electrical shock damage and are knocked back.
+  - **Deactivation:** Right-click into the air again to instantly toggle off the grid.
+
+### 3. Tactical Recon Drone
+- **Controllable Flight:** Right-click to pilot the drone with full 3D directional flight, animated propellers, and navigation LEDs (60-second flight battery).
+- **Custom Cockpit HUD Dock:** Player hotbar is replaced with a dedicated 4-action tactical drone dock:
+  1. `[1: Laser Target Marker]` &mdash; Designates targets with a red laser beacon visible up to cloud level.
+  2. `[2: Tranquilizer Dart (5/5)]` &mdash; Fires pneumatic sleep darts, immobilizing targets for 15 seconds.
+  3. `[3: Kamikaze Strike]` &mdash; Initiates a tactical dive bomb explosion (yield 4.0), safely returning the pilot to base.
+  4. `[4: Return to Base]` &mdash; Recalls the drone and safely returns control to the player.
+- **Recharging:** Sneak + right-click with Redstone Dust to instantly recharge battery and refill darts. Slowly trickles charge while resting in inventory.
+- **Radar Scanner:** Passively scans nearby mobs within 32 meters, highlighting them with glowing outlines synchronized to spy goggles.
+
+### 4. Tactical Parachute Backpack
+- **Worn Mode (Chestplate Slot):** Automatically deploys when falling from high structures or cliffs. Can also be manually deployed during descent by pressing the Sneak key.
+- **Hand Mode (Inventory):** Right-click while in mid-air to deploy directly from hand as an emergency contingency.
+- **Gliding Mechanics:** Smooth, steerable descent in the direction the player is looking, completely eliminates fall damage, and automatically repacks upon landing.
+
+### 5. Magnetic Climbing Gloves
+- **Vertical Surface Scaling:** Hold in hand to climb vertical walls, including glass, smooth stone, and metal structures.
+- **Wall Cling:** Press Sneak (Shift) to latch onto walls and hold position for sniping or recon.
+
+### 6. Thermal Vision Goggles
+- **Wall Penetration:** Grants high-contrast target outlines through solid blocks within a 32-meter radius.
+- **Night Operations:** Integrated night vision eliminates cave and darkness visibility penalties.
+
+### 7. Tranquilizer Dart Gun
+- **Pneumatic Stealth:** Fires silent darts that put hostile and neutral mobs to sleep for 15 seconds.
+- **Aggro Reset:** Sleeping targets completely lose player aggression when waking up.
+
+### 8. Holographic Decoy Projector
+- **Target Diversion:** Right-click on the ground to project a lifelike holographic operative clone.
+- **Threat Draw:** Nearby guards, monsters, and hostile mobs prioritize attacking the decoy for 25 seconds.
+
+### 9. Tactical Smoke Grenade
+- **Screening:** Thrown grenade creates a dense 12-second smoke cloud upon impact.
+- **Tactical Concealment:** Blinds hostile mobs, breaks enemy line of sight, and grants the player stealth camouflage.
+
+### 10. Tactical C4 Explosive & Remote Detonator
+- **Variable Yield:** Supports 1x Standard (4.5x), 2x Double (9.0x), and 3x Mega Breach (18.0x) explosive charges.
+- **Multi-Detonation:** Place multiple charges and detonate them simultaneously with the remote trigger from a safe distance.
+
+### 11. Procedural Mission Skyscraper Base
+- **Mission Deployer Beacon:** Right-click on the ground to construct a 96-floor villain corporate skyscraper.
+- **Structure Features:** Multi-level subterranean parking garage, security checkpoints, drone sentries, laser barriers, executive penthouses, and mission safes.
+
+### 12. Villager Spy Disguise
+- **Infiltration Outfit:** Mask and Robe combination completely alters the player's 3D model into an authentic villager with custom animations.
+- **Covert Sounds:** Right-clicking while disguised produces authentic villager vocalizations and emerald particle effects.
+
+### 13. Tactical Grappling Hook Gun
+- **Rapid Ascent:** Fires a reinforced cable up to 32 blocks to pull the operative to rooftops or elevated ledges.
+- **Soft Landing:** Automatically provides brief slow-fall mitigation on arrival.
+
+### 14. Spy Bug & Radar Tracker
+- **Asset Tagging:** Attach to any player or mob to track position and distance for 10 minutes through solid terrain.
+- **Waypoint Anchors:** Plant on blocks to mark permanent extraction points and secret bases.
+
+### 15. Sonic Decoy Sound Trap
+- **Acoustic Lure:** Emits realistic Creeper priming audio every 3 seconds with 2.5x volume range.
+- **Mob Gathering:** Draws all hostile and neutral entities within 32 blocks directly toward the decoy.
+
+---
+
+## Development & Testing
+
+The repository includes a complete Gradle build environment and automated JUnit 5 test suite.
 
 ```bash
-cd ~/Develop/mc/spycraft
+# Run tests
+./gradlew test
+
+# Compile mod JAR
+./gradlew build
+
+# Launch client development environment
 ./gradlew runClient
+
+# Launch dedicated multiplayer test server
+./gradlew runServer
 ```
 
-Minecraft 1.21.1 will boot up with **SpyCraft** already loaded!
+### Texture Variant Studio
+SpyCraft features an asset harness for inspecting textures and 3D models:
 
-> [!TIP]
-> **Using VS Code or Antigravity IDE?**
-> Simply open the folder `~/Develop/mc` in VS Code / Antigravity IDE. Press **F5** (or open the *Run & Debug* panel and click **Minecraft Client (Debug)**) to start Minecraft with full code debugging attached!
-> Read [`docs/05-ide-and-development-setup.md`](docs/05-ide-and-development-setup.md) for complete details.
+```bash
+# Start asset preview server at http://127.0.0.1:8088
+python3 tools/asset-harness/server.py
 
----
-
-## 🕵️‍♂️ Tactical Spy Arsenal
-
-All tools are in the **"SpyCraft Tactical Gear"** creative tab:
-
-### 1. 🎯 Mesterlövész Puska (Tactical Sniper Rifle) ([`SniperRifleItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/SniperRifleItem.java))
-- **Optikai Célkereszt Zoom:** Tartsd nyomva a jobb egérgombot $\rightarrow$ a kamera ráközelít a távoli célpontra nagy nagyítással!
-- **Lövés:** Engedd el a gombot $\rightarrow$ dördül a lövés (hangos visszhang és visszarúgás), és egy hiperszonikus füst/szikracsík csapódik be akár **128 blokk** távolságba!
-- **Extrém Sebzés:** 28 sebzés (egy lövésből teríti le a legtöbb szörnyet).
-- **Csípőlövés:** Guggolva (Shift) + jobb gombbal azonnal lő célzás nélkül.
-- **Kém Szemüveg Kombó:** Ha a **Tactical Spy Goggles** rajtad van, a célpontok a falakon át is ragyognak, így sötétben vagy fedezék mögül is láthatod őket!
-
-### 2. ⚡ Lézerfal Erőpajzs Csapda (Laser Forcefield Trap) ([`LaserPylonBlock.java`](spycraft/src/main/java/com/hdkiller/spycraft/block/LaserPylonBlock.java) & [`LaserRemoteItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/LaserRemoteItem.java))
-- **Lézeroszlopok (Pylons):** Helyezz le legalább 3 oszlopot a védeni kívánt terület körül.
-- **Távirányító (Remote):** Kattints sorban az oszlopokra, majd kattints a levegőbe:
-  - **BE:** 4 méter magas, szikrázó sci-fi lézer erőpajzs fal jelenik meg az oszlopok között!
-  - **ÁTHATOLHATATLAN:** Bárki megpróbál átjutni rajta, az erőpajzs elektromos kisüléssel visszalöki és megrázza! Senki sem tud kijönni vagy behatolni!
-  - **KI:** Még egy kattintás a levegőbe $\rightarrow$ a lézerfal azonnal kikapcsol.
-
-### 3. 🥸 Falusi Álcaruha (Villager Spy Disguise) ([`VillagerDisguiseItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/VillagerDisguiseItem.java))
-- **Falusi Álcamaszk** (Sisak) és **Falusi Álcaköpeny** (Mellvért).
-- **Valódi 3D Modellcsere:** Ha felveszed, a játékos modellje azonnal kicserélődik egy **élethű, animált Falusira** (összekulcsolt kezekkel, nagy orral, sétáló animációval és fejmozgással)!
-- **Hang:** Álcázva jobb-klikkre a klasszikus *"HRRRMMM!"* falusi hangot adja zöld smaragd szikrákkal!
-
-### 4. 🔫 Tactical Grappling Hook Gun ([`GrapplingHookGunItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/GrapplingHookGunItem.java))
-- Aim at any ledge or rooftop up to 32 blocks away and right-click.
-- Shoots a cable with spark trails and reels Erik up with soft-landing slow-fall protection!
-
-### 5. 📡 Spy Bug & Radar Tracker ([`MobTrackerItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/MobTrackerItem.java))
-- **Mount on Mobs/Players**: Right-click ANY mob or Dad to plant a live bug (glows through walls for 10 min).
-- **Plant GPS Beacon on Blocks**: Right-click ANY block to plant a permanent beacon.
-- **Sonar Ping**: Right-click in the air anytime to ping distance, elevation, and compass heading.
-
-### 6. 🕶️ Tactical Spy Goggles ([`SpyGogglesItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/SpyGogglesItem.java))
-- **Night Vision**: Instant, permanent clear vision in dark caves and at night.
-- **Sky-High Beacon Pillar**: Projects a towering **96-block tall glowing light pillar** straight up into the sky, visible over mountains from up to 256 meters away!
-- **Live Action-Bar HUD**: `[SPY HUD | 📍 Base: 24m | 📡 Target: 12m | 💣 C4: 2 [MEGA 3x]]`.
-
-### 7. 🧭 GPS Waypoint Navigator Visor ([`GpsNavigatorGogglesItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/GpsNavigatorGogglesItem.java))
-- **Floating 3D Guidance Arrows**: Projects glowing 3D arrows directly in the air in front of your eyes pointing the exact way towards your beacon or target!
-- **Dynamic Relative HUD**: `⬆ [EGYENESEN ELŐRE]`, `➡ [FORDULJ JOBBRA]`, `⬇ [FORDULJ MEG!]`, stb.
-
-### 8. 🧨 Tactical C4 Canister & Remote Detonator ([`C4Block.java`](spycraft/src/main/java/com/hdkiller/spycraft/block/C4Block.java) & [`RemoteDetonatorItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/RemoteDetonatorItem.java))
-- Sleek 3D **cylindrical tube canister** with 3 LED indicators.
-- **3 Robbanási Fokozat**: 1x Alap (4.5x), 2x Dupla (9.0x), 3x MEGA (18.0x óriási kráter)!
-- Right-click detonator in the air to trigger simultaneous breach!
-
-### 9. 🛸 Felderítő Drón (Tactical Recon Drone) ([`ReconDroneItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/ReconDroneItem.java))
-- **Irányítható repülés (60s akku)**: Jobb klikk és a játékos átveszi a drón irányítását szabad 3D repüléssel, propellerekkel és LED fényekkel.
-- **Speciális Drón Műszerfal GUI**: A játékos normál inventory hotbarja és keze teljesen elrejtőzik, helyette a képernyő alján megjelenik a 4-gombos **Drón Vezérlő Dokk**:
-  - `[1: 🎯 LÉZER JELÖLŐ]` — Vörös lézersugár & 96 blokk magas felhőkig érő Beacon fénysugár a célpontra.
-  - `[2: 💤 ALTATÓ LÖVEDÉK (5/5)]` — Pneumatikus kábító lövedék, a célpont elalszik (15 másodpercre mozdulatlanul megdermed, békés Zzz kotta hangjegyek lebegnek a feje felett).
-  - `[3: 💥 KAMIKAZE CSAPÁS]` — Taktikai zuhanás & robbanás (yield 4.0), a pilóta azonnal biztonságban visszatér a bázisra.
-  - `[4: 🏠 BÁZIS VISSZATÉRÉS]` — Biztonságos visszatérés a kiindulópontra.
-- **Akcióválasztás**: Az `1`, `2`, `3`, `4` számbillentyűkkel vagy egérgörgővel választhatsz a 4 funkció közül, majd a **Jobb klikk** azonnal végrehajtja! Nem tudsz véletlenül fegyvert vagy sniper puskát elővenni.
-- **Töltés & Újratöltés**:
-  - **Gyors-töltés**: Guggolva Jobb klikk Redstone-nal a kézben azonnal 100%-ra (60mp) tölti az akkumulátort és újratölti az 5/5 altató lövedéket!
-  - **Csepptöltés**: Ha a drón a hátizsákban pihen, magától is lassan újratöltődik.
-- **Radar & Szkenner**: Folyamatosan pásztázza a környező mobokat (32m hatótáv), Glowing körvonalat ad nekik és szinkronizál a Trackerekkel és a Navigációs Szemüvegekkel!
-
-### 10. 🔊 Hangcsapda (Sonic Decoy Sound Trap) ([`SoundTrapBlock.java`](spycraft/src/main/java/com/hdkiller/spycraft/block/SoundTrapBlock.java))
-- **Creeper sziszegés hang**: 3 másodpercenként élethű, félelmetes Creeper sziszegést (`CREEPER_PRIMED`) bocsát ki 2.5x-es hangerővel (akár 40 blokk távolságig hallatszik)!
-- **Mob vonzás & csalizás**: 32 méteres körzetben minden ellenséges és békés mobot (Zombik, Csontvázak, Creeper-ek, Pókok, stb.) közvetlenül magához vonz; a mobok odasétálnak és gyanakvóan nézik a csapdát!
-- **Játékos megtévesztés**: Barlangban vagy bázison elrejtve a játékosok a sziszegést hallva pánikszerűen keresni kezdik a nem létező Creepert.
-- **Kiütésre megszűnik**: Ha kiütöd vagy elbontod a blokkot, a sziszegés azonnal elhallgat, és a mobok elhagyják a helyszínt. Kézzel jobb klikkelve csendes készenléti módba is kapcsolható.
-
-### 11. 🪂 Taktikai Ejtőernyős Hátizsák (Tactical Parachute Backpack) ([`ParachuteBackpackItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/ParachuteBackpackItem.java))
-- **Hátra véve (Mellvért slot):** Magasból ugráskor a zuhanást azonnal érzékeli és magától kinyílik, vagy ugrás közben a Guggolás (Sneak) gombbal kézzel is nyitható!
-- **Kézben tartva (Inventory):** Ha a kezedben van és leugrasz egy magas toronyból, jobb-klikkre (vagy használatra) vésznyitásként azonnal kinyílik!
-- **Irányítható siklás:** A nézésed irányában siklik finoman, 100%-ban nullázza az esési sebzést, és a talaj érintésekor automatikusan összecsukódik.
-
-### 12. 🧤 Mágneses Mászókesztyű (Magnetic Climbing Gloves) ([`ClimbingGlovesItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/ClimbingGlovesItem.java))
-- **Falmászás:** Kézben tartva függőleges felületeken (akár sima üveg, kő vagy vasfalakon) is fel tudsz mászni.
-- **Tapadás:** Guggolás (Sneak / Shift) gombbal megállsz a falon egy helyben pihenni vagy lőni.
-
-### 13. 🥽 Hőkamera Szemüveg (Thermal Vision Goggles) ([`ThermalGogglesItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/ThermalGogglesItem.java))
-- **Látás a falakon át:** 32 méteres körzetben ragyogó kontúrt ad minden élőlénynek, zombinak, őrnek és játékosnak, még a vastag falak mögött is!
-
-### 14. 💤 Altató Nyílpuska (Tranquilizer Dart Gun) ([`TranquilizerGunItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/TranquilizerGunItem.java))
-- **Csendes kábítás:** Pneumatikus altató lövedékeket lő ki hangtalanul. Eltalálva a célpont elalszik (15 másodpercig mozgásképtelenné válik és elfelejti az agrót).
-
-### 15. 👥 Hologram Projektor (Holographic Decoy) ([`HologramProjectorItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/HologramProjectorItem.java))
-- **Megtévesztő klón:** Jobb-klikk a talajra egy sugárzó, élethű hologram klónt vetít ki, ami magára vonzza a közeli szörnyek és őrök figyelmét 25 másodpercre.
-
-### 16. 💨 Taktikai Füstgránát (Tactical Smoke Grenade) ([`SmokeGrenadeItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/SmokeGrenadeItem.java))
-- **Füstfüggöny:** Eldobva sűrű, látványos füstfelhőt képez 12 másodpercre, ami megvakítja az ellenségeket és láthatatlanságot biztosít a behatolónak.
-
-### 17. 🏢 Küldetés Jeladó Csomag (Mission Deployer Beacon) ([`MissionBeaconItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/MissionBeaconItem.java))
-- **Procedurális kémbázis felhőkarcoló:** Jobb-klikk a talajra felépíti a 96 emeletes gonosztevő felhőkarcolót mélygarázzsal, lifttel, őrökkel és széfekkel!
+# Apply tactical texture preset
+python3 tools/asset-harness/cli_apply.py apply-preset specops
+```
 
 ---
 
-## 🛠️ Common Commands
+## Localization
 
-Run these inside `~/Develop/mc/spycraft`:
-
-| Command | What it Does |
-| :--- | :--- |
-| `./gradlew runClient` | Boots up Minecraft with SpyCraft for live testing |
-| `./gradlew test` | Runs JUnit 5 automated test suite |
-| `./gradlew build` | Compiles into `build/libs/spycraft-1.0.0.jar` |
-| `./gradlew runServer` | Starts dedicated multiplayer test server |
-| `python3 tools/asset-harness/server.py` | Starts Asset Studio web harness at `http://127.0.0.1:8088` |
-| `python3 tools/asset-harness/cli_apply.py apply-preset specops` | Applies SpecOps tactical texture preset |
+SpyCraft is localized with clean, native language support:
+- **English (`en_us`):** Default standard terminology.
+- **Hungarian (`hu_hu`):** Complete native localization for all items, tooltips, and in-game status prompts.
 
 ---
 
-## 🎨 Asset Studio & Texture Variants
+## License
 
-SpyCraft includes a dedicated interactive web harness and CLI tool to preview, compare, inspect in 3D, and switch texture variants for items and blocks:
-- **Web UI:** [`http://127.0.0.1:8088`](http://127.0.0.1:8088) (run `python3 spycraft/tools/asset-harness/server.py`)
-- **Themes Available:** SpecOps Tactical, Cyberpunk Neon, Steampunk / Vanilla Friendly, Baseline Prototype.
-- **Documentation:** See [`docs/06-asset-harness.md`](docs/06-asset-harness.md) for full instructions.
-
+This project is licensed under the [MIT License](LICENSE).
