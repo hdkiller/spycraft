@@ -6,7 +6,8 @@
     "ExampleClientMixin",
     "PlayerRendererMixin",
     "GuiMixin",
-    "ItemInHandRendererMixin"
+    "ItemInHandRendererMixin",
+    "AbstractClientPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

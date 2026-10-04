@@ -16,7 +16,7 @@ public abstract class PlayerMixin {
             cir.setReturnValue(false);
             return;
         }
-        if (player.isUsingItem() && player.getUseItem().is(ModItems.SNIPER_RIFLE)) {
+        if (player.isUsingItem() && (player.getUseItem().is(ModItems.SNIPER_RIFLE) || player.getUseItem().is(ModItems.BINOCULARS))) {
             cir.setReturnValue(true);
         }
     }

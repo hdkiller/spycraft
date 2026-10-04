@@ -133,6 +133,103 @@ public abstract class GuiMixin {
         }
     }
 
+    // Tactical Binoculars HUD & Reticle
+    @Inject(method = "renderSpyglassOverlay", at = @At("RETURN"))
+    private void erikcraft$renderBinocularsReticle(GuiGraphics guiGraphics, float scopeScale, CallbackInfo ci) {
+        LocalPlayer player = this.minecraft.player;
+        if (player == null || !player.isUsingItem() || !player.getUseItem().is(ModItems.BINOCULARS)) {
+            return;
+        }
+
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
+        int cx = width / 2;
+        int cy = height / 2;
+
+        int crosshairColor = 0xDD111111;
+        int cyanAccent = 0xFF00FFEE;
+        int activeColor = 0xFF55FF55;
+        int lockColor = 0xFFFF3333;
+
+        Font font = this.minecraft.font;
+
+        // 1. Tactical Viewfinder Framing Brackets
+        int bSize = 24;
+        int bDist = 48;
+        // Top-left
+        guiGraphics.fill(cx - bDist, cy - bDist, cx - bDist + bSize, cy - bDist + 1, cyanAccent);
+        guiGraphics.fill(cx - bDist, cy - bDist, cx - bDist + 1, cy - bDist + bSize, cyanAccent);
+        // Top-right
+        guiGraphics.fill(cx + bDist - bSize, cy - bDist, cx + bDist, cy - bDist + 1, cyanAccent);
+        guiGraphics.fill(cx + bDist - 1, cy - bDist, cx + bDist, cy - bDist + bSize, cyanAccent);
+        // Bottom-left
+        guiGraphics.fill(cx - bDist, cy + bDist - 1, cx - bDist + bSize, cy + bDist, cyanAccent);
+        guiGraphics.fill(cx - bDist, cy + bDist - bSize, cx - bDist + 1, cy + bDist, cyanAccent);
+        // Bottom-right
+        guiGraphics.fill(cx + bDist - bSize, cy + bDist - 1, cx + bDist, cy + bDist, cyanAccent);
+        guiGraphics.fill(cx + bDist - 1, cy + bDist - bSize, cx + bDist, cy + bDist, cyanAccent);
+
+        // 2. Center Crosshairs (Clean tactical cross with gap)
+        int crossLen = 12;
+        int crossGap = 4;
+        guiGraphics.fill(cx - crossLen, cy, cx - crossGap, cy + 1, crosshairColor);
+        guiGraphics.fill(cx + crossGap + 1, cy, cx + crossLen + 1, cy + 1, crosshairColor);
+        guiGraphics.fill(cx, cy - crossLen, cx + 1, cy - crossGap, crosshairColor);
+        guiGraphics.fill(cx, cy + crossGap + 1, cx + 1, cy + crossLen + 1, crosshairColor);
+        guiGraphics.fill(cx - 1, cy - 1, cx + 2, cy + 2, cyanAccent);
+
+        // 3. Raycast Target & Rangefinder
+        Vec3 eyePos = player.getEyePosition(1.0f);
+        Vec3 look = player.getViewVector(1.0f);
+        double maxDist = 96.0;
+        Vec3 reach = eyePos.add(look.scale(maxDist));
+
+        HitResult hit = player.level().clip(new ClipContext(
+            eyePos, reach,
+            ClipContext.Block.COLLIDER,
+            ClipContext.Fluid.NONE,
+            player
+        ));
+
+        double distMeters = hit.getType() != HitResult.Type.MISS ? eyePos.distanceTo(hit.getLocation()) : maxDist;
+
+        EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
+            player.level(), player, eyePos, reach,
+            new AABB(eyePos, reach).inflate(1.2),
+            e -> e instanceof LivingEntity && e != player && e.isAlive()
+        );
+
+        int ticksUsing = player.getTicksUsingItem();
+        int dwellGoal = 24; // 1.2s for lock-on
+
+        if (entityHit != null && entityHit.getEntity() instanceof LivingEntity target) {
+            double targetDist = eyePos.distanceTo(entityHit.getLocation());
+            boolean isLocked = ticksUsing >= dwellGoal;
+            String targetName = target.getName().getString();
+
+            String statusText = isLocked
+                ? "§a✔ CÉLPONT ZÁROLVA: §f" + targetName + " §8[§e" + (int) targetDist + "m§8]"
+                : "§e🔍 CÉLPONT BEFOGÁSA: §f" + targetName + " §8[§e" + (int) targetDist + "m§8]";
+            int textW = font.width(statusText);
+            guiGraphics.drawString(font, statusText, cx - textW / 2, cy - bDist - 14, 0xFFFFFF, true);
+
+            // Lock-on Progress Gauge Bar
+            int barW = 64;
+            int barH = 3;
+            int barX = cx - barW / 2;
+            int barY = cy + bDist + 8;
+            guiGraphics.fill(barX - 1, barY - 1, barX + barW + 1, barY + barH + 1, 0x88000000);
+            float progress = Math.min((float) ticksUsing / dwellGoal, 1.0f);
+            int filled = (int) (barW * progress);
+            int barColor = isLocked ? activeColor : (progress > 0.5f ? 0xFFFFDD00 : lockColor);
+            guiGraphics.fill(barX, barY, barX + filled, barY + barH, barColor);
+        } else {
+            String rangeText = "§7TÁVOLSÁG: §b" + (int) distMeters + "m";
+            int textW = font.width(rangeText);
+            guiGraphics.drawString(font, rangeText, cx - textW / 2, cy - bDist - 14, 0xCCCCCC, true);
+        }
+    }
+
     private static int sizeSafe(int s) {
         return s;
     }
