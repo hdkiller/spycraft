@@ -1,11 +1,16 @@
-# 🎮 SpyCraft — Tactical Minecraft Mod (`~/Develop/mc`)
+<p align="center">
+  <img src="docs/spycraft_logo_512.png" width="220" alt="SpyCraft Logo" />
+</p>
 
-[![Build Status](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen.svg)](https://fabricmc.net/)
-[![Fabric Loader](https://img.shields.io/badge/Fabric-0.19.5-blue.svg)](https://fabricmc.net/)
+# 🎮 SpyCraft — Tactical Secret Agent Mod for Minecraft
+
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen.svg)](https://fabricmc.net/)
+[![Fabric Loader](https://img.shields.io/badge/Fabric-0.16%2B-blue.svg)](https://fabricmc.net/)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://adoptium.net/)
-[![GitHub](https://img.shields.io/badge/GitHub-hdkiller%2Fspycraft-lightgrey.svg)](https://github.com/hdkiller/spycraft)
+[![GitHub Release](https://img.shields.io/github/v/release/hdkiller/spycraft?color=success&label=Release)](https://github.com/hdkiller/spycraft/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Welcome to **SpyCraft**! This workspace is created by **László & Erik** to code, test, and play tactical secret-agent gear, reconnaissance drones, sonic sound traps, laser perimeters, and infiltration tools together on macOS.
+**SpyCraft** is a high-tech tactical Minecraft mod bringing secret agent gadgets, reconnaissance drones, laser forcefields, night vision, procedural villain skyscraper infiltration bases, and tactical gear to Minecraft 1.21.1! Built with ❤️ by **László & Erik**. Supports both **English (default)** and **Hungarian (Magyar)** native localization.
 
 ---
 
@@ -91,6 +96,30 @@ All tools are in the **"SpyCraft Tactical Gear"** creative tab:
 - **Mob vonzás & csalizás**: 32 méteres körzetben minden ellenséges és békés mobot (Zombik, Csontvázak, Creeper-ek, Pókok, stb.) közvetlenül magához vonz; a mobok odasétálnak és gyanakvóan nézik a csapdát!
 - **Játékos megtévesztés**: Barlangban vagy bázison elrejtve a játékosok a sziszegést hallva pánikszerűen keresni kezdik a nem létező Creepert.
 - **Kiütésre megszűnik**: Ha kiütöd vagy elbontod a blokkot, a sziszegés azonnal elhallgat, és a mobok elhagyják a helyszínt. Kézzel jobb klikkelve csendes készenléti módba is kapcsolható.
+
+### 11. 🪂 Taktikai Ejtőernyős Hátizsák (Tactical Parachute Backpack) ([`ParachuteBackpackItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/ParachuteBackpackItem.java))
+- **Hátra véve (Mellvért slot):** Magasból ugráskor a zuhanást azonnal érzékeli és magától kinyílik, vagy ugrás közben a Guggolás (Sneak) gombbal kézzel is nyitható!
+- **Kézben tartva (Inventory):** Ha a kezedben van és leugrasz egy magas toronyból, jobb-klikkre (vagy használatra) vésznyitásként azonnal kinyílik!
+- **Irányítható siklás:** A nézésed irányában siklik finoman, 100%-ban nullázza az esési sebzést, és a talaj érintésekor automatikusan összecsukódik.
+
+### 12. 🧤 Mágneses Mászókesztyű (Magnetic Climbing Gloves) ([`ClimbingGlovesItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/ClimbingGlovesItem.java))
+- **Falmászás:** Kézben tartva függőleges felületeken (akár sima üveg, kő vagy vasfalakon) is fel tudsz mászni.
+- **Tapadás:** Guggolás (Sneak / Shift) gombbal megállsz a falon egy helyben pihenni vagy lőni.
+
+### 13. 🥽 Hőkamera Szemüveg (Thermal Vision Goggles) ([`ThermalGogglesItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/ThermalGogglesItem.java))
+- **Látás a falakon át:** 32 méteres körzetben ragyogó kontúrt ad minden élőlénynek, zombinak, őrnek és játékosnak, még a vastag falak mögött is!
+
+### 14. 💤 Altató Nyílpuska (Tranquilizer Dart Gun) ([`TranquilizerGunItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/TranquilizerGunItem.java))
+- **Csendes kábítás:** Pneumatikus altató lövedékeket lő ki hangtalanul. Eltalálva a célpont elalszik (15 másodpercig mozgásképtelenné válik és elfelejti az agrót).
+
+### 15. 👥 Hologram Projektor (Holographic Decoy) ([`HologramProjectorItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/HologramProjectorItem.java))
+- **Megtévesztő klón:** Jobb-klikk a talajra egy sugárzó, élethű hologram klónt vetít ki, ami magára vonzza a közeli szörnyek és őrök figyelmét 25 másodpercre.
+
+### 16. 💨 Taktikai Füstgránát (Tactical Smoke Grenade) ([`SmokeGrenadeItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/SmokeGrenadeItem.java))
+- **Füstfüggöny:** Eldobva sűrű, látványos füstfelhőt képez 12 másodpercre, ami megvakítja az ellenségeket és láthatatlanságot biztosít a behatolónak.
+
+### 17. 🏢 Küldetés Jeladó Csomag (Mission Deployer Beacon) ([`MissionBeaconItem.java`](spycraft/src/main/java/com/hdkiller/spycraft/item/MissionBeaconItem.java))
+- **Procedurális kémbázis felhőkarcoló:** Jobb-klikk a talajra felépíti a 96 emeletes gonosztevő felhőkarcolót mélygarázzsal, lifttel, őrökkel és széfekkel!
 
 ---
 

@@ -88,10 +88,10 @@ public class ReconDroneItem extends Item {
         int secs = (battery + 19) / 20;
         int pct = (battery * 100) / MAX_BATTERY;
 
-        tooltip.add(Component.literal("§b🔋 Akkumulátor: §e" + pct + "% §7(" + secs + "mp / 60mp)"));
-        tooltip.add(Component.literal("§3💤 Altató lövedékek: §a" + darts + " / 5 db"));
-        tooltip.add(Component.literal("§7[Guggolva Jobb klikk Redstone-nal az azonnali feltöltéshez]"));
-        tooltip.add(Component.literal("§8Hátizsákban pihenve automatikusan töltődik"));
+        tooltip.add(Component.translatable("tooltip.spycraft.recon_drone.battery", pct, secs));
+        tooltip.add(Component.translatable("tooltip.spycraft.recon_drone.darts", darts));
+        tooltip.add(Component.translatable("tooltip.spycraft.recon_drone.recharge_hint"));
+        tooltip.add(Component.translatable("tooltip.spycraft.recon_drone.auto_recharge"));
     }
 
     @Override

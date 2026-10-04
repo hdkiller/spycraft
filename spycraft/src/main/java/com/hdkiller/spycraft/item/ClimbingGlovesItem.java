@@ -64,7 +64,7 @@ public class ClimbingGlovesItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Tartsd a kezedben sima falak §bMágneses mászásához§7!"));
-        tooltip.add(Component.literal("§8↳ Nyomd a fal felé a haladást/ugrást a mászáshoz, Shift-et a tapadáshoz."));
+        tooltip.add(Component.translatable("tooltip.spycraft.climbing_gloves.desc"));
+        tooltip.add(Component.translatable("tooltip.spycraft.climbing_gloves.effect"));
     }
 }

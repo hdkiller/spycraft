@@ -70,7 +70,7 @@ public class HologramProjectorItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Jobb-klikk a földre egy §bHologram Klón §7kivetítéséhez!"));
-        tooltip.add(Component.literal("§8↳ Magára vonzza és lefoglalja az őröket és szörnyeket (25 mp)."));
+        tooltip.add(Component.translatable("tooltip.spycraft.hologram_projector.line1"));
+        tooltip.add(Component.translatable("tooltip.spycraft.hologram_projector.line2"));
     }
 }

@@ -8,7 +8,9 @@
     "László & Erik"
   ],
   "contact": {
-    "homepage": "https://github.com/hdkiller/mc"
+    "homepage": "https://github.com/hdkiller/spycraft",
+    "sources": "https://github.com/hdkiller/spycraft",
+    "issues": "https://github.com/hdkiller/spycraft/issues"
   },
   "license": "MIT",
   "icon": "assets/spycraft/icon.png",

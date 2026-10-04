@@ -66,7 +66,7 @@ public class ParachuteBackpackItem extends ArmorItem {
                 double pz = player.getZ();
                 serverLevel.sendParticles(ParticleTypes.CLOUD, px, py, pz, 15, 0.8, 0.3, 0.8, 0.05);
 
-                player.sendSystemMessage(Component.literal("§f🪂 §b[EJTŐERNYŐ KINYÍLT!] §7Irányítsd a siklást a nézéseddel..."));
+                player.sendSystemMessage(Component.translatable("message.spycraft.parachute.deployed"));
             }
         }
     }
@@ -79,7 +79,7 @@ public class ParachuteBackpackItem extends ArmorItem {
             if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
                 serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.WOOL_STEP, SoundSource.PLAYERS, 1.0f, 1.2f);
-                player.sendSystemMessage(Component.literal("§a🪂 [SIKERES FÖLDETÉRÉS] §7Az ejtőernyő összecsukódott."));
+                player.sendSystemMessage(Component.translatable("message.spycraft.parachute.landed"));
             }
         }
     }
@@ -190,9 +190,9 @@ public class ParachuteBackpackItem extends ArmorItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Taktikai ejtőernyő magasból történő ugrásokhoz & beszivárgáshoz!"));
-        tooltip.add(Component.literal("§e↳ Hátra véve (Mellvért slot): §fMagától kinyílik zuhanáskor (vagy Guggolás gombra)!"));
-        tooltip.add(Component.literal("§b↳ Kézben tartva: §fJobb-klikk zuhanás közben a kézi nyitáshoz!"));
-        tooltip.add(Component.literal("§8↳ Siklás a nézés irányában, 0 esési sebzés, automatikus összecsukódás földet éréskor."));
+        tooltip.add(Component.translatable("tooltip.spycraft.parachute_backpack.desc"));
+        tooltip.add(Component.translatable("tooltip.spycraft.parachute_backpack.worn"));
+        tooltip.add(Component.translatable("tooltip.spycraft.parachute_backpack.hand"));
+        tooltip.add(Component.translatable("tooltip.spycraft.parachute_backpack.glide"));
     }
 }

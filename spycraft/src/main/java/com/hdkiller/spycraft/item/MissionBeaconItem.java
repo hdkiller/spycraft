@@ -36,13 +36,13 @@ public class MissionBeaconItem extends Item {
         if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
             // Check if mission base is already deployed in this world
             if (SpyBaseMissionBuilder.isMissionDeployed(serverLevel)) {
-                player.sendSystemMessage(Component.literal("§c⚠️ [KÜLDETÉS MÁR AKTÍV!] §7A kémbázis felhőkarcoló már le lett helyezve ebben a világban, nem indítható újra!"));
+                player.sendSystemMessage(Component.translatable("message.spycraft.mission_beacon.already_active"));
                 serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1.0f, 0.8f);
                 return InteractionResult.FAIL;
             }
 
-            player.sendSystemMessage(Component.literal("§b🛰️ [KÜLDETÉS JELADÓ AKTIVÁLVA!] §eKémbázis építése folyamatban..."));
+            player.sendSystemMessage(Component.translatable("message.spycraft.mission_beacon.activating"));
             serverLevel.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 2.0f, 1.2f);
 
             boolean success = SpyBaseMissionBuilder.deployMission(serverLevel, pos, player);
@@ -52,7 +52,7 @@ public class MissionBeaconItem extends Item {
                 player.getCooldowns().addCooldown(this, 100);
                 return InteractionResult.SUCCESS;
             } else {
-                player.sendSystemMessage(Component.literal("§c❌ [HIBA] A kémbázis adatfájl nem tölthető be!"));
+                player.sendSystemMessage(Component.translatable("message.spycraft.mission_beacon.error"));
             }
         }
 
@@ -61,8 +61,8 @@ public class MissionBeaconItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Jobb-klikk a földre a §bKémbázis Felhőkarcoló §7lehelyezéséhez!"));
-        tooltip.add(Component.literal("§e↳ Egyszer használatos küldetés indító eszköz!"));
-        tooltip.add(Component.literal("§8↳ 96 emelet, mélygarázs, automata őrök & lézercsapdák."));
+        tooltip.add(Component.translatable("tooltip.spycraft.mission_beacon.desc"));
+        tooltip.add(Component.translatable("tooltip.spycraft.mission_beacon.single_use"));
+        tooltip.add(Component.translatable("tooltip.spycraft.mission_beacon.specs"));
     }
 }

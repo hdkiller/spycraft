@@ -80,4 +80,19 @@ class SpyGadgetsTest {
         assertTrue(langContent.contains("item.spycraft.climbing_gloves"), "Climbing gloves translation missing");
         assertTrue(langContent.contains("item.spycraft.parachute_backpack"), "Parachute backpack translation missing");
     }
+
+    @Test
+    @DisplayName("Verify gadget localization keys exist in hu_hu.json")
+    void testHungarianLocalization() throws Exception {
+        InputStream is = getClass().getResourceAsStream("/assets/spycraft/lang/hu_hu.json");
+        assertNotNull(is, "hu_hu.json must exist");
+        String langContent = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+
+        assertTrue(langContent.contains("item.spycraft.thermal_goggles"), "Thermal goggles Hungarian translation missing");
+        assertTrue(langContent.contains("item.spycraft.hologram_projector"), "Hologram projector Hungarian translation missing");
+        assertTrue(langContent.contains("item.spycraft.tranquilizer_gun"), "Tranquilizer gun Hungarian translation missing");
+        assertTrue(langContent.contains("item.spycraft.smoke_grenade"), "Smoke grenade Hungarian translation missing");
+        assertTrue(langContent.contains("item.spycraft.climbing_gloves"), "Climbing gloves Hungarian translation missing");
+        assertTrue(langContent.contains("item.spycraft.parachute_backpack"), "Parachute backpack Hungarian translation missing");
+    }
 }

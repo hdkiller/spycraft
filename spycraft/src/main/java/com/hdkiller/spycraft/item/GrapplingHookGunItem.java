@@ -89,7 +89,7 @@ public class GrapplingHookGunItem extends Item {
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
         } else {
             if (!level.isClientSide) {
-                player.sendSystemMessage(Component.literal("§c[Grappling Hook] §7Target too far! (Max 32 blocks)"));
+                player.sendSystemMessage(Component.translatable("message.spycraft.grappling_hook.too_far"));
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.8f, 1.8f);
             }

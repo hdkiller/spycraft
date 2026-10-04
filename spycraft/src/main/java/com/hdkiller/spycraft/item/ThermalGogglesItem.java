@@ -72,7 +72,7 @@ public class ThermalGogglesItem extends ArmorItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Viseld a fejeden a falakon keresztüli §6Hőlátáshoz§7!"));
-        tooltip.add(Component.literal("§8↳ Minden élőlény ragyogó kontúrt kap a falak mögött (32m)."));
+        tooltip.add(Component.translatable("tooltip.spycraft.thermal_goggles.desc"));
+        tooltip.add(Component.translatable("tooltip.spycraft.thermal_goggles.effect"));
     }
 }

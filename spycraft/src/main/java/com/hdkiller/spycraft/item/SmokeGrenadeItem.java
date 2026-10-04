@@ -72,7 +72,7 @@ public class SmokeGrenadeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Eldobható §fTaktikai Füstgránát§7."));
-        tooltip.add(Component.literal("§8↳ 12 mp sűrű füstfüggöny (szörnyvakítás, agro-törlés, láthatatlanság)."));
+        tooltip.add(Component.translatable("tooltip.spycraft.smoke_grenade.desc"));
+        tooltip.add(Component.translatable("tooltip.spycraft.smoke_grenade.effect"));
     }
 }

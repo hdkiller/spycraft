@@ -107,7 +107,7 @@ public class TranquilizerGunItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§7Csendes, sűrített levegős §aAltató Nyílpuska§7."));
-        tooltip.add(Component.literal("§8↳ Eltalálva a célpont elalszik (15 mp mozgásképtelenség + agro-törlés)."));
+        tooltip.add(Component.translatable("tooltip.spycraft.tranquilizer_gun.desc"));
+        tooltip.add(Component.translatable("tooltip.spycraft.tranquilizer_gun.effect"));
     }
 }
