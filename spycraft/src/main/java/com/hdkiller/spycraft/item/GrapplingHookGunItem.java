@@ -143,9 +143,9 @@ public class GrapplingHookGunItem extends Item {
                 // Enemy Harpoon: Pull enemy towards player + stun
                 Vec3 toPlayer = eyePos.subtract(target.position()).normalize();
                 double pullDist = eyePos.distanceTo(target.position());
-                double pullSpeed = Math.min(1.5, 0.6 + pullDist * 0.05);
+                double pullSpeed = Math.min(1.05, 0.45 + pullDist * 0.03);
 
-                target.setDeltaMovement(toPlayer.x * pullSpeed, 0.45, toPlayer.z * pullSpeed);
+                target.setDeltaMovement(toPlayer.x * pullSpeed, 0.38, toPlayer.z * pullSpeed);
                 target.hurtMarked = true;
                 target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 35, 4, false, false));
 
@@ -236,12 +236,12 @@ public class GrapplingHookGunItem extends Item {
         if (dist < 2.2 || session.ticksReeling > 60) {
             Vec3 currentVel = player.getDeltaMovement();
             Vec3 look = player.getLookAngle();
-            double popY = Math.max(currentVel.y * 0.4, 0.54);
+            double popY = Math.max(currentVel.y * 0.35, 0.44);
 
             player.setDeltaMovement(
-                currentVel.x * 0.4 + look.x * 0.28,
+                currentVel.x * 0.3 + look.x * 0.22,
                 popY,
-                currentVel.z * 0.4 + look.z * 0.28
+                currentVel.z * 0.3 + look.z * 0.22
             );
             player.hurtMarked = true;
             player.resetFallDistance();
@@ -258,14 +258,14 @@ public class GrapplingHookGunItem extends Item {
             return;
         }
 
-        // Smooth Continuous Reeling Acceleration
+        // Smooth Continuous Reeling Acceleration (controllable tactical ascent)
         Vec3 dir = toTarget.normalize();
-        double speed = 1.15;
+        double speed = 0.72; // ~14.4 blocks per second, smooth and steady winch reeling
         Vec3 desiredVel = dir.scale(speed);
         Vec3 currentVel = player.getDeltaMovement();
 
         // Blend velocity for responsive, agile pulling
-        Vec3 newVel = currentVel.scale(0.3).add(desiredVel.scale(0.7));
+        Vec3 newVel = currentVel.scale(0.35).add(desiredVel.scale(0.65));
         player.setDeltaMovement(newVel);
         player.hurtMarked = true;
         player.resetFallDistance();
@@ -297,7 +297,7 @@ public class GrapplingHookGunItem extends Item {
 
             // Slingshot momentum boost upon early release
             Vec3 vel = player.getDeltaMovement();
-            player.setDeltaMovement(vel.x * 1.25, vel.y * 1.1 + 0.12, vel.z * 1.25);
+            player.setDeltaMovement(vel.x * 1.15, Math.min(vel.y * 1.05 + 0.08, 0.8), vel.z * 1.15);
             player.hurtMarked = true;
             player.resetFallDistance();
             grantGrappleProtection(player.getUUID());
