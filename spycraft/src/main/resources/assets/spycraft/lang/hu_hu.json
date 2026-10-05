@@ -9,10 +9,10 @@
   "item.spycraft.gps_navigator_goggles": "GPS Navigációs Szemüveg",
   "item.spycraft.villager_disguise_robe": "Falusi Álcaköpeny",
   "item.spycraft.villager_disguise_mask": "Falusi Álcamaszk",
-  "item.spycraft.laser_remote": "Lézerfal Távirányító",
+  "item.spycraft.laser_remote": "Taktikai Univerzális Távirányító",
   "block.spycraft.laser_pylon": "Lézeroszlop",
   "block.spycraft.c4_block": "Taktikai C4 Robbanóanyag",
-  "item.spycraft.remote_detonator": "C4 Távirányító",
+  "item.spycraft.remote_detonator": "Taktikai Univerzális Távirányító",
   "item.spycraft.recon_drone": "Taktikai Felderítő Drón",
   "block.spycraft.sound_trap": "Hangcsapda Csalétek",
   "item.spycraft.mission_beacon": "Küldetés Jeladó Csomag",
@@ -85,5 +85,10 @@
   "tooltip.spycraft.breaching_spray.clear": "§8↳ Shift + Jobb klikk levegőbe: Összes befújt blokk hatástalanítása",
   "hud.spycraft.breaching_spray.sprayed": "§6💥 FAL BEFÚJVA: §f%d blokk élesítve §8| §7Robbants a Távirányítóval!",
   "message.spycraft.breaching_spray.cleared": "§a🛡️ [Falbontó Spray] §f%d befújt blokk hatástalanítva és törölve.",
-  "message.spycraft.breaching_spray.none": "§e[Falbontó Spray] §7Nincsenek aktív befújt blokkok."
+  "message.spycraft.breaching_spray.none": "§e[Falbontó Spray] §7Nincsenek aktív befújt blokkok.",
+
+  "tooltip.spycraft.remote_detonator.desc": "§7Minden-az-egyben intelligens taktikai távirányító!",
+  "tooltip.spycraft.remote_detonator.c4": "§c↳ C4 & Falbontó: §fKözvetlen klikk = fokozat (1x/2x/3x) | Levegőbe kattintva = ROBBANTÁS!",
+  "tooltip.spycraft.remote_detonator.laser": "§b↳ Lézeroszlop: §fKözvetlen klikk = lánc összekötés | Célzás rá / Guggolva klikk = Be/Kikapcsolás",
+  "tooltip.spycraft.remote_detonator.sound": "§e↳ Hangcsapda: §fKözvetlen vagy távoli kattintás = Csalétek sziszegés kapcsolása"
 }

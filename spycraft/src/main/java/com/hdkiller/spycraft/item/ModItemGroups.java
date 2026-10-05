@@ -36,18 +36,17 @@ public class ModItemGroups {
                 entries.accept(ModItems.ZIPLINE_GUN);
                 entries.accept(ModItems.RECON_DRONE);
                 entries.accept(ModItems.SNIPER_RIFLE);
-                entries.accept(ModItems.LASER_REMOTE);
                 entries.accept(ModBlocks.LASER_PYLON);
                 entries.accept(ModBlocks.SOUND_TRAP);
+                entries.accept(ModBlocks.C4_BLOCK);
+                entries.accept(ModItems.REMOTE_DETONATOR);
+                entries.accept(ModItems.BREACHING_SPRAY);
                 entries.accept(ModItems.VILLAGER_DISGUISE_MASK);
                 entries.accept(ModItems.VILLAGER_DISGUISE_ROBE);
                 entries.accept(ModItems.SPY_GOGGLES);
                 entries.accept(ModItems.GPS_NAVIGATOR_GOGGLES);
                 entries.accept(ModItems.GRAPPLING_HOOK_GUN);
                 entries.accept(ModItems.SPY_TRACKER);
-                entries.accept(ModBlocks.C4_BLOCK);
-                entries.accept(ModItems.REMOTE_DETONATOR);
-                entries.accept(ModItems.BREACHING_SPRAY);
                 entries.accept(ModItems.ERIKS_SWORD);
                 entries.accept(ModItems.ERIKS_STAR);
             })

@@ -9,10 +9,10 @@
   "item.spycraft.gps_navigator_goggles": "GPS Waypoint Navigator Visor",
   "item.spycraft.villager_disguise_robe": "Villager Disguise Robe",
   "item.spycraft.villager_disguise_mask": "Villager Disguise Mask",
-  "item.spycraft.laser_remote": "Laser Forcefield Remote",
+  "item.spycraft.laser_remote": "Tactical Universal Remote",
   "block.spycraft.laser_pylon": "Laser Security Pylon",
   "block.spycraft.c4_block": "Tactical C4 Explosive",
-  "item.spycraft.remote_detonator": "Remote C4 Detonator",
+  "item.spycraft.remote_detonator": "Tactical Universal Remote",
   "item.spycraft.recon_drone": "Tactical Recon Drone",
   "block.spycraft.sound_trap": "Sonic Decoy Trap",
   "item.spycraft.mission_beacon": "Mission Deployer Beacon",
@@ -85,5 +85,10 @@
   "tooltip.spycraft.breaching_spray.clear": "§8↳ Sneak + Right-Click in air: Disarm all sprayed wall blocks",
   "hud.spycraft.breaching_spray.sprayed": "§6💥 WALL COATED: §f%d blocks primed §8| §7Use Remote Detonator!",
   "message.spycraft.breaching_spray.cleared": "§a🛡️ [Breaching Spray] §f%d sprayed blocks disarmed and cleared.",
-  "message.spycraft.breaching_spray.none": "§e[Breaching Spray] §7No active sprayed blocks."
+  "message.spycraft.breaching_spray.none": "§e[Breaching Spray] §7No active sprayed blocks.",
+
+  "tooltip.spycraft.remote_detonator.desc": "§7All-in-one intelligent tactical universal remote!",
+  "tooltip.spycraft.remote_detonator.c4": "§c↳ C4 & Breaching: §fDirect click = cycle yield (1x/2x/3x) | Click in air = DETONATE!",
+  "tooltip.spycraft.remote_detonator.laser": "§b↳ Laser Pylons: §fDirect click = link grid | Aim at pylon or Crouch click = Toggle Grid",
+  "tooltip.spycraft.remote_detonator.sound": "§e↳ Sound Trap: §fDirect or ranged click = Toggle decoy hiss"
 }

@@ -127,11 +127,10 @@ public class SpyCraftMod implements ModInitializer {
             entries.accept(ModItems.SPY_GOGGLES);
             entries.accept(ModItems.GPS_NAVIGATOR_GOGGLES);
             entries.accept(ModItems.GRAPPLING_HOOK_GUN);
-            entries.accept(ModItems.LASER_REMOTE);
             entries.accept(ModBlocks.LASER_PYLON);
+            entries.accept(ModBlocks.C4_BLOCK);
             entries.accept(ModItems.REMOTE_DETONATOR);
             entries.accept(ModItems.BREACHING_SPRAY);
-            entries.accept(ModBlocks.C4_BLOCK);
             entries.accept(ModItems.ERIKS_SWORD);
             entries.accept(ModItems.ERIKS_STAR);
         });
