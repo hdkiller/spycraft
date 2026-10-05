@@ -272,105 +272,107 @@ def gen_recon_drone():
 def gen_grappling_hook():
     print("Generating Grappling Hook Gun variants...")
 
-    # Variant A: Pneumatic Line Gun
+    # Variant A: Tactical Winch (Giant Steel 3-Prong Barbed Anchor Claw)
     pal_a = {
-        '#': '#0f172a', 'B': '#1e293b', 'M': '#334155', 'H': '#64748b',
-        'K': '#94a3b8', 'k': '#e2e8f0', 'G': '#ca8a04', 'S': '#cbd5e1', 's': '#ffffff',
+        '#': '#020617', 'S': '#475569', 's': '#94a3b8', 'H': '#cbd5e1',
+        'W': '#ffffff', 'C': '#1e293b', 'c': '#334155', 'O': '#365314',
+        'R': '#ca8a04', 'r': '#facc15',
     }
     pat_a = [
-        ".............#k.",
-        "............#kK#",
-        "...........#kK#.",
-        "..........#KKK#.",
-        "........#HMKB#..",
-        ".......#HMBGG#..",
-        "......#HMBGG##..",
-        ".....#HMBB#Ss#..",
-        "....#HMBB#SSS#..",
-        "...#HMBB##SS##..",
-        "..#HMB#.........",
-        ".#HMB#..........",
-        "#HMB#...........",
-        "##M#............",
-        "................",
-        "................",
+        "...........#W...",
+        "..........#HW#W.",
+        ".........#sH##HW",
+        "........#sH#..#s",
+        "....#W.#sH#...##",
+        "...#HW##sH#.....",
+        "..#sH##ssS#.....",
+        "..#H#..#sSs#....",
+        "..##...#CSss#...",
+        "......#CCc#Rr#..",
+        ".....#CCcc#rR#..",
+        "....#COOC##Rr#..",
+        "...#COOC#.......",
+        "..#CCc##........",
+        ".#CC#...........",
+        "##..............",
     ]
     save_variant("grappling_hook_gun", "variant_a_tactical_winch", create_sprite(pal_a, pat_a))
 
-    # Variant B: Cross-Tether Harpoon
+    # Variant B: Crossbow Grapple (Wide folding compound limbs with trident harpoon)
     pal_b = {
-        '#': '#020617', 'L': '#475569', 'l': '#94a3b8', 'B': '#1e293b',
-        'S': '#e2e8f0', 'H': '#f87171', 'h': '#ef4444', 'W': '#78350f',
+        '#': '#020617', 'L': '#334155', 'l': '#64748b', 'T': '#cbd5e1',
+        't': '#ffffff', 'B': '#1e293b', 'W': '#78350f', 'w': '#b45309',
+        'S': '#94a3b8', 'R': '#ef4444',
     }
     pat_b = [
-        "..............#l",
-        "............#hL#",
-        "...........#hH#S",
-        "..........#HBB#S",
-        "........#BLBB#S.",
-        ".......#BBLBB#S.",
-        "......#BBBBL#S..",
-        ".....#BBBBB#S...",
-        "....#BBBBB#l....",
-        "...#WBBB##......",
-        "..#WBB#.........",
-        ".#WBB#..........",
-        "#WBB#...........",
-        "##B#............",
-        "................",
-        "................",
+        "............#t..",
+        "...........#Tt#t",
+        ".........#L#Tt#T",
+        "........#lL##Tt#",
+        "......#SlL#..#T#",
+        ".....#SlL#....##",
+        "...#t#lL#.......",
+        "..#Tt#L#........",
+        ".#tTt#S#R#......",
+        "..##S#B#RR#.....",
+        "....#SB#BRR#....",
+        ".....#WBB##S....",
+        "....#WwwB#......",
+        "...#WwwB#.......",
+        "..#WWB##........",
+        "..##............",
     ]
     save_variant("grappling_hook_gun", "variant_b_crossbow_grapple", create_sprite(pal_b, pat_b))
 
-    # Variant C: Mag-Tether Harpoon
+    # Variant C: Mag-Tether Harpoon (Sci-fi dual cyan rails with energized anchor)
     pal_c = {
-        '#': '#030712', 'D': '#0f172a', 'C': '#06b6d4', 'c': '#22d3ee',
-        'T': '#cbd5e1', 't': '#ffffff', 'Y': '#eab308', 'y': '#ca8a04',
+        '#': '#030712', 'C': '#0891b2', 'c': '#06b6d4', 'L': '#22d3ee',
+        'l': '#a5f3fc', 'T': '#cbd5e1', 't': '#ffffff', 'B': '#0f172a', 'b': '#1e293b',
     }
     pat_c = [
-        "..............#t",
-        ".............#Tt",
-        "............#TT#",
-        "..........#ccTT#",
-        ".........#cCDD#.",
-        "........#cCDD#..",
-        ".......#CCDD#...",
-        "......#YyDD#....",
-        ".....#YyDDD#....",
-        "....#DCDDD#.....",
-        "...#DDDD##......",
-        "..#DDDD#........",
-        ".#DCD##.........",
-        "#DD#............",
+        "...........#l...",
+        "..........#Ll#l.",
+        ".........#CL##Ll",
+        "........#cCL#.#C",
+        "....#l.#cCL#..##",
+        "...#Ll##cCL#....",
+        "..#CL##cCb#.....",
+        "..#L#..#cCB#....",
+        "..##...#BBcC#...",
+        "......#BbB#Ll#..",
+        ".....#BBbb#lL#..",
+        "....#BbBB##Ll#..",
+        "...#BbB#........",
+        "..#BBB##........",
+        ".#BB#...........",
         "##..............",
-        "................",
     ]
     save_variant("grappling_hook_gun", "variant_c_plasma_harpoon", create_sprite(pal_c, pat_c))
 
-    # Variant D: Steampunk Brass Winch
+    # Variant D: Titan Anchor Gun (Industrial forged iron triple-fluke anchor)
     pal_d = {
-        '#': '#1c1917', 'B': '#d97706', 'b': '#f59e0b', 'I': '#374151',
-        'i': '#9ca3af', 'C': '#b45309', 'G': '#fde047', 'W': '#78350f',
+        '#': '#1c1917', 'I': '#374151', 'i': '#4b5563', 'S': '#9ca3af',
+        's': '#f3f4f6', 'B': '#b45309', 'b': '#d97706', 'W': '#451a03', 'w': '#78350f',
     }
     pat_d = [
-        "............#i..",
-        "...........#iI#.",
-        "..........#iII#.",
-        ".........#IIII#.",
-        ".......#bBII##..",
-        "......#bBCCG#...",
-        ".....#bBCCGG#...",
-        "....#bBCBB#.....",
-        "...#bBBB##......",
-        "..#WBBB#........",
-        ".#WWB#..........",
-        "#WWB#...........",
-        "#W##............",
+        "...........#s...",
+        "..........#Ss#s.",
+        ".........#iS##Ss",
+        "........#iS#..#i",
+        "....#s.#iS#...##",
+        "...#Ss##iS#.....",
+        "..#iS##iiI#.....",
+        "..#S#..#iIi#....",
+        "..##...#BIii#...",
+        "......#BBb#Ss#..",
+        ".....#BBbb#sS#..",
+        "....#BbBb##Ss#..",
+        "...#WwwB#.......",
+        "..#WwwB#........",
+        ".#WWB##.........",
         "##..............",
-        "................",
-        "................",
     ]
-    save_variant("grappling_hook_gun", "variant_d_steampunk_grappler", create_sprite(pal_d, pat_d))
+    save_variant("grappling_hook_gun", "variant_d_titan_anchor_gun", create_sprite(pal_d, pat_d))
 
 # =========================================================================
 # 4. REMOTE DETONATOR
@@ -1619,6 +1621,443 @@ def gen_erik_items():
     ]
     save_variant("eriks_star", "variant_c_royal_relic", create_sprite(pal_st_c, pat_st_c))
 
+# =========================================================================
+# 12b. PARACHUTE BACKPACK
+# =========================================================================
+def gen_parachute_backpack():
+    print("Generating Parachute Backpack variants...")
+
+    # Variant A: High-Vis Rescue Canopy Deployed
+    pal_a = {
+        '#': '#020617', 'O': '#c2410c', 'o': '#f97316', 'W': '#f8fafc',
+        'w': '#cbd5e1', 'L': '#94a3b8', 'B': '#1e293b', 'b': '#334155',
+        'S': '#f1f5f9', 'R': '#ef4444',
+    }
+    pat_a = [
+        "....########....",
+        "..##oOWWwwOO##..",
+        ".#ooOOWwwWOOoo#.",
+        "#ooOOWWwwWOOOoo#",
+        "#oOOWWWwwWOOOOo#",
+        ".#O#WW#ww#OO#O#.",
+        "..#L..#L#..L#...",
+        "...#L.#L#.L#....",
+        "....#L#L#L#.....",
+        ".....#LLL#......",
+        ".....#bBb#......",
+        "....#bSBbB#R....",
+        "....#BBbBB#RR...",
+        "....#bBBBb#.....",
+        ".....#BBB#......",
+        "......###.......",
+    ]
+    save_variant("parachute_backpack", "variant_a_canopy_rescue", create_sprite(pal_a, pat_a))
+
+    # Variant B: Tactical SpecOps Camo Canopy
+    pal_b = {
+        '#': '#020617', 'G': '#1e3a1e', 'g': '#365314', 'O': '#4d7c0f',
+        'C': '#0f172a', 'c': '#1e293b', 'L': '#64748b', 'B': '#0f172a',
+        'b': '#334155', 'S': '#94a3b8', 'R': '#dc2626',
+    }
+    pat_b = [
+        "....########....",
+        "..##GgCCccGG##..",
+        ".#GgGgCCccGGgG#.",
+        "#GgOgCCccccGgOG#",
+        "#gOGgCCccccGgGO#",
+        ".#G#CC#cc#GG#G#.",
+        "..#L..#L#..L#...",
+        "...#L.#L#.L#....",
+        "....#L#L#L#.....",
+        ".....#LLL#......",
+        ".....#BbB#......",
+        "....#bSBbB#R....",
+        "....#BBbBB#RR...",
+        "....#bBBBb#.....",
+        ".....#BBB#......",
+        "......###.......",
+    ]
+    save_variant("parachute_backpack", "variant_b_tactical_airdrop", create_sprite(pal_b, pat_b))
+
+    # Variant C: Steerable Ram-Air Parafoil Wing (Cyan / Navy)
+    pal_c = {
+        '#': '#030712', 'C': '#0891b2', 'c': '#06b6d4', 'L': '#22d3ee',
+        'l': '#a5f3fc', 'N': '#0f172a', 'n': '#1e293b', 'W': '#94a3b8',
+        'w': '#f1f5f9', 'B': '#1e293b', 'b': '#475569', 'R': '#ef4444',
+    }
+    pat_c = [
+        ".##############.",
+        "#lLLcCnNnNcCLLl#",
+        "#LLcCnNNNnNcCLL#",
+        "#lcCnnNNNncClLl#",
+        ".#C#n#N#N#n#C#..",
+        "..#W.#W...W#.W#.",
+        "...#W.#W.W#.W#..",
+        "....#W.W.W.W#...",
+        ".....#WWWWW#....",
+        ".....R#bBb#R....",
+        "....RR#bwb#RR...",
+        "....R#bbBbb#R...",
+        ".....#bBBBb#....",
+        ".....#BBBBB#....",
+        "......#BBB#.....",
+        ".......###......",
+    ]
+    save_variant("parachute_backpack", "variant_c_steerable_parafoil", create_sprite(pal_c, pat_c))
+
+    # Variant D: Skydiving Rig Pack (Container pack with cross harness & 3-ring release)
+    pal_d = {
+        '#': '#020617', 'B': '#0f172a', 'b': '#1e293b', 'C': '#334155',
+        'S': '#cbd5e1', 's': '#ffffff', 'Y': '#ca8a04', 'y': '#facc15',
+        'R': '#dc2626', 'r': '#ef4444', 'W': '#64748b',
+    }
+    pat_d = [
+        ".....######.....",
+        "...##bCCCBb##...",
+        "..#BbCCCCCbBb#..",
+        ".#WbCCCCCCCbW#..",
+        ".#Wb#bb#bb#bW#..",
+        ".#Wb#Yy#Yy#bW#R.",
+        ".#sS#Yy#Yy#Ss#Rr",
+        ".#Wb#bb#bb#bW#r.",
+        ".#Wb#CCCCCCbW#..",
+        ".#Wb#CCCCCCbW#..",
+        ".#Wb#CCCCCCbW#..",
+        ".#sS#bb#bb#Ss#..",
+        "..#BbCCCCCCbBb#.",
+        "...#bBBBBBBb#...",
+        "....#bbbbbb#....",
+        ".....######.....",
+    ]
+    save_variant("parachute_backpack", "variant_d_skydiving_rig_pack", create_sprite(pal_d, pat_d))
+
+# =========================================================================
+# 13. BINOCULARS
+# =========================================================================
+def gen_binoculars():
+    print("Generating Binoculars variants...")
+    
+    # Variant A: SpecOps Military Rangefinder
+    pal_a = {
+        '#': '#020617', 'B': '#0f172a', 'M': '#1e293b', 'O': '#365314', 'o': '#4d7c0f',
+        'E': '#047857', 'e': '#10b981', 'H': '#6ee7b7', 'W': '#ffffff', 'R': '#ef4444', 'K': '#475569',
+    }
+    pat_a = [
+        "................",
+        "...#B#....#B#...",
+        "..#MoB#..#MoB#..",
+        "..#ooo#KK#ooo#..",
+        ".#Booo#RK#oooB#.",
+        ".#Mooo#KK#oooM#.",
+        ".#MoooB##BoooM#.",
+        ".#MooBB##BBooM#.",
+        ".#MBBB#..#BBBM#.",
+        "#M#B##....##B#M#",
+        "#MEeB#....#BEeM#",
+        "#MeHW#....#MeHWM",
+        "#MEeB#....#BEeM#",
+        ".#MB#......#BM#.",
+        "..##........##..",
+        "................",
+    ]
+    save_variant("binoculars", "variant_a_military_rangefinder", create_sprite(pal_a, pat_a))
+
+    # Variant B: Digital Thermal Binoculars
+    pal_b = {
+        '#': '#030712', 'C': '#18181b', 'c': '#27272a', 'G': '#52525b',
+        'R': '#7f1d1d', 'r': '#dc2626', 'A': '#f97316', 'Y': '#fbbf24', 'W': '#fef08a',
+        'L': '#06b6d4', 'l': '#67e8f9',
+    }
+    pat_b = [
+        "................",
+        "...#c#....#c#...",
+        "..#CcG#..#CcG#..",
+        "..#ccG#LL#ccG#..",
+        ".#CccG#ll#CccG#.",
+        ".#cccc#GG#cccc#.",
+        ".#ccCG##ccCCcc#.",
+        ".#ccC#....#Ccc#.",
+        "#C#C#......#C#C#",
+        "#CRrC#....#CRrC#",
+        "#RrAY#....#RrAY#",
+        "#rAYW#....#rAYW#",
+        "#RRAY#....#RRAY#",
+        ".#RC#......#RC#.",
+        "..##........##..",
+        "................",
+    ]
+    save_variant("binoculars", "variant_b_digital_thermal", create_sprite(pal_b, pat_b))
+
+    # Variant C: Covert Sapphire Prism
+    pal_c = {
+        '#': '#0f172a', 'T': '#334155', 't': '#64748b', 'S': '#94a3b8', 's': '#e2e8f0',
+        'D': '#1e3a8a', 'B': '#2563eb', 'A': '#38bdf8', 'W': '#ffffff', 'G': '#475569',
+    }
+    pat_c = [
+        "................",
+        "...#t#....#t#...",
+        "..#TtS#..#TtS#..",
+        "..#tSs#GG#tSs#..",
+        ".#TtSss##tSsST#.",
+        ".#TtSs#..#tSsT#.",
+        ".#TtSs#..#tSsT#.",
+        ".#TtS#....#TtS#.",
+        "#TtS#......#TtS#",
+        "#TDBT#....#TDBT#",
+        "#DBAs#....#DBAs#",
+        "#BAWs#....#BAWs#",
+        "#DDBT#....#DDBT#",
+        ".#TB#......#TB#.",
+        "..##........##..",
+        "................",
+    ]
+    save_variant("binoculars", "variant_c_covert_prism", create_sprite(pal_c, pat_c))
+
+    # Variant D: Brass Steampunk Field Glasses
+    pal_d = {
+        '#': '#1c1917', 'B': '#78350f', 'b': '#b45309', 'G': '#d97706', 'g': '#fde047',
+        'C': '#9a3412', 'c': '#ea580c', 'R': '#881337', 'r': '#be123c', 'H': '#f43f5e', 'W': '#fda4af',
+    }
+    pat_d = [
+        "................",
+        "...#B#....#B#...",
+        "..#BbG#..#BbG#..",
+        "..#bgg#Cc#bgg#..",
+        ".#BbbG#cc#BbbG#.",
+        ".#bbGg#CC#bbGg#.",
+        ".#bbGg#..#bbGg#.",
+        ".#BbGG#..#BbGG#.",
+        "#BbG#......#BbG#",
+        "#BRrB#....#BRrB#",
+        "#RrHW#....#RrHW#",
+        "#RrH##....##RrH#",
+        "#BRrB#....#BRrB#",
+        ".#BB#......#BB#.",
+        "..##........##..",
+        "................",
+    ]
+    save_variant("binoculars", "variant_d_brass_steampunk", create_sprite(pal_d, pat_d))
+
+# =========================================================================
+# 14. ZIPLINE GUN
+# =========================================================================
+def gen_zipline_gun():
+    print("Generating Zipline Gun variants...")
+    
+    # Variant A: Industrial Hazard Spooler
+    pal_a = {
+        '#': '#0f172a', 'Y': '#ca8a04', 'y': '#facc15', 'P': '#475569',
+        'p': '#94a3b8', 'A': '#d97706', 'W': '#cbd5e1', 'w': '#f8fafc',
+        'B': '#1e293b', 'R': '#dc2626',
+    }
+    pat_a = [
+        "....#pp#...#pp#.",
+        "...#pAPp#.#pAPp#",
+        "...#PPPP###PPPP#",
+        "....####Yyy####.",
+        "......#YyyyY#...",
+        "....##YYYYYYY#..",
+        "...#YY#WWwwW#Y#.",
+        "..#Yy#WwwWWww#Y#",
+        "..#yY#wwWWwwW#Y#",
+        ".#ByY#WwwWWww#Y#",
+        ".#BRR##WWwwW#Y#.",
+        "#BB##..#YYYYY#..",
+        "#BB#....#####...",
+        "#B#.............",
+        "##..............",
+        "................",
+    ]
+    save_variant("zipline_gun", "variant_a_industrial_spooler", create_sprite(pal_a, pat_a))
+
+    # Variant B: SpecOps Tactical Traversal Winch
+    pal_b = {
+        '#': '#020617', 'C': '#0f172a', 'c': '#1e293b', 'G': '#334155',
+        'g': '#64748b', 'O': '#365314', 'o': '#4d7c0f', 'P': '#475569',
+        'p': '#94a3b8', 'W': '#64748b', 'w': '#cbd5e1', 'R': '#ef4444',
+    }
+    pat_b = [
+        "....#pp#...#pp#.",
+        "...#pPPp#.#pPPp#",
+        "...#PPPP###PPPP#",
+        "....####cGg####.",
+        "......#cGGgc#...",
+        "....##CGGGGGC#..",
+        "...#CG#WWwwW#G#.",
+        "..#cG#WwwWWww#G#",
+        "..#Gc#wwWWwwW#G#",
+        ".#CoC#WwwWWww#G#",
+        ".#CoR##WWwwW#G#.",
+        "#CC##..#CGGGC#..",
+        "#CC#....#####...",
+        "#C#.............",
+        "##..............",
+        "................",
+    ]
+    save_variant("zipline_gun", "variant_b_specops_cablegun", create_sprite(pal_b, pat_b))
+
+    # Variant C: Mag-Tether Traversal Rig (Cyan neon energy spool + top mag-glide trolley)
+    pal_c = {
+        '#': '#030712', 'T': '#0f172a', 't': '#334155', 'S': '#94a3b8',
+        's': '#f8fafc', 'C': '#0891b2', 'c': '#06b6d4', 'L': '#22d3ee',
+        'l': '#a5f3fc',
+    }
+    pat_c = [
+        "....#ll#...#ll#.",
+        "...#lLLl#.#lLLl#",
+        "...#LLLL###LLLL#",
+        "....####sSt####.",
+        "......#sSttS#...",
+        "....##tSSSSSt#..",
+        "...#tS#CcLLc#S#.",
+        "..#st#cLLlLLc#S#",
+        "..#Ts#LlLLlLc#S#",
+        ".#TtS#cLLlLLc#S#",
+        ".#TLl##CcLLc#S#.",
+        "#TT##..#tSSSt#..",
+        "#TT#....#####...",
+        "#T#.............",
+        "##..............",
+        "................",
+    ]
+    save_variant("zipline_gun", "variant_c_magrail_tether", create_sprite(pal_c, pat_c))
+
+    # Variant D: Heavy Crossbow Traversal Winch
+    pal_d = {
+        '#': '#1c1917', 'W': '#451a03', 'w': '#78350f', 'B': '#b45309',
+        'b': '#d97706', 'G': '#fde047', 'S': '#94a3b8', 's': '#e2e8f0',
+        'P': '#d97706', 'p': '#fde047',
+    }
+    pat_d = [
+        "....#pp#...#pp#.",
+        "...#pPPp#.#pPPp#",
+        "...#PPPP###PPPP#",
+        "....####BbG####.",
+        "......#BbGGb#...",
+        "....##BBBBBBB#..",
+        "...#BB#SSssS#B#.",
+        "..#bB#SssSSss#B#",
+        "..#Bb#ssSSssS#B#",
+        ".#WbB#SssSSss#B#",
+        ".#WwB##SSssS#B#.",
+        "#WW##..#BBBBB#..",
+        "#WW#....#####...",
+        "#W#.............",
+        "##..............",
+        "................",
+    ]
+    save_variant("zipline_gun", "variant_d_heavy_crossbow_pulley", create_sprite(pal_d, pat_d))
+
+# =========================================================================
+# 15. BREACHING SPRAY
+# =========================================================================
+def gen_breaching_spray():
+    print("Generating Breaching Spray variants...")
+    
+    # Variant A: Hazard Caution Blast Can
+    pal_a = {
+        '#': '#0f172a', 'R': '#dc2626', 'r': '#ef4444', 'Y': '#ca8a04',
+        'y': '#facc15', 'B': '#1e293b', 'S': '#94a3b8', 's': '#cbd5e1',
+        'F': '#e2e8f0', 'f': '#ffffff',
+    }
+    pat_a = [
+        ".f..............",
+        "F.F.............",
+        ".FfF....#Rr#....",
+        "...FF..#sRrs#...",
+        ".....F.#SSSS#...",
+        "......#ByyByB#..",
+        ".....#BByyByBB#.",
+        ".....#yBByyByy#.",
+        ".....#yyBByyBy#.",
+        ".....#ByyBByyB#.",
+        ".....#BByyBByB#.",
+        ".....#yBByyByy#.",
+        ".....#yyBByyBy#.",
+        ".....#SSSSSSSS#.",
+        "......#SSSSSS#..",
+        ".......######...",
+    ]
+    save_variant("breaching_spray", "variant_a_hazard_foam_can", create_sprite(pal_a, pat_a))
+
+    # Variant B: Mil-Spec C4 Breach Foam
+    pal_b = {
+        '#': '#020617', 'T': '#1e293b', 't': '#475569', 'O': '#1e3a1e',
+        'o': '#365314', 'L': '#4d7c0f', 'W': '#ffffff', 'G': '#b45309',
+        'g': '#fbbf24', 'r': '#ef4444', 'F': '#cbd5e1', 'f': '#f1f5f9',
+    }
+    pat_b = [
+        ".f..............",
+        "F.f.............",
+        "..Ff....#Tt#....",
+        "...Ff..#tTtt#...",
+        ".....F.#tttt#...",
+        "......#oLLooO#..",
+        ".....#oLLoooOO#.",
+        ".....#oLWWoGgo#.",
+        ".....#oLoWoGrO#.",
+        ".....#oLWWoGgo#.",
+        ".....#oLLoooOO#.",
+        ".....#oLLWLoOO#.",
+        ".....#oLLLLoOO#.",
+        ".....#oLLoooOO#.",
+        "......#OOOOOO#..",
+        ".......######...",
+    ]
+    save_variant("breaching_spray", "variant_b_tactical_olive_foam", create_sprite(pal_b, pat_b))
+
+    # Variant C: Heavy Breach Extinguisher
+    pal_c = {
+        '#': '#1c1917', 'L': '#334155', 'l': '#64748b', 'G': '#d97706',
+        'g': '#fde047', 'P': '#ef4444', 'R': '#991b1b', 'r': '#dc2626',
+        'H': '#f87171', 'h': '#fca5a5', 'S': '#475569', 'F': '#e2e8f0', 'f': '#ffffff',
+    }
+    pat_c = [
+        "...f.f..........",
+        "..ff.f..#Ll#....",
+        ".fffff.#LLllL#..",
+        "..fff..#lGgPL#..",
+        "......#lGgPll#..",
+        ".....#HRRrrrRR#.",
+        "....#hHRrrrrRR#.",
+        "....#hHRrrrrRR#.",
+        "....#hHRrrrrRR#.",
+        "....#hHRrrrrRR#.",
+        "....#hHRrrrrRR#.",
+        "....#hHRrrrrRR#.",
+        "....#hHRrrrrRR#.",
+        "....#SSRRRRSS#..",
+        ".....#SSSSSS#...",
+        "......######....",
+    ]
+    save_variant("breaching_spray", "variant_c_breaching_extinguisher", create_sprite(pal_c, pat_c))
+
+    # Variant D: Cyber Plasma Foam Aerosol
+    pal_d = {
+        '#': '#030712', 'C': '#09090b', 'c': '#18181b', 'G': '#27272a',
+        'S': '#94a3b8', 's': '#f1f5f9', 'N': '#0891b2', 'n': '#06b6d4',
+        'L': '#67e8f9', 'l': '#a5f3fc', 'P': '#a855f7', 'p': '#c084fc',
+    }
+    pat_d = [
+        ".l..............",
+        "L.p.............",
+        ".lPl....#SS#....",
+        "..LpP..#sSSs#...",
+        "....LP.#SSSS#...",
+        "......#CccGGc#..",
+        ".....#CCcNNGGc#.",
+        ".....#CCcLnGGc#.",
+        ".....#CCcLnGGc#.",
+        ".....#CCcLnGGc#.",
+        ".....#CCcLnGGc#.",
+        ".....#CCcLnGGc#.",
+        ".....#CCcNNGGc#.",
+        ".....#sSSSSSSs#.",
+        "......#SSSSSS#..",
+        ".......######...",
+    ]
+    save_variant("breaching_spray", "variant_d_cyber_plasma_torch", create_sprite(pal_d, pat_d))
+
 def main():
     print("=== Generating SpyCraft High-Detail Asset Variants ===")
     gen_sniper_rifle()
@@ -1633,6 +2072,10 @@ def main():
     gen_sound_trap()
     gen_laser_pylon()
     gen_erik_items()
+    gen_parachute_backpack()
+    gen_binoculars()
+    gen_zipline_gun()
+    gen_breaching_spray()
     print("=== All asset variants generated successfully! ===")
 
 if __name__ == "__main__":

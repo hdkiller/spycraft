@@ -247,15 +247,15 @@ public class GrapplingHookGunItem extends Item {
         double dist = toTarget.length();
 
         // Ledge Mantling & Arrival Check: pop player over ledge cleanly
-        if (dist < 2.0 || session.ticksReeling > 90) {
+        if (dist < 2.5 || session.ticksReeling > 90) {
             Vec3 currentVel = player.getDeltaMovement();
             Vec3 look = player.getLookAngle();
-            double popY = Math.max(currentVel.y * 0.3, 0.40);
+            double popY = Math.max(currentVel.y * 0.35, 0.45);
 
             player.setDeltaMovement(
-                currentVel.x * 0.25 + look.x * 0.18,
+                currentVel.x * 0.30 + look.x * 0.22,
                 popY,
-                currentVel.z * 0.25 + look.z * 0.18
+                currentVel.z * 0.30 + look.z * 0.22
             );
             player.hurtMarked = true;
             player.resetFallDistance();
@@ -272,14 +272,14 @@ public class GrapplingHookGunItem extends Item {
             return;
         }
 
-        // Smooth Continuous Reeling Acceleration (controllable tactical ascent)
+        // Smooth Continuous Reeling Acceleration (2.5x high-speed tactical ascent: 18 blocks/s)
         Vec3 dir = toTarget.normalize();
-        double speed = 0.36; // ~7.2 blocks per second, steady and controlled winch reeling
+        double speed = 0.90; // 2.5x boost from 0.36 -> ~18 blocks per second
         Vec3 desiredVel = dir.scale(speed);
         Vec3 currentVel = player.getDeltaMovement();
 
         // Blend velocity for responsive, agile pulling
-        Vec3 newVel = currentVel.scale(0.3).add(desiredVel.scale(0.7));
+        Vec3 newVel = currentVel.scale(0.25).add(desiredVel.scale(0.75));
         player.setDeltaMovement(newVel);
         player.hurtMarked = true;
         player.resetFallDistance();

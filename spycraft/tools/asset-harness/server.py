@@ -46,15 +46,15 @@ METADATA = {
         }
     },
     "grappling_hook_gun": {
-        "title": "Grappling Hook Gun",
+        "title": "Grappling Hook Gun (Csáklyapuska)",
         "category": "weapons",
-        "description": "Tactical climbing tool firing a barbed cable anchor that pulls the operative swiftly up vertical cliffs.",
+        "description": "Tactical climbing tool firing a barbed steel cable anchor claw that pulls the operative swiftly up vertical cliffs.",
         "variants": {
-            "current": {"name": "Baseline Hook", "desc": "Original minimal sprite."},
-            "variant_a_tactical_winch": {"name": "Pneumatic Line Gun", "desc": "Tactical pistol with 3-prong steel grapple, braided wire spool & silver CO2 cylinder.", "theme": "specops"},
-            "variant_b_crossbow_grapple": {"name": "Cross-Tether Launcher", "desc": "Folding recurve crossbow limbs, high-tension wire string & heavy barbed penetrator bolt.", "theme": "specops"},
-            "variant_c_plasma_harpoon": {"name": "Mag-Tether Harpoon", "desc": "Sci-fi magnetic launcher with twin cyan accelerator rails & hazard stripes.", "theme": "cyberpunk"},
-            "variant_d_steampunk_grappler": {"name": "Steampunk Brass Winch", "desc": "Burnished copper & brass frame, forged iron anchor hook & gear ratchet.", "theme": "steampunk"},
+            "current": {"name": "Baseline Hook", "desc": "Original minimal prototype sprite."},
+            "variant_a_tactical_winch": {"name": "SpecOps 3-Prong Winch", "desc": "Tactical launcher armed with a massive triple-barbed steel anchor claw, pressurized gas cylinder, and braided wire guide.", "theme": "specops"},
+            "variant_b_crossbow_grapple": {"name": "Crossbow Trident Claw", "desc": "Folding compound crossbow limbs loaded with a heavy barbed steel penetrator trident.", "theme": "specops"},
+            "variant_c_plasma_harpoon": {"name": "Mag-Tether Harpoon", "desc": "Sci-fi magnetic accelerator launcher with dual cyan rails and energized titanium claw.", "theme": "cyberpunk"},
+            "variant_d_titan_anchor_gun": {"name": "Titan Forged Anchor Gun", "desc": "Heavy industrial forged iron launcher with massive triple-fluked naval anchor.", "theme": "steampunk"},
         }
     },
     "remote_detonator": {
@@ -299,7 +299,11 @@ METADATA = {
         "category": "surveillance",
         "description": "Wearable tactical parachute rig: auto-deploys upon falling or can be emergency activated directly from hand.",
         "variants": {
-            "current": {"name": "SpecOps Ripstop Rig", "desc": "Reinforced military harness pack with red ripcord release and high-visibility warning tag.", "theme": "specops"}
+            "current": {"name": "Baseline Rig", "desc": "Original compact backpack prototype sprite."},
+            "variant_a_canopy_rescue": {"name": "High-Vis Rescue Canopy", "desc": "Open arched dome parachute canopy with high-visibility orange/white striped panels and suspension cords down to tactical harness.", "theme": "specops"},
+            "variant_b_tactical_airdrop": {"name": "SpecOps Camo Canopy", "desc": "Tactical military commando arched canopy with stealth olive-drab and dark camo panels.", "theme": "specops"},
+            "variant_c_steerable_parafoil": {"name": "Cyber Ram-Air Parafoil", "desc": "Steerable aerodynamic rectangular ram-air airfoil wing with cyan cells, dual steering toggles, and aero pod.", "theme": "cyberpunk"},
+            "variant_d_skydiving_rig_pack": {"name": "Skydiving Dual-Pack Rig", "desc": "Contoured container pack with cross harness straps, silver 3-ring release buckles, yellow hazard chevrons, and red ripcord handle.", "theme": "steampunk"},
         }
     },
     "binoculars": {
@@ -307,7 +311,35 @@ METADATA = {
         "category": "surveillance",
         "description": "High-magnification optical binoculars with dwell lock-on target tagging and radar synchronization.",
         "variants": {
-            "current": {"name": "SpecOps Digital Binoculars", "desc": "Dual-barrel rubberized military binoculars with cyan anti-reflective coated optics.", "theme": "specops"}
+            "current": {"name": "Baseline Digital Binoculars", "desc": "Dual-barrel rubberized military binoculars with cyan anti-reflective coated optics."},
+            "variant_a_military_rangefinder": {"name": "SpecOps Military Rangefinder", "desc": "Matte black/olive dual tubes with bright emerald-coated optics and rubber eyecups.", "theme": "specops"},
+            "variant_b_digital_thermal": {"name": "Digital Thermal Binoculars", "desc": "Angular composite body with glowing red/amber thermal sensory lenses and central digital readout.", "theme": "cyberpunk"},
+            "variant_c_covert_prism": {"name": "Covert Sapphire Prism", "desc": "Sleek titanium pocket field glasses with deep sapphire-blue optics.", "theme": "specops"},
+            "variant_d_brass_steampunk": {"name": "Brass Clockwork Field Glasses", "desc": "Heavy burnished brass dual cylinders with ruby lenses and knurled focus wheel.", "theme": "steampunk"},
+        }
+    },
+    "zipline_gun": {
+        "title": "Tactical Zipline Gun (Kötélpálya Kilövő)",
+        "category": "weapons",
+        "description": "Long-range cable anchor projector anchoring high-tension traversal ziplines for aerial gliding.",
+        "variants": {
+            "current": {"name": "Baseline Zipline Gun", "desc": "Original compact diagonal cable launcher."},
+            "variant_a_industrial_spooler": {"name": "Hazard Yellow Trolley Spooler", "desc": "Industrial hazard yellow chassis with giant circular steel cable drum, exposed coiled wire, and top dual trolley pulley rollers.", "theme": "steampunk"},
+            "variant_b_specops_cablegun": {"name": "SpecOps Traversal Winch", "desc": "Matte charcoal tactical frame with underbarrel braided steel cable drum and top sliding trolley carriage.", "theme": "specops"},
+            "variant_c_magrail_tether": {"name": "Mag-Tether Traversal Rig", "desc": "Sci-fi titanium chassis with cyan neon induction power spool and top magnetic glide carriage.", "theme": "cyberpunk"},
+            "variant_d_heavy_crossbow_pulley": {"name": "Compound Traversal Winch", "desc": "Tactical compound projector with twin side pulleys, heavy bronze winch drum, and reinforced steel guide roller.", "theme": "specops"},
+        }
+    },
+    "breaching_spray": {
+        "title": "Tactical Breaching Spray (Robbantóhab Spray)",
+        "category": "explosives",
+        "description": "Aerosol breaching compound coating walls in reactive foam, primed for detonation via Remote Detonator.",
+        "variants": {
+            "current": {"name": "Baseline Breaching Spray", "desc": "Original aerosol spray can prototype."},
+            "variant_a_hazard_foam_can": {"name": "Hazard Caution Blast Can", "desc": "Bright hazard yellow/orange can with black diagonal caution stripes, big red spray button, and white foam splatter tip.", "theme": "specops"},
+            "variant_b_tactical_olive_foam": {"name": "Mil-Spec C4 Breach Foam", "desc": "Military olive-drab canister with white C4 stencil, brass pressure dial, and black composite nozzle.", "theme": "specops"},
+            "variant_c_breaching_extinguisher": {"name": "Heavy Breach Extinguisher", "desc": "Chubby red blast foam tank with top steel squeeze lever, pressure meter, and high-flow nozzle.", "theme": "steampunk"},
+            "variant_d_cyber_plasma_torch": {"name": "Cyber Plasma Foam Aerosol", "desc": "Sleek carbon fiber can with neon-cyan level indicator, chrome base, and energizing glow tip.", "theme": "cyberpunk"},
         }
     }
 }

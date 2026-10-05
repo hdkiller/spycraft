@@ -79,6 +79,8 @@ public class ZiplineManager {
         }
     }
 
+    public static final int ZIPLINE_DURATION_TICKS = 6000; // 5 minutes (300 seconds * 20 ticks)
+
     private static final List<ActiveZipline> ACTIVE_ZIPLINES = new CopyOnWriteArrayList<>();
     private static final Map<UUID, ZiplineRider> ACTIVE_RIDERS = new ConcurrentHashMap<>();
 
@@ -97,7 +99,7 @@ public class ZiplineManager {
                 SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.8f, 1.2f);
         }
 
-        ActiveZipline zipline = new ActiveZipline(player.getUUID(), level.dimension(), startPos, endPos, 3600); // 3 minutes
+        ActiveZipline zipline = new ActiveZipline(player.getUUID(), level.dimension(), startPos, endPos, ZIPLINE_DURATION_TICKS);
         ACTIVE_ZIPLINES.add(zipline);
 
         // Sound effects
@@ -378,6 +380,10 @@ public class ZiplineManager {
                 zipline.remainingTicks--;
 
                 if (zipline.remainingTicks <= 0) {
+                    level.playSound(null, zipline.startPos.x, zipline.startPos.y, zipline.startPos.z,
+                        SoundEvents.LEASH_KNOT_BREAK, SoundSource.BLOCKS, 0.8f, 1.3f);
+                    level.playSound(null, zipline.endPos.x, zipline.endPos.y, zipline.endPos.z,
+                        SoundEvents.LEASH_KNOT_BREAK, SoundSource.BLOCKS, 0.8f, 1.3f);
                     ACTIVE_ZIPLINES.remove(zipline);
                     continue;
                 }

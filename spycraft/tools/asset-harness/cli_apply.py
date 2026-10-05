@@ -42,6 +42,8 @@ ASSET_MAP = {
     "climbing_gloves": ("item/climbing_gloves.png", "item"),
     "parachute_backpack": ("item/parachute_backpack.png", "item"),
     "binoculars": ("item/binoculars.png", "item"),
+    "zipline_gun": ("item/zipline_gun.png", "item"),
+    "breaching_spray": ("item/breaching_spray.png", "item"),
 }
 
 THEME_PRESETS = {
@@ -68,6 +70,11 @@ THEME_PRESETS = {
             "laser_pylon_emitter": "variant_a_aegis_defense",
             "eriks_sword": "variant_a_shadow_katana",
             "eriks_star": "variant_a_shadow_ninja",
+            "parachute_backpack": "variant_b_tactical_airdrop",
+            "grappling_hook_gun": "variant_a_tactical_winch",
+            "binoculars": "variant_a_military_rangefinder",
+            "zipline_gun": "variant_b_specops_cablegun",
+            "breaching_spray": "variant_b_tactical_olive_foam",
         }
     },
     "cyberpunk": {
@@ -93,6 +100,10 @@ THEME_PRESETS = {
             "laser_pylon_emitter": "variant_b_crying_obsidian",
             "eriks_sword": "variant_b_plasma_energy",
             "eriks_star": "variant_b_plasma_energy",
+            "parachute_backpack": "variant_c_steerable_parafoil",
+            "binoculars": "variant_b_digital_thermal",
+            "zipline_gun": "variant_c_magrail_tether",
+            "breaching_spray": "variant_d_cyber_plasma_torch",
         }
     },
     "steampunk": {
@@ -100,7 +111,7 @@ THEME_PRESETS = {
         "mapping": {
             "sniper_rifle": "variant_d_timberline_hunter",
             "recon_drone": "variant_d_redstone_scout",
-            "grappling_hook_gun": "variant_d_steampunk_grappler",
+            "grappling_hook_gun": "variant_d_titan_anchor_gun",
             "remote_detonator": "variant_d_redstone_transmitter",
             "spy_tracker": "variant_c_amber_sonar",
             "spy_goggles": "variant_d_steampunk_aviators",
@@ -118,6 +129,10 @@ THEME_PRESETS = {
             "laser_pylon_emitter": "variant_a_aegis_defense",
             "eriks_sword": "variant_c_royal_relic",
             "eriks_star": "variant_c_royal_relic",
+            "parachute_backpack": "variant_d_skydiving_rig_pack",
+            "binoculars": "variant_d_brass_steampunk",
+            "zipline_gun": "variant_a_industrial_spooler",
+            "breaching_spray": "variant_c_breaching_extinguisher",
         }
     },
     "baseline": {

@@ -20,7 +20,8 @@
       "com.hdkiller.spycraft.SpyCraftMod"
     ],
     "client": [
-      "com.hdkiller.spycraft.client.SpyCraftModClient"
+      "com.hdkiller.spycraft.client.SpyCraftModClient",
+      "com.hdkiller.spycraft.client.director.DirectorClient"
     ]
   },
   "mixins": [
