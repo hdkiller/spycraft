@@ -36,7 +36,7 @@
   "tooltip.spycraft.mission_beacon.single_use": "§e↳ Egyszer használatos küldetés indító eszköz!",
   "tooltip.spycraft.mission_beacon.specs": "§8↳ 96 emelet, mélygarázs, automata őrök & lézercsapdák.",
   "tooltip.spycraft.parachute_backpack.desc": "§7Taktikai ejtőernyő magasból történő ugrásokhoz & beszivárgáshoz!",
-  "tooltip.spycraft.parachute_backpack.worn": "§e↳ Hátra véve (Mellvért slot): §fMagától kinyílik zuhanáskor (vagy Guggolás gombra)!",
+  "tooltip.spycraft.parachute_backpack.worn": "§e↳ Hátra véve (Mellvért slot): §fMagától kinyílik magasból zuhanáskor (4+ blokk) vagy Guggolásra!",
   "tooltip.spycraft.parachute_backpack.hand": "§b↳ Kézben tartva: §fJobb-klikk zuhanás közben a kézi nyitáshoz!",
   "tooltip.spycraft.parachute_backpack.glide": "§8↳ Siklás a nézés irányában, 0 esési sebzés, automatikus összecsukódás földet éréskor.",
   "tooltip.spycraft.binoculars.desc": "§7Nagy nagyítású felderítő távcső célpontbefogó rendszerrel!",

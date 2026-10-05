@@ -162,12 +162,13 @@ public class ParachuteBackpackItem extends ArmorItem {
             // Fall Detection for Auto-Deploy (only when worn on chest)
             if (isWorn && player.isAlive() && !player.onGround() && !player.isInWater() && !player.isFallFlying()) {
                 Vec3 vel = player.getDeltaMovement();
-                // 1. Auto-deploy on significant fall (>1.8 blocks fallen or downward velocity < -0.4)
-                if (player.fallDistance > 1.8f || vel.y < -0.4) {
+                // 1. Auto-deploy on real falls from height (>=4.0 blocks fallen with downward velocity, or >=5.5 blocks)
+                // Prevents annoying triggers on normal jumping or hopping down small 1-2 block ledges.
+                if ((player.fallDistance >= 4.0f && vel.y < -0.5) || player.fallDistance >= 5.5f) {
                     deployParachute(player, level);
                 }
-                // 2. Manual key-press deploy while falling (pressing Sneak / Crouch or Sprint)
-                else if (player.isCrouching() || player.isSprinting()) {
+                // 2. Manual key-press deploy while falling: Pressing Sneak (Crouch) during a descent
+                else if (player.isCrouching() && player.fallDistance > 2.0f && vel.y < -0.2) {
                     deployParachute(player, level);
                 }
             }

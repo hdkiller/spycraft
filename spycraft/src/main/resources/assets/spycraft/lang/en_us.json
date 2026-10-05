@@ -36,7 +36,7 @@
   "tooltip.spycraft.mission_beacon.single_use": "§e↳ Single-use mission starter device!",
   "tooltip.spycraft.mission_beacon.specs": "§8↳ 96 floors, underground parking, automated security drones & laser traps.",
   "tooltip.spycraft.parachute_backpack.desc": "§7Tactical parachute for high-altitude jumps & infiltration!",
-  "tooltip.spycraft.parachute_backpack.worn": "§e↳ Worn on Chest: §fAuto-deploys on fall (or press Sneak / Crouch)!",
+  "tooltip.spycraft.parachute_backpack.worn": "§e↳ Worn on Chest: §fAuto-deploys when falling from height (4+ blocks) or press Sneak!",
   "tooltip.spycraft.parachute_backpack.hand": "§b↳ Held in Hand: §fRight-click while falling to emergency deploy!",
   "tooltip.spycraft.parachute_backpack.glide": "§8↳ Steerable gliding, 0 fall damage, auto-folds upon touchdown.",
   "tooltip.spycraft.binoculars.desc": "§7High-magnification recon binoculars with target lock-on!",
