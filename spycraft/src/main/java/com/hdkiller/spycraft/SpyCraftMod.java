@@ -115,6 +115,7 @@ public class SpyCraftMod implements ModInitializer {
             entries.accept(ModItems.HOLOGRAM_PROJECTOR);
             entries.accept(ModItems.TRANQUILIZER_GUN);
             entries.accept(ModItems.SMOKE_GRENADE);
+            entries.accept(ModItems.FRAG_GRENADE);
             entries.accept(ModItems.CLIMBING_GLOVES);
             entries.accept(ModItems.PARACHUTE_BACKPACK);
             entries.accept(ModItems.BINOCULARS);

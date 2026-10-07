@@ -115,6 +115,12 @@ public class ModItems {
         new SmokeGrenadeItem(new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(16))
     );
 
+    // Tactical Frag Grenade - Throwable high-explosive fragmentation grenade
+    public static final Item FRAG_GRENADE = registerItem(
+        "frag_grenade",
+        new FragGrenadeItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(16))
+    );
+
     // Magnetic Climbing Gloves - Scale walls and hang in mid-air
     public static final Item CLIMBING_GLOVES = registerItem(
         "climbing_gloves",
