@@ -63,6 +63,7 @@ public class SpyCraftMod implements ModInitializer {
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.SmokeCloudManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.ZiplineManager::tick);
         ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.BreachingSprayManager::tick);
+        ServerTickEvents.END_WORLD_TICK.register(com.hdkiller.spycraft.item.FragGrenadeManager::tick);
         ServerTickEvents.END_SERVER_TICK.register(com.hdkiller.spycraft.item.ParachuteBackpackItem::tick);
 
         // Register disconnect event for safe cleanup
@@ -153,5 +154,6 @@ public class SpyCraftMod implements ModInitializer {
         com.hdkiller.spycraft.item.MobTrackerItem.clearRuntime();
         com.hdkiller.spycraft.item.RemoteDetonatorItem.clearRuntime();
         com.hdkiller.spycraft.item.ParachuteBackpackItem.clearRuntime();
+        com.hdkiller.spycraft.item.FragGrenadeManager.clearRuntime();
     }
 }
